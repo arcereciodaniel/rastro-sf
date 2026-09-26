@@ -22,6 +22,259 @@ html[data-theme="dark"]{
 @media(max-width:1180px){.season-summary{grid-template-columns:repeat(3,1fr)}.mini-kpis{grid-template-columns:repeat(2,1fr)}.event-cards{grid-template-columns:repeat(2,1fr)}.finance-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:900px){:root{--sidebarW:0px}.sidebar{display:none}.main{margin-left:0}.topbar{padding:0 15px;height:58px}.content{padding:20px 15px 92px}.topbar .season-select{display:none}.mobile-menu-btn{display:inline-flex}.hero-grid,.section-grid,.offseason-grid,.budget-grid{grid-template-columns:1fr}.season-summary{grid-template-columns:repeat(2,1fr)}.state-grid{grid-template-columns:1fr}.event-cards{grid-template-columns:1fr 1fr}.mobile-nav{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;background:color-mix(in srgb,var(--surface) 95%, transparent);backdrop-filter:blur(12px);border-top:1px solid var(--border);padding:7px 8px calc(7px + env(safe-area-inset-bottom));justify-content:space-around}.mobile-nav button{border:0;background:transparent;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:2px;font-size:.62rem;padding:4px 8px}.mobile-nav button.active{color:var(--accent);font-weight:750}.mobile-nav .fab{width:48px;height:48px;border-radius:50%;margin-top:-22px;background:var(--accent);color:#fff;font-size:1.4rem;box-shadow:0 6px 18px rgba(0,0,0,.16)}.mobile-only{display:block}}
 @media(max-width:620px){.topbar .currency-select,.topbar .theme-btn{display:none}.content{padding-top:18px}.title-row{display:block;margin-bottom:16px}.title-row h1{font-size:1.6rem}.title-row .actions{margin-top:12px}.hero-card{padding:17px}.hero-value{font-size:2.45rem}.mini-kpis{grid-template-columns:1fr 1fr;gap:8px}.card{padding:14px}.section-grid{gap:10px}.event-cards{grid-template-columns:1fr}.finance-grid{grid-template-columns:1fr 1fr}.season-summary{grid-template-columns:1fr 1fr}.month-detail{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.cash-chart{height:210px;gap:4px}.bar-wrap small{display:none}.event-right{display:none}.ring{width:150px;height:150px}.topbar .workspace-mini{max-width:160px;overflow:hidden;text-overflow:ellipsis}.modal{align-items:flex-end;padding:0}.modal-card{border-radius:16px 16px 0 0;max-height:94vh;width:100%}.amount-wrap input{font-size:2rem}}
+
+/* ==========================================================
+   RASTRO V2.9 · Visual refinement
+   Keeps the original Rastro graphic line, with cleaner hierarchy.
+   ========================================================== */
+.visual-kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin:0 0 18px}
+.visual-kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:18px;display:flex;align-items:center;gap:14px;min-height:106px}
+.visual-kpi-icon{width:46px;height:46px;display:grid;place-items:center;border-radius:13px;flex:0 0 auto;background:var(--accentSoft);color:var(--accent)}
+.visual-kpi-icon svg{width:24px;height:24px;stroke:currentColor}
+.visual-kpi-icon.blue{background:color-mix(in srgb,var(--blue) 11%,var(--surface));color:var(--blue)}
+.visual-kpi-icon.orange{background:color-mix(in srgb,#df6d35 11%,var(--surface));color:#c75b2d}
+.visual-kpi-icon.red{background:color-mix(in srgb,var(--danger) 10%,var(--surface));color:var(--danger)}
+.visual-kpi-copy{min-width:0;flex:1}.visual-kpi-copy span{display:block;font-size:.75rem;color:var(--muted);font-weight:650}
+.visual-kpi-copy strong{display:block;font-size:1.55rem;letter-spacing:-.04em;margin-top:4px}.visual-kpi-copy small{display:block;color:var(--muted);font-size:.7rem;margin-top:3px}
+.visual-chevron{color:var(--muted);font-size:1.25rem}
+
+.operation-shell{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:16px}
+.operation-shell-head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:2px 0 14px}
+.operation-shell-title{display:flex;align-items:flex-start;gap:12px;min-width:0}
+.operation-shell-icon{width:40px;height:40px;border-radius:10px;background:var(--surface2);display:grid;place-items:center;color:var(--text);flex:0 0 auto}
+.operation-shell-icon svg{width:19px;height:19px;stroke:currentColor}
+.operation-shell-title h2{font-size:1.22rem;letter-spacing:-.025em;margin:1px 0 2px}
+.operation-shell-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.operation-shell .status{padding:5px 9px}
+
+.visual-metric-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.visual-metric{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:15px;display:flex;align-items:center;gap:11px;min-height:82px}
+.visual-metric-icon{width:38px;height:38px;border-radius:10px;background:var(--accentSoft);display:grid;place-items:center;color:var(--accent);flex:0 0 auto}
+.visual-metric-icon.blue{background:color-mix(in srgb,var(--blue) 11%,var(--surface));color:var(--blue)}
+.visual-metric-icon.red{background:color-mix(in srgb,var(--danger) 10%,var(--surface));color:var(--danger)}
+.visual-metric-icon svg{width:20px;height:20px;stroke:currentColor}
+.visual-metric span{display:block;font-size:.7rem;color:var(--muted);font-weight:700}
+.visual-metric strong{display:block;font-size:1.25rem;letter-spacing:-.03em;margin-top:3px}
+.visual-metric small{display:block;font-size:.66rem;color:var(--muted);margin-top:2px}
+
+.operation-block{border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-top:12px;background:var(--surface)}
+.operation-block-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-bottom:1px solid var(--border)}
+.operation-block-title{display:flex;gap:10px;align-items:center;min-width:0}
+.operation-location-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;background:var(--accentSoft);color:var(--accent);flex:0 0 auto}
+.operation-location-icon svg{width:20px;height:20px;stroke:currentColor}
+.operation-block-title strong{display:block;font-size:1rem}
+.operation-block-title small{display:block;color:var(--muted);font-size:.72rem;margin-top:1px}
+.operation-table td,.operation-table th{padding-top:9px;padding-bottom:9px}
+.operation-table tbody tr:hover td{background:transparent}
+.operation-table td:first-child{font-weight:600}
+.category-cell{display:flex;align-items:center;gap:9px}
+.category-cell .cat-icon{width:22px;height:22px;display:grid;place-items:center;color:var(--muted)}
+.category-cell .cat-icon svg{width:16px;height:16px;stroke:currentColor}
+.positive-number{color:var(--good);font-weight:760}
+.negative-number{color:var(--danger);font-weight:760}
+.operation-total-row{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,minmax(130px,.42fr));align-items:center;padding:12px 14px;background:var(--surface2);border-top:1px solid var(--border);font-variant-numeric:tabular-nums}
+.operation-total-row strong:not(:first-child){text-align:right}
+
+.movements-visual-card{padding:0;overflow:hidden;border-radius:11px}
+.movements-visual-card .table-head{padding:16px 18px}
+.movements-visual-table th{padding:10px 14px}
+.movements-visual-table td{padding:12px 14px;vertical-align:middle}
+.movement-type{display:inline-flex;align-items:center;border-radius:999px;padding:4px 9px;font-size:.68rem;font-weight:750}
+.movement-type.expense{color:var(--blue);background:color-mix(in srgb,var(--blue) 11%,var(--surface))}
+.movement-type.income{color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--surface))}
+.status.complete-dot{gap:6px;padding:5px 9px}
+.status.complete-dot:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--good)}
+.movement-edit{display:inline-flex;align-items:center;gap:5px}
+.movement-edit svg{width:13px;height:13px;stroke:currentColor}
+.visual-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.visual-toolbar select,.visual-toolbar input{height:40px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:0 11px}
+.visual-search{position:relative}.visual-search:before{content:"⌕";position:absolute;left:12px;top:7px;color:var(--muted);font-size:1.15rem}.visual-search input{padding-left:37px;min-width:330px}
+
+/* Operation editor */
+#operationModal{background:rgba(20,20,20,.40);backdrop-filter:blur(1px)}
+#operationModal .modal-card{width:min(1010px,calc(100vw - 34px));max-height:94vh;border-radius:12px;box-shadow:0 28px 80px rgba(0,0,0,.22)}
+#operationModal .modal-head{padding:15px 20px}
+#operationModal .modal-head h2{font-size:1.15rem}
+#operationModal .modal-body{padding:0}
+.operation-intro{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.operation-intro .kpi-sub{max-width:760px}
+.operation-plan-meta{padding:17px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.operation-editor-section{padding:18px 20px}
+.operation-editor-section>.section-title{margin-bottom:13px}
+.operation-editor-section>.section-title h2{font-size:1rem}
+.op-group-editor{padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;margin:0 0 18px!important}
+.op-group-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.op-group-head strong{font-size:.9rem}.op-group-head .kpi-sub{margin-top:1px}
+.op-event-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin-top:8px}
+.op-event-choice{display:flex;gap:10px;align-items:center;border:1px solid var(--border);border-radius:9px;padding:11px 12px;background:var(--surface);cursor:pointer;transition:.12s ease}
+.op-event-choice:hover{background:var(--surface2)}
+.op-event-choice:has(input:checked){border-color:color-mix(in srgb,var(--accent) 45%,var(--border));background:var(--accentSoft)}
+.op-event-choice input{width:16px;height:16px;accent-color:var(--accent)}
+.op-event-choice strong{display:block;font-size:.8rem}.op-event-choice small{display:block;color:var(--muted);font-size:.68rem;margin-top:2px}
+.op-budget-wrap{margin-top:16px;border-top:1px solid var(--border);padding-top:14px}
+.op-budget-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:9px}
+.op-budget-table-head,.op-budget-line{display:grid;grid-template-columns:150px minmax(170px,1.4fr) 80px 95px 110px 120px 34px;gap:8px;align-items:end}
+.op-budget-table-head{padding:0 2px 7px;border-bottom:1px solid var(--border);align-items:center}
+.op-budget-table-head span{font-size:.62rem;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.04em}
+.op-budget-line{padding:8px 2px;border-bottom:1px solid var(--border);margin:0!important}
+.op-budget-line .field{margin:0}
+.op-budget-line .field label{display:none}
+.op-budget-line input,.op-budget-line select{height:38px;padding:7px 9px;background:var(--surface);border:1px solid var(--border);border-radius:7px}
+.op-budget-total{display:flex;justify-content:space-between;align-items:center;background:var(--surface2);border:1px solid var(--border);border-top:0;border-radius:0 0 9px 9px;padding:12px 14px;font-weight:750;margin-bottom:4px}
+.op-budget-total strong{font-size:1.05rem}
+.operation-editor-footer{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:13px 20px;display:flex;justify-content:flex-end;gap:8px;z-index:3}
+#operationModal .modal-actions{margin:0;padding:0;border:0}
+#operationSaveError{margin:0 20px 10px!important}
+#operationGroupEditors{margin-bottom:0}
+
+@media(max-width:1180px){
+ .visual-kpi-grid,.visual-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:900px){
+ .op-budget-table-head{display:none}
+ .op-budget-line{grid-template-columns:1fr 1fr}
+ .op-budget-line .field label{display:block}
+ .op-budget-line .icon-btn{grid-column:2;justify-self:end}
+ .op-event-grid{grid-template-columns:1fr}
+ .operation-total-row{grid-template-columns:1fr 1fr}
+ .operation-total-row strong:not(:first-child){text-align:left}
+}
+@media(max-width:620px){
+ .visual-kpi-grid,.visual-metric-grid{grid-template-columns:1fr}
+ .operation-shell-head,.operation-block-head{align-items:flex-start;flex-direction:column}
+ .visual-search input{min-width:100%;width:100%}
+}
+
+
+.btn svg{width:14px;height:14px;vertical-align:-2px;stroke:currentColor;margin-right:4px}
+
+
+/* ==========================================================
+   RASTRO V2.10 · Unified modal language
+   Applies the Operación visual system to Movimientos/Cobros modals
+   ========================================================== */
+.workflow-modal{background:rgba(20,20,20,.40);backdrop-filter:blur(1px)}
+.workflow-modal .modal-card{width:min(900px,calc(100vw - 34px));max-height:94vh;border-radius:12px;box-shadow:0 28px 80px rgba(0,0,0,.22);overflow:hidden}
+.workflow-modal .modal-head{padding:15px 20px}
+.workflow-modal .modal-head h2{font-size:1.15rem;letter-spacing:-.02em}
+.workflow-modal .modal-body{padding:0}
+.workflow-modal form{display:flex;flex-direction:column;min-height:0}
+.workflow-intro{padding:16px 20px;border-bottom:1px solid var(--border);background:var(--surface)}
+.workflow-intro-title{display:block;font-size:.9rem;font-weight:750;margin-bottom:4px}
+.workflow-intro .kpi-sub{max-width:760px}
+.workflow-context-card{margin-top:12px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px}
+.workflow-context-card strong{display:block;font-size:.84rem}
+.workflow-context-card .kpi-sub{margin-top:2px}
+.workflow-body{padding:0;background:var(--surface);overflow:auto}
+.workflow-section{padding:18px 20px;border-bottom:1px solid var(--border)}
+.workflow-section:last-child{border-bottom:0}
+.workflow-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.workflow-section-head h3{margin:0;font-size:1rem}
+.workflow-soft{background:var(--surface)}
+.workflow-modal .amount-wrap,.workflow-amount-wrap{display:flex;align-items:center;gap:10px;padding:0;margin:0;border:0}
+.workflow-modal .workflow-section.workflow-amount-row{padding-top:16px;padding-bottom:16px;background:var(--surface)}
+.workflow-modal .amount-wrap select,.workflow-amount-wrap select{width:96px;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 10px;font-weight:650}
+.workflow-modal .amount-wrap input,.workflow-amount-wrap input{flex:1;min-width:0;border:0;background:transparent;font-size:2.45rem;font-weight:800;letter-spacing:-.05em;outline:0;padding:0}
+.workflow-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+.workflow-summary-grid .managed-card{margin:0;padding:13px;border-radius:10px;background:var(--surface2)}
+.workflow-summary-grid .managed-card strong{font-size:1.05rem;margin-top:3px}
+.workflow-modal .form-grid{gap:14px}
+.workflow-modal .field{margin-bottom:0}
+.workflow-modal .field label{font-size:.69rem;color:var(--muted);font-weight:750;margin-bottom:7px}
+.workflow-modal .field input,.workflow-modal .field select,.workflow-modal .field textarea{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:11px 12px}
+.workflow-modal .field textarea{min-height:78px}
+.workflow-footer{position:sticky;bottom:0;background:var(--surface);border-top:1px solid var(--border);padding:13px 20px;display:flex;justify-content:flex-end;gap:8px;z-index:4}
+.workflow-footer .modal-actions{margin:0;padding:0;border:0}
+.workflow-modal .managed-card{margin:0;border-radius:10px;padding:12px;background:var(--surface2)}
+.workflow-modal .table-head{padding:0 0 10px;border-bottom:0}
+#registerModal #expenseAllocationRows,
+#expenseEditModal #expenseEditAllocations{display:grid;gap:10px}
+#registerModal .allocation-row,
+#expenseEditModal .allocation-row{padding:12px;border:1px solid var(--border);border-radius:10px;background:var(--surface2)}
+#registerModal .allocation-row input[type="checkbox"],
+#expenseEditModal .allocation-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--accent)}
+#registerModal .allocation-row .alloc-amount,
+#expenseEditModal .allocation-row .master-alloc-amount{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 11px}
+#registerModal #expenseAllocationSummary,
+#expenseEditModal #expenseEditError{margin-top:12px}
+#expenseEditModal .modal-card{width:min(920px,calc(100vw - 34px))}
+#receivableModal .modal-card{width:min(760px,calc(100vw - 34px))}
+#eventModal .modal-card,#budgetLineModal .modal-card{width:min(760px,calc(100vw - 34px))}
+#eventModal.workflow-modal .modal-body,#budgetLineModal.workflow-modal .modal-body{padding:18px 20px}
+#eventModal.workflow-modal .modal-actions,#budgetLineModal.workflow-modal .modal-actions{position:sticky;bottom:0;background:var(--surface);padding:13px 0 0;border-top:1px solid var(--border);margin-top:14px}
+@media(max-width:900px){
+ .workflow-summary-grid{grid-template-columns:1fr}
+}
+@media(max-width:620px){
+ .workflow-modal .modal-card{width:100%;border-radius:16px 16px 0 0;max-height:95vh}
+ .workflow-intro,.workflow-section,.workflow-footer{padding-left:16px;padding-right:16px}
+ .workflow-modal .amount-wrap input,.workflow-amount-wrap input{font-size:2rem}
+}
+
+
+/* ==========================================================
+   RASTRO V2.11 · Modal scroll/layout correction
+   Footer never covers allocation rows or financial summary.
+   ========================================================== */
+.workflow-modal .modal-card{
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  max-height:92vh;
+}
+.workflow-modal .modal-head{
+  flex:0 0 auto;
+}
+.workflow-modal .modal-body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow:hidden;
+}
+.workflow-modal form{
+  height:100%;
+  max-height:calc(92vh - 58px);
+  display:flex;
+  flex-direction:column;
+  min-height:0;
+}
+.workflow-intro{
+  flex:0 0 auto;
+}
+.workflow-body{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  padding-bottom:16px;
+}
+.workflow-footer{
+  position:static;
+  flex:0 0 auto;
+  margin-top:auto;
+  z-index:1;
+}
+#expenseEditModal #expenseEditAllocations{
+  display:grid;
+  gap:10px;
+  margin-bottom:12px;
+}
+#expenseEditModal .workflow-summary-grid{
+  margin-top:14px;
+  margin-bottom:2px;
+}
+#expenseEditModal .allocation-row{
+  min-height:66px;
+}
+#expenseEditModal .modal-card{
+  width:min(920px,calc(100vw - 34px));
+}
+#expenseEditModal .workflow-section:last-child{
+  padding-bottom:20px;
+}
+@media(max-width:620px){
+ .workflow-modal form{max-height:calc(95vh - 56px)}
+}
+
 </style>
 </head>
 <body>
@@ -60,7 +313,7 @@ html[data-theme="dark"]{
     <div class="sidebar-bottom">
       <div class="managed-card">
         <strong>Integración V1</strong>
-        <span>Login y Eventos ya usan Supabase. Operación, Movimientos y Cobros siguen con datos demo mientras los migramos.</span>
+        <span>Eventos, Movimientos, Cobros, Operación, Temporada e Inicio ya usan Supabase real. Inicio respeta estrictamente el ciclo de temporada seleccionado en KPIs, alertas, cobros y próximos eventos.</span>
       </div>
       <div class="managed-card" id="sessionCard">
       <strong id="sessionBusiness">Conectando…</strong>
@@ -102,58 +355,91 @@ html[data-theme="dark"]{
   </nav>
 </div>
 
-<div class="modal" id="registerModal" aria-hidden="true">
+<div class="modal workflow-modal" id="registerModal" aria-hidden="true">
   <div class="modal-card">
     <div class="modal-head"><h2>Registrar gasto</h2><button class="icon-btn" id="closeModal">×</button></div>
     <div class="modal-body">
       <form id="expenseForm">
-        <div class="amount-wrap">
-          <select id="expenseCurrency"><option value="CRC">CRC ₡</option><option value="USD">USD $</option></select>
-          <input id="expenseAmount" type="number" min="0" step="0.01" placeholder="0" required autofocus>
+        <div class="workflow-intro">
+          <strong class="workflow-intro-title">Nuevo movimiento de gasto</strong>
+          <div class="kpi-sub">Registra el monto real y define si corresponde a la operación general, a un evento o a varios eventos.</div>
+          <div id="expenseOperationContext" class="workflow-context-card" style="display:none"></div>
         </div>
-        <div class="form-grid">
-          <div class="field"><label>Categoría</label><select id="expenseCategory"><option>Flores</option><option>Personal</option><option>Hospedaje</option><option>Alimentación</option><option>Gasolina</option><option>Transporte</option><option>Materiales</option><option>Servicios</option><option>Alquiler</option><option>Imprevistos</option><option>Otros</option></select></div>
-          <div class="field"><label>Asignación del gasto</label><select id="expenseAssignmentType"><option value="general">Operación general / sin evento</option><option value="single">Un evento</option><option value="multi">Varios eventos</option></select></div>
-          <div class="field" id="expenseSingleEventField"><label>Evento relacionado</label><select id="expenseEvent"></select></div>
-          <div class="field"><label>Medio de pago</label><select id="expenseMethod"><option>Tarjeta</option><option>Transferencia</option><option>Efectivo</option><option>Otro</option></select></div>
-          <div class="field"><label>Fecha</label><input id="expenseDate" type="date" required></div>
+
+        <div class="workflow-body">
+          <div class="workflow-section workflow-amount-row">
+            <div class="workflow-amount-wrap amount-wrap">
+              <select id="expenseCurrency"><option value="CRC">CRC ₡</option><option value="USD">USD $</option></select>
+              <input id="expenseAmount" type="number" min="0" step="0.01" placeholder="0" required autofocus>
+            </div>
+          </div>
+
+          <div class="workflow-section">
+            <div class="form-grid">
+              <div class="field"><label>Categoría</label><select id="expenseCategory"><option>Flores</option><option>Personal</option><option>Hospedaje</option><option>Alimentación</option><option>Gasolina</option><option>Transporte</option><option>Materiales</option><option>Servicios</option><option>Alquiler</option><option>Imprevistos</option><option>Otros</option></select></div>
+              <div class="field"><label>Asignación del gasto</label><select id="expenseAssignmentType"><option value="general">Operación general / sin evento</option><option value="single">Un evento</option><option value="multi">Varios eventos</option></select></div>
+              <div class="field" id="expenseSingleEventField"><label>Evento relacionado</label><select id="expenseEvent"></select></div>
+              <div class="field"><label>Medio de pago</label><select id="expenseMethod"><option>Tarjeta</option><option>Transferencia</option><option>Efectivo</option><option>Otro</option></select></div>
+              <div class="field"><label>Fecha</label><input id="expenseDate" type="date" required></div>
+            </div>
+          </div>
+
+          <div id="expenseMultiAllocation" class="workflow-section workflow-soft" style="display:none">
+            <div class="workflow-section-head"><div><h3>Distribución entre eventos</h3><div class="kpi-sub">El gasto se registra una sola vez. Aquí defines qué parte corresponde a cada evento.</div></div><button type="button" class="btn secondary small" id="expenseAutoAllocate">Distribuir según presupuesto</button></div>
+            <div id="expenseAllocationRows"></div>
+            <div id="expenseAllocationSummary" class="kpi-sub"></div>
+          </div>
+
+          <div class="workflow-section">
+            <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><textarea id="expenseNote" placeholder="Ej. compra urgente de flores importadas"></textarea></div>
+          </div>
         </div>
-        <div id="expenseOperationContext" class="card" style="display:none;margin-bottom:13px;padding:12px"></div>
-        <div id="expenseMultiAllocation" class="card" style="display:none;margin-bottom:13px;padding:12px">
-          <div class="section-title" style="margin-bottom:8px"><div><h2>Distribución entre eventos</h2><div class="kpi-sub">El gasto se registra una sola vez. Aquí defines qué parte corresponde a cada evento.</div></div><button type="button" class="btn secondary small" id="expenseAutoAllocate">Distribuir según presupuesto</button></div>
-          <div id="expenseAllocationRows"></div>
-          <div id="expenseAllocationSummary" class="kpi-sub" style="margin-top:10px"></div>
-        </div>
-        <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><textarea id="expenseNote" placeholder="Ej. compra urgente de flores importadas"></textarea></div>
-        <div class="modal-actions"><button type="button" class="btn secondary" id="savePending">Guardar para clasificar después</button><button class="btn" type="submit">Guardar gasto</button></div>
+
+        <div class="workflow-footer"><div class="modal-actions"><button type="button" class="btn secondary" id="savePending">Guardar para clasificar después</button><button class="btn" type="submit">Guardar gasto</button></div></div>
       </form>
     </div>
   </div>
 </div>
 
-<div class="modal" id="receivableModal" aria-hidden="true">
+<div class="modal workflow-modal" id="receivableModal" aria-hidden="true">
   <div class="modal-card">
-    <div class="modal-head"><h2>Registrar cobro</h2><button class="icon-btn" id="closeReceivableModal">×</button></div>
+    <div class="modal-head"><h2 id="receivableModalTitle">Registrar cobro</h2><button class="icon-btn" id="closeReceivableModal">×</button></div>
     <div class="modal-body">
       <form id="receivableForm">
-        <div class="amount-wrap">
-          <select id="receivableCurrency"><option value="USD">USD $</option><option value="CRC">CRC ₡</option></select>
-          <input id="receivableAmount" type="number" min="0" step="0.01" placeholder="0" required>
+        <div class="workflow-intro">
+          <strong class="workflow-intro-title" id="receivableModeHeading">Cobro o cuota esperada</strong>
+          <div class="kpi-sub" id="receivableModeHint">Gestiona lo que falta por recibir o registra un ingreso ya recibido.</div>
         </div>
-        <div class="form-grid">
-          <div class="field"><label>Evento</label><select id="receivableEvent"></select></div>
-          <div class="field"><label>Cuota / concepto pendiente</label><select id="receivablePending"></select></div>
-          <div class="field"><label>Medio recibido</label><select id="receivableMethod"><option>Transferencia</option><option>Tarjeta</option><option>Efectivo</option><option>SINPE</option><option>Otro</option></select></div>
-          <div class="field"><label>Fecha</label><input id="receivableDate" type="date" required></div>
+
+        <div class="workflow-body">
+          <div class="workflow-section workflow-amount-row">
+            <div class="workflow-amount-wrap amount-wrap">
+              <select id="receivableCurrency"><option value="USD">USD $</option><option value="CRC">CRC ₡</option></select>
+              <input id="receivableAmount" type="number" min="0" step="0.01" placeholder="0" required>
+            </div>
+          </div>
+
+          <div class="workflow-section">
+            <div class="form-grid">
+              <div class="field"><label>Evento</label><select id="receivableEvent"></select></div>
+              <div class="field"><label>Cuota / concepto pendiente</label><select id="receivablePending"></select></div>
+              <div class="field"><label>Medio recibido</label><select id="receivableMethod"><option>Transferencia</option><option>Tarjeta</option><option>Efectivo</option><option>SINPE</option><option>Otro</option></select></div>
+              <div class="field"><label>Fecha</label><input id="receivableDate" type="date" required></div>
+            </div>
+          </div>
+
+          <div class="workflow-section">
+            <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><textarea id="receivableNote" placeholder="Ej. segundo pago recibido por planner"></textarea></div>
+          </div>
         </div>
-        <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><textarea id="receivableNote" placeholder="Ej. segundo pago recibido por planner"></textarea></div>
-        <div class="modal-actions"><button type="button" class="btn secondary" id="savePendingReceivable">Guardar pendiente</button><button class="btn" type="submit">Registrar cobro</button></div>
+
+        <div class="workflow-footer"><div class="modal-actions"><button type="button" class="btn secondary" id="savePendingReceivable">Guardar cuota</button><button class="btn" id="submitReceivableBtn" type="submit">Registrar cobro</button></div></div>
       </form>
     </div>
   </div>
 </div>
 
-<div class="modal" id="eventModal" aria-hidden="true">
+<div class="modal workflow-modal" id="eventModal" aria-hidden="true">
   <div class="modal-card">
     <div class="modal-head"><h2>Nuevo evento</h2><button class="icon-btn" id="closeEventModal">×</button></div>
     <div class="modal-body">
@@ -172,6 +458,216 @@ html[data-theme="dark"]{
         <div class="modal-actions"><button type="button" class="btn secondary" id="cancelEventModal">Cancelar</button><button class="btn" id="saveEventBtn" type="submit">Guardar evento</button></div>
       </form>
     </div>
+  </div>
+</div>
+
+
+<div class="modal workflow-modal" id="budgetLineModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head"><h2>Nueva línea de presupuesto</h2><button class="icon-btn" id="closeBudgetLineModal">×</button></div>
+    <div class="modal-body">
+      <form id="budgetLineForm">
+        <div class="form-grid">
+          <div class="field"><label>Categoría</label><select id="budgetLineCategory"></select></div>
+          <div class="field"><label>Moneda</label><select id="budgetLineCurrency"><option value="USD">USD $</option><option value="CRC">CRC ₡</option></select></div>
+          <div class="field" style="grid-column:1/-1"><label>Detalle interno</label><input id="budgetLineDescription" required placeholder="Ej. Rosas rojas / pintura de pared / hospedaje"></div>
+          <div class="field"><label>Cantidad <span style="font-weight:400">(opcional)</span></label><input id="budgetLineQuantity" type="number" min="0" step="0.001" placeholder="0"></div>
+          <div class="field"><label>Unidad <span style="font-weight:400">(opcional)</span></label><input id="budgetLineUnit" placeholder="tallos, noches, personas…"></div>
+          <div class="field"><label>Costo unitario estimado <span style="font-weight:400">(opcional)</span></label><input id="budgetLineUnitCost" type="number" min="0" step="0.0001" placeholder="0"></div>
+          <div class="field"><label>Presupuesto total</label><input id="budgetLineAmount" type="number" min="0" step="0.01" required placeholder="0"></div>
+        </div>
+        <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><textarea id="budgetLineNotes" placeholder="Supuesto o detalle útil para revisar después"></textarea></div>
+        <div id="budgetLineError" style="display:none;margin-bottom:10px;color:var(--danger);font-size:.75rem"></div>
+        <div class="modal-actions"><button type="button" class="btn secondary" id="cancelBudgetLineModal">Cancelar</button><button class="btn" id="saveBudgetLineBtn" type="submit">Guardar línea</button></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal workflow-modal" id="expenseEditModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head"><h2>Editar gasto</h2><button class="icon-btn" id="closeExpenseEditModal">×</button></div>
+    <div class="modal-body">
+      <form id="expenseEditForm">
+        <div class="workflow-intro">
+          <div class="managed-card">
+            <strong id="expenseEditTitle">Gasto real</strong>
+            <span>Edición maestra. Los cambios afectan el movimiento original y quedan registrados en el historial de auditoría.</span>
+          </div>
+        </div>
+
+        <div class="workflow-body">
+          <div class="workflow-section">
+            <div class="form-grid">
+              <div class="field">
+                <label>Categoría</label>
+                <select id="expenseEditCategory"></select>
+              </div>
+              <div class="field">
+                <label>Fecha</label>
+                <input id="expenseEditDate" type="date" required>
+              </div>
+              <div class="field">
+                <label>Moneda</label>
+                <select id="expenseEditCurrency">
+                  <option value="USD">USD $</option>
+                  <option value="CRC">CRC ₡</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Monto real</label>
+                <input id="expenseEditAmount" type="number" min="0.01" step="0.01" required>
+              </div>
+              <div class="field">
+                <label>Medio de pago</label>
+                <select id="expenseEditMethod">
+                  <option>Transferencia</option>
+                  <option>Tarjeta</option>
+                  <option>Efectivo</option>
+                  <option>SINPE</option>
+                  <option>Otro</option>
+                </select>
+              </div>
+              <div class="field">
+                <label>Proveedor / contraparte <span style="font-weight:400">(opcional)</span></label>
+                <input id="expenseEditCounterparty" placeholder="Ej. Cabinas Doña Rosa">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>Descripción</label>
+                <input id="expenseEditDescription" required placeholder="Ej. Hospedaje equipo Guanacaste">
+              </div>
+              <div class="field" style="grid-column:1/-1">
+                <label>Referencia <span style="font-weight:400">(opcional)</span></label>
+                <input id="expenseEditReference" placeholder="Factura, comprobante o referencia">
+              </div>
+            </div>
+          </div>
+
+          <div class="workflow-section">
+            <div class="workflow-section-head">
+              <div>
+                <h3>Distribución entre eventos</h3>
+                <div class="kpi-sub"><span id="expenseEditAllocationCount">0 eventos asignados</span> · Puedes dejar parte del gasto sin asignar. Nunca se duplica el movimiento real.</div>
+              </div>
+              <button type="button" class="btn secondary small" id="expenseEditRedistribute">Redistribuir proporcional</button>
+            </div>
+            <div id="expenseEditAllocations"></div>
+            <div class="kpi-sub" style="margin-top:12px">Resumen de asignación</div>
+            <div class="workflow-summary-grid">
+              <div class="managed-card"><span>Gasto real</span><strong id="expenseEditTotalLabel">$0</strong></div>
+              <div class="managed-card"><span>Asignado</span><strong id="expenseEditAssignedLabel">$0</strong></div>
+              <div class="managed-card"><span>Sin asignar</span><strong id="expenseEditUnassignedLabel">$0</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="expenseEditError" style="display:none;margin:14px 20px 0;color:var(--danger);font-size:.75rem"></div>
+        <div class="workflow-footer">
+          <div class="modal-actions">
+            <button type="button" class="btn secondary" id="cancelExpenseEditModal">Cancelar</button>
+            <button class="btn" id="saveExpenseEditBtn" type="submit">Guardar cambios</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal workflow-modal" id="seasonFundModal" aria-hidden="true">
+  <div class="modal-card" style="width:min(680px,calc(100vw - 34px))">
+    <div class="modal-head"><h2>Fondo Off Season</h2><button class="icon-btn" id="closeSeasonFundModal">×</button></div>
+    <div class="modal-body">
+      <form id="seasonFundForm">
+        <div class="workflow-intro"><strong class="workflow-intro-title">Reserva de temporada baja</strong><div class="kpi-sub">Define la meta de reserva y cuánto dinero ya está apartado para cubrir julio — octubre.</div></div>
+        <div class="workflow-body">
+          <div class="workflow-section">
+            <div class="form-grid">
+              <div class="field"><label>Moneda</label><select id="seasonFundCurrency"><option value="USD">USD $</option><option value="CRC">CRC ₡</option></select></div>
+              <div></div>
+              <div class="field"><label>Meta del fondo</label><input id="seasonFundTarget" type="number" min="0" step="0.01" required></div>
+              <div class="field"><label>Acumulado actualmente</label><input id="seasonFundReserved" type="number" min="0" step="0.01" required><div class="kpi-sub" style="margin-top:6px">Dinero ya apartado para cubrir el Off Season.</div></div>
+            </div>
+          </div>
+        </div>
+        <div id="seasonFundError" style="display:none;margin:12px 20px 0;color:var(--danger);font-size:.75rem"></div>
+        <div class="workflow-footer"><div class="modal-actions"><button type="button" class="btn secondary" id="cancelSeasonFundModal">Cancelar</button><button class="btn" id="saveSeasonFundBtn" type="submit">Guardar cambios</button></div></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal workflow-modal" id="operatingCashModal" aria-hidden="true">
+  <div class="modal-card" style="width:min(680px,calc(100vw - 34px))">
+    <div class="modal-head"><h2>Saldo líquido actual</h2><button class="icon-btn" id="closeOperatingCashModal">×</button></div>
+    <div class="modal-body">
+      <form id="operatingCashForm">
+        <div class="workflow-intro">
+          <strong class="workflow-intro-title">Conciliar banco y caja</strong>
+          <div class="kpi-sub">Ingresa cuánto dinero líquido tiene hoy Stylos & Flores entre banco y caja. Desde este punto, Rastro ajustará el saldo con los movimientos nuevos.</div>
+        </div>
+        <div class="workflow-body">
+          <div class="workflow-section">
+            <div class="form-grid">
+              <div class="field"><label>Moneda</label><select id="operatingCashCurrency"><option value="USD">USD $</option><option value="CRC">CRC ₡</option></select></div>
+              <div class="field"><label>Saldo líquido actual</label><input id="operatingCashAmount" type="number" min="0" step="0.01" required></div>
+            </div>
+            <div class="managed-card" style="margin-top:8px">
+              <strong>¿Qué incluye?</strong>
+              <span>Dinero realmente disponible en cuentas bancarias y caja. No incluye cuentas por cobrar ni ventas futuras.</span>
+            </div>
+          </div>
+        </div>
+        <div id="operatingCashError" style="display:none;margin:12px 20px 0;color:var(--danger);font-size:.75rem"></div>
+        <div class="workflow-footer"><div class="modal-actions"><button type="button" class="btn secondary" id="cancelOperatingCashModal">Cancelar</button><button class="btn" id="saveOperatingCashBtn" type="submit">Guardar saldo</button></div></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="operationModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <h2 id="operationModalTitle">Crear operativo</h2>
+      </div>
+      <button class="icon-btn" id="closeOperationModal">×</button>
+    </div>
+    <form id="operationForm">
+      <div class="operation-intro">
+        <div class="kpi-sub">Configura el operativo general y luego divide la ejecución por zona, equipo o ruta.</div>
+      </div>
+
+      <div class="operation-plan-meta">
+        <div class="form-grid">
+          <div class="field" style="grid-column:1/-1">
+            <label>Nombre del operativo</label>
+            <input id="operationName" required placeholder="Ej. Fin de semana Guanacaste · 14–16 marzo">
+          </div>
+          <div class="field"><label>Inicio</label><input id="operationStart" type="date" required></div>
+          <div class="field"><label>Fin</label><input id="operationEnd" type="date" required></div>
+          <div class="field"><label>Estado</label><select id="operationStatus"><option value="draft">Borrador</option><option value="planned">Planificado</option><option value="active">En curso</option><option value="closed">Cerrado</option><option value="cancelled">Cancelado</option></select></div>
+          <div class="field"><label>Nota <span style="font-weight:400">(opcional)</span></label><input id="operationNotes" placeholder="Objetivo, logística o contexto"></div>
+        </div>
+      </div>
+
+      <div class="operation-editor-section">
+        <div class="section-title">
+          <div><h2>Bloques operativos</h2><div class="kpi-sub">Cada bloque puede agrupar varios eventos con su propia logística y presupuesto.</div></div>
+          <button type="button" class="btn secondary small" id="addOperationGroup">+ Bloque</button>
+        </div>
+        <div id="operationGroupEditors"></div>
+      </div>
+
+      <div id="operationSaveError" style="display:none;color:var(--danger);font-size:.75rem"></div>
+      <div class="operation-editor-footer">
+        <div class="modal-actions">
+          <button type="button" class="btn secondary" id="cancelOperationModal">Cancelar</button>
+          <button class="btn" id="saveOperationBtn" type="submit">Guardar operativo</button>
+        </div>
+      </div>
+    </form>
   </div>
 </div>
 
@@ -257,7 +753,17 @@ const SUPABASE_PUBLISHABLE_KEY='sb_publishable_p2UfbU8ZCMdRoCgLLg7ZHQ_vv4uVW6q';
 const sb=window.supabase?window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY,{
  auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
 }):null;
-let dbContext={user:null,businessId:'',businessName:'Stylos & Flores',role:'',seasonId:'',seasonName:'Temporada 2026/2027'};
+let dbContext={user:null,businessId:'',businessName:'Stylos & Flores',role:'',seasonId:'',seasonName:'Temporada 2026/2027',seasonStart:'',seasonEnd:'',offseasonStart:'',offseasonEnd:'',offseasonFundTarget:0,offseasonFundReserved:0,offseasonCurrency:'USD',operatingCashBalance:0,operatingCashCurrency:'USD',operatingCashReferenceAt:''};
+let dbCategories=[];
+let globalDbMovements=[];
+let globalDbAllocations=[];
+let globalDbReceivables=[];
+let globalDbPayments=[];
+let globalDbEventBudgetLines=[];
+let dbOperations=[];
+const dbBudgetLinesByEvent={};
+const dbExpenseRowsByEvent={};
+const dbReceivableRowsByEvent={};
 
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
 function usd(value,currency='USD'){return currency==='USD'?Number(value):Number(value)/FX}
@@ -270,7 +776,19 @@ function dateLabel(iso){return new Intl.DateTimeFormat('es-CR',{day:'numeric',mo
 function shortDate(iso){return new Intl.DateTimeFormat('es-CR',{day:'2-digit',month:'short'}).format(new Date(iso+'T12:00:00')).replace('.','')}
 function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(iso+'T12:00:00')).replace('.','').toUpperCase()}
 function eventById(id){return events.find(e=>e.id===id)}
-function operationById(id){return operations.find(o=>o.id===id)}
+function isUuid(value=''){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value))}
+function valueToUsd(amount,currency){return currency==='CRC'?Number(amount||0)/FX:Number(amount||0)}
+function categoryById(id){return dbCategories.find(c=>c.id===id)}
+function categoryIdByName(name){return dbCategories.find(c=>c.name===name)?.id||null}
+function realEventById(id){return databaseEvents.find(e=>e.id===id)}
+function realEventsOnly(){return databaseEvents}
+function populateDbCategorySelects(){
+ const expense=$('#expenseCategory'),budget=$('#budgetLineCategory');
+ const expenseCats=dbCategories.filter(c=>c.kind==='expense'||c.kind==='both');
+ const html=expenseCats.map(c=>`<option value="${escapeHtml(c.name)}">${escapeHtml(c.name)}</option>`).join('');
+ if(expense&&html)expense.innerHTML=html;
+ if(budget&&html)budget.innerHTML=expenseCats.map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+}
 function allocationsForMovement(m){const rows=expenseAllocations.filter(a=>a.movementId===m.id);if(rows.length)return rows;if(m.eventId)return [{movementId:m.id,eventId:m.eventId,amountUsd:usd(m.amount,m.currency),operationId:'',groupId:'',budgeted:true}];return []}
 function allocatedToEvent(m,eventId){return allocationsForMovement(m).filter(a=>a.eventId===eventId).reduce((s,a)=>s+a.amountUsd,0)}
 function movementEventLabel(m){const a=allocationsForMovement(m);if(!a.length)return 'Operación general';if(a.length===1)return eventById(a[0].eventId)?.name||'1 evento';return `${a.length} eventos`}
@@ -302,79 +820,493 @@ function sumPendingReceivables(){return receivables.filter(r=>r.status!=='Pagado
 function seasonCollectedTotal(){return shared.seasonCollected + (events.reduce((s,e)=>s+e.collected,0)-baseline.sampleCollected)}
 function seasonReceivableTotal(){return Math.max(0, shared.receivableTotal + (sumPendingReceivables()-baseline.pendingReceivables))}
 function updateEventFinancialStatus(e){
-  const pending=receivables.filter(r=>r.eventId===e.id && r.status!=='Pagado').reduce((s,r)=>s+r.amount,0);
-  if(pending<=0 || e.collected>=e.sale){e.financial='Cobrado completo';}
+  if(e.sale>0 && e.collected>=e.sale){e.financial='Cobrado completo';}
   else if(e.collected>0){e.financial='Cobro parcial';}
   else{e.financial='Sin cobros';}
 }
 function navTo(view){currentView=view;$$('.view').forEach(v=>v.classList.remove('active'));const el=$(`#view-${view}`);if(el)el.classList.add('active');$$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));window.scrollTo({top:0,behavior:'instant'});if(view==='home')renderHome();if(view==='season')renderSeason();if(view==='operation')renderOperation();if(view==='events')renderEvents();if(view==='movements')renderMovements();if(view==='receivables')renderReceivables();if(view==='eventDetail')renderEventDetail()}
 
+
+function eventBudgetTotalUsd(eventId){
+ return globalDbEventBudgetLines.filter(r=>r.event_id===eventId).reduce((s,r)=>s+valueToUsd(Number(r.budgeted_amount||0),r.currency||'USD'),0);
+}
+function eventActualExpenseUsd(eventId){
+ return expenseAllocations.filter(a=>a.source==='db'&&a.eventId===eventId).reduce((s,a)=>s+a.amountUsd,0);
+}
+function eventCollectedUsd(eventId){
+ return movements.filter(m=>m.source==='db'&&m.kind==='income'&&m.eventId===eventId).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+}
+function syncRealEventAggregates(){
+ databaseEvents.forEach(e=>{
+  e.costEst=eventBudgetTotalUsd(e.id);
+  e.costReal=eventActualExpenseUsd(e.id);
+  e.collected=eventCollectedUsd(e.id);
+  updateEventFinancialStatus(e);
+ });
+}
+function dateInRange(iso,start,end){return !!iso&&(!start||iso>=start)&&(!end||iso<=end)}
+function seasonCycleEnd(){return dbContext.offseasonEnd||dbContext.seasonEnd||''}
+function seasonEventsReal(){
+ const start=dbContext.seasonStart||'';const end=seasonCycleEnd();
+ return databaseEvents.filter(e=>dateInRange(e.date,start,end));
+}
+function confirmedSeasonEvents(){return seasonEventsReal().filter(e=>!['quote','cancelled'].includes(e.dbStatus||''))}
+function addMonthsIso(iso,offset){const d=new Date(`${iso}T12:00:00`);d.setMonth(d.getMonth()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function monthStartIso(key){return `${key}-01`}
+function monthEndIso(key){const [y,m]=key.split('-').map(Number);return new Date(y,m,0,12).toISOString().slice(0,10)}
+function seasonMonthModels(){
+ const start=dbContext.seasonStart||'2026-11-01';const end=seasonCycleEnd()||'2027-10-31';
+ const startKey=start.slice(0,7),endKey=end.slice(0,7);const arr=[];let key=startKey,i=0;
+ while(key<=endKey&&i<18){
+  const off=dateInRange(monthStartIso(key),dbContext.offseasonStart,dbContext.offseasonEnd)||dateInRange(monthEndIso(key),dbContext.offseasonStart,dbContext.offseasonEnd);
+  const ev=seasonEventsReal().filter(e=>e.date.startsWith(key));
+  const confirmed=ev.filter(e=>!['quote','cancelled'].includes(e.dbStatus||''));
+  const contracted=confirmed.reduce((s,e)=>s+e.sale,0),collected=ev.reduce((s,e)=>s+e.collected,0),cost=confirmed.reduce((s,e)=>s+e.costEst,0);
+  const d=new Date(`${key}-01T12:00:00`),label=d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase();
+  arr.push({key,label,off,events:ev.length,contracted,collected,cost,balance:contracted-cost});
+  key=addMonthsIso(start,++i);
+ }
+ return arr;
+}
+function formatSeasonRange(){
+ const fmt=iso=>iso?new Date(`${iso}T12:00:00`).toLocaleDateString('es-CR',{month:'long',year:'numeric'}):'';
+ return `${fmt(dbContext.seasonStart)} — ${fmt(dbContext.seasonEnd)}${dbContext.offseasonStart&&dbContext.offseasonEnd?` · Off Season ${fmt(dbContext.offseasonStart)} — ${fmt(dbContext.offseasonEnd)}`:''}`;
+}
+function seasonContractedReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e.sale,0)}
+function seasonCollectedReal(){return seasonEventsReal().reduce((s,e)=>s+e.collected,0)}
+function seasonProjectedCostReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e.costEst,0)}
+function seasonActualCostReal(){return seasonEventsReal().reduce((s,e)=>s+e.costReal,0)}
+function fundUsd(value){return valueToUsd(Number(value||0),dbContext.offseasonCurrency||'USD')}
+function offseasonFundCoveragePct(){const t=fundUsd(dbContext.offseasonFundTarget);return t>0?fundUsd(dbContext.offseasonFundReserved)/t*100:0}
+function openSeasonFundModal(){
+ if(!['owner','admin'].includes(dbContext.role)){showToast('Solo owner/admin puede editar el fondo.');return}
+ $('#seasonFundTarget').value=Number(dbContext.offseasonFundTarget||0);
+ $('#seasonFundReserved').value=Number(dbContext.offseasonFundReserved||0);
+ $('#seasonFundCurrency').value=dbContext.offseasonCurrency||'USD';
+ $('#seasonFundError').style.display='none';
+ $('#seasonFundModal').classList.add('open');$('#seasonFundModal').setAttribute('aria-hidden','false');
+}
+function closeSeasonFundModal(){$('#seasonFundModal').classList.remove('open');$('#seasonFundModal').setAttribute('aria-hidden','true')}
+async function saveSeasonFund(e){
+ e.preventDefault();const target=Number($('#seasonFundTarget').value||0),reserved=Number($('#seasonFundReserved').value||0),currency=$('#seasonFundCurrency').value,err=$('#seasonFundError'),btn=$('#saveSeasonFundBtn');
+ if(target<0||reserved<0){err.textContent='Los montos no pueden ser negativos.';err.style.display='block';return}
+ btn.disabled=true;btn.textContent='Guardando…';err.style.display='none';
+ const {error}=await sb.rpc('update_season_offseason_fund',{p_business_id:dbContext.businessId,p_season_id:dbContext.seasonId,p_target:target,p_reserved:reserved,p_currency:currency});
+ btn.disabled=false;btn.textContent='Guardar cambios';
+ if(error){console.error(error);err.textContent=error.message;err.style.display='block';return}
+ dbContext.offseasonFundTarget=target;dbContext.offseasonFundReserved=reserved;dbContext.offseasonCurrency=currency;closeSeasonFundModal();showToast('Fondo Off Season actualizado');renderSeason();
+}
+
+
+function todayIsoLocal(){
+ const d=new Date(),pad=n=>String(n).padStart(2,'0');
+ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function addDaysLocal(iso,days){
+ const d=new Date(`${iso}T12:00:00`);
+ d.setDate(d.getDate()+days);
+ return d.toISOString().slice(0,10);
+}
+function cashReferenceConfigured(){return !!dbContext.operatingCashReferenceAt}
+function homeSeasonStart(){return dbContext.seasonStart||''}
+function homeSeasonEnd(){return seasonCycleEnd()}
+function homeDateInSelectedSeason(date){
+ const start=homeSeasonStart(),end=homeSeasonEnd();
+ if(!date||!start||!end)return false;
+ return date>=start&&date<=end;
+}
+function homeSeasonEvents(){
+ return databaseEvents.filter(e=>homeDateInSelectedSeason(e.date));
+}
+function homeSeasonEventIds(){
+ return new Set(homeSeasonEvents().map(e=>e.id));
+}
+function homeReceivableInSelectedSeason(r){
+ return homeSeasonEventIds().has(r.eventId);
+}
+function homeMovementInSelectedSeason(m){
+ return homeDateInSelectedSeason(m.movement_date||m.date);
+}
+function currentLiquidCashUsd(){
+ if(!cashReferenceConfigured())return null;
+ let balance=valueToUsd(dbContext.operatingCashBalance,dbContext.operatingCashCurrency||'USD');
+ const ref=new Date(dbContext.operatingCashReferenceAt).getTime();
+ globalDbMovements.forEach(m=>{
+  const created=m.created_at?new Date(m.created_at).getTime():0;
+  if(created<=ref)return;
+  const amount=valueToUsd(Number(m.amount||0),m.currency||'USD');
+  if(m.movement_type==='income')balance+=amount;
+  else if(m.movement_type==='expense')balance-=amount;
+ });
+ return balance;
+}
+function futureCommittedCostsReal(){
+ const today=todayIsoLocal();
+ return homeSeasonEvents()
+  .filter(e=>!['quote','cancelled','completed'].includes(e.dbStatus||'')&&e.date>=today)
+  .reduce((s,e)=>s+Math.max(0,Number(e.costEst||0)-Number(e.costReal||0)),0);
+}
+function realOperatingAvailable(){
+ const cash=currentLiquidCashUsd();
+ if(cash===null)return null;
+ return cash-futureCommittedCostsReal()-fundUsd(dbContext.offseasonFundReserved);
+}
+function outstandingContractedReal(){
+ return Math.max(0,seasonContractedReal()-seasonCollectedReal());
+}
+function realUpcomingEvents(days=30){
+ const today=todayIsoLocal(),end=addDaysLocal(today,days);
+ return homeSeasonEvents()
+  .filter(e=>!['quote','cancelled'].includes(e.dbStatus||'')&&e.date>=today&&e.date<=end)
+  .sort((a,b)=>a.date.localeCompare(b.date));
+}
+function realNextEvents(limit=4){
+ const today=todayIsoLocal();
+ return homeSeasonEvents()
+  .filter(e=>!['quote','cancelled'].includes(e.dbStatus||'')&&e.date>=today)
+  .sort((a,b)=>a.date.localeCompare(b.date))
+  .slice(0,limit);
+}
+function openReceivablesReal(){
+ const seasonIds=homeSeasonEventIds();
+ return receivables.filter(r=>r.source==='db'&&!['Pagado','Cancelado'].includes(r.status)&&seasonIds.has(r.eventId));
+}
+function upcomingReceivablesReal(days=30){
+ const today=todayIsoLocal(),end=addDaysLocal(today,days);
+ return openReceivablesReal().filter(r=>r.due>=today&&r.due<=end);
+}
+function overdueReceivablesReal(){
+ const today=todayIsoLocal();
+ return openReceivablesReal().filter(r=>r.due<today);
+}
+function unassignedExpenseUsd(){
+ return globalDbMovements
+  .filter(m=>m.movement_type==='expense'&&homeMovementInSelectedSeason(m))
+  .reduce((sum,m)=>{
+   const allocated=globalDbAllocations.filter(a=>a.movement_id===m.id).reduce((s,a)=>s+valueToUsd(Number(a.allocated_amount||0),m.currency||'USD'),0);
+   return sum+Math.max(0,valueToUsd(Number(m.amount||0),m.currency||'USD')-allocated);
+  },0);
+}
+function nearBudgetEventsReal(){
+ const today=todayIsoLocal();
+ return homeSeasonEvents()
+  .filter(e=>!['quote','cancelled','completed'].includes(e.dbStatus||'')&&e.date>=today&&e.costEst>0&&e.costReal/e.costEst>=.75)
+  .sort((a,b)=>(b.costReal/b.costEst)-(a.costReal/a.costEst));
+}
+function realHomeProjection(){
+ const available=realOperatingAvailable();
+ if(available===null)return [];
+ const end=homeSeasonEnd()||addDaysLocal(todayIsoLocal(),365);
+ const today=todayIsoLocal();
+ const projectionStart=(homeSeasonStart()&&today<homeSeasonStart())?homeSeasonStart():today;
+ let d=new Date(`${projectionStart.slice(0,7)}-01T12:00:00`);
+ const stop=new Date(`${end.slice(0,7)}-01T12:00:00`);
+ const rows=[],open=openReceivablesReal();
+ let balance=available,guard=0;
+ while(d<=stop&&guard<16){
+  const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  const income=open.filter(r=>String(r.due||'').startsWith(key)).reduce((s,r)=>s+receivableRemainingUsd(r),0);
+  balance+=income;
+  const off=dateInRange(`${key}-15`,dbContext.offseasonStart,dbContext.offseasonEnd);
+  rows.push({
+   key,label:d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase(),
+   income,cost:0,balance,off
+  });
+  d.setMonth(d.getMonth()+1);guard++;
+ }
+ return rows;
+}
+function realProjectionChartHTML(dataset,height=250){
+ if(!dataset.length)return '<div class="placeholder" style="padding:38px 20px">Configura el saldo líquido actual para activar la proyección de caja.</div>';
+ const vals=dataset.map(x=>x.balance);
+ const min=Math.min(0,...vals),max=Math.max(1,...vals);
+ const span=Math.max(1,max-min);
+ return `<div class="cash-chart" style="height:${height}px">${dataset.map(m=>{
+  const h=Math.max(12,((m.balance-min)/span)*82);
+  const tip=`${fullMonthLabel(m.key)}\nCobros programados: +${money(m.income)}\nDisponible operativo proyectado: ${money(m.balance)}`;
+  return `<div class="bar-wrap" data-tooltip="${tip.replace(/"/g,'&quot;')}"><small>${money(m.balance).replace(/\$|₡/,'')}</small><div class="bar ${m.off?'season-off':''}" style="height:${h}%"></div><label>${m.label}</label></div>`;
+ }).join('')}</div>
+ <div class="chart-legend"><span class="legend-item"><i class="legend-swatch"></i>Temporada alta</span><span class="legend-item"><i class="legend-swatch off"></i>Off Season</span></div>
+ <div class="chart-note">Proyección conservadora: parte del disponible operativo actual y suma únicamente cuotas con fecha esperada. Los costos futuros ya están protegidos dentro del monto comprometido.</div>`;
+}
+function openOperatingCashModal(){
+ if(!['owner','admin'].includes(dbContext.role)){showToast('Solo owner/admin puede conciliar el saldo.');return}
+ $('#operatingCashAmount').value=Number(dbContext.operatingCashBalance||0);
+ $('#operatingCashCurrency').value=dbContext.operatingCashCurrency||'USD';
+ $('#operatingCashError').style.display='none';
+ $('#operatingCashModal').classList.add('open');$('#operatingCashModal').setAttribute('aria-hidden','false');
+}
+function closeOperatingCashModal(){$('#operatingCashModal').classList.remove('open');$('#operatingCashModal').setAttribute('aria-hidden','true')}
+async function saveOperatingCash(e){
+ e.preventDefault();
+ const amount=Number($('#operatingCashAmount').value||0),currency=$('#operatingCashCurrency').value,err=$('#operatingCashError'),btn=$('#saveOperatingCashBtn');
+ if(amount<0){err.textContent='El saldo no puede ser negativo.';err.style.display='block';return}
+ btn.disabled=true;btn.textContent='Guardando…';err.style.display='none';
+ const {error}=await sb.rpc('update_business_operating_cash',{p_business_id:dbContext.businessId,p_amount:amount,p_currency:currency});
+ btn.disabled=false;btn.textContent='Guardar saldo';
+ if(error){console.error(error);err.textContent=error.message;err.style.display='block';return}
+ dbContext.operatingCashBalance=amount;dbContext.operatingCashCurrency=currency;dbContext.operatingCashReferenceAt=new Date().toISOString();
+ closeOperatingCashModal();showToast('Saldo líquido conciliado');renderHome();
+}
+
 function renderHome(){
- const available=operatingAvailable(); const next=[...events].sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4); const offPct=shared.offReserved/shared.offTarget*100; const maxBal=Math.max(...months.map(m=>m.balance));
- $('#view-home').innerHTML=header('Buenos días',`${dbContext.seasonName||'Temporada 2026/2027'} · Vista ejecutiva del negocio`)+`
+ const cash=currentLiquidCashUsd();
+ const committed=futureCommittedCostsReal();
+ const offReserved=fundUsd(dbContext.offseasonFundReserved);
+ const available=realOperatingAvailable();
+ const offTarget=fundUsd(dbContext.offseasonFundTarget);
+ const offPct=offTarget>0?offReserved/offTarget*100:0;
+ const monthlyNeed=offTarget>0?offTarget/4:0;
+ const coverageMonths=monthlyNeed>0?offReserved/monthlyNeed:0;
+ const upcoming30=realUpcomingEvents(30);
+ const next=realNextEvents(4);
+ const upcomingCobros=upcomingReceivablesReal(30);
+ const overdue=overdueReceivablesReal();
+ const nearBudget=nearBudgetEventsReal();
+ const unassigned=unassignedExpenseUsd();
+ const attention=[];
+ if(unassigned>.01)attention.push({tone:'warn',view:'movements',title:`${money(unassigned)} de gastos sin asignar`,sub:'Todavía no están atribuidos a eventos u operación.'});
+ if(overdue.length)attention.push({tone:'danger',view:'receivables',title:`${overdue.length} cobro${overdue.length===1?' vencido':'s vencidos'}`,sub:'Revisar cuotas con fecha esperada ya pasada.'});
+ if(upcomingCobros.length)attention.push({tone:'warn',view:'receivables',title:`${upcomingCobros.length} cobro${upcomingCobros.length===1?' próximo':'s próximos'}`,sub:`${money(upcomingCobros.reduce((s,r)=>s+receivableRemainingUsd(r),0))} esperados en los próximos 30 días.`});
+ if(nearBudget.length)attention.push({tone:'danger',eventId:nearBudget[0].id,title:`${nearBudget.length} evento${nearBudget.length===1?' cerca':'s cerca'} del presupuesto`,sub:`${nearBudget[0].name} ha consumido ${Math.round(nearBudget[0].costReal/nearBudget[0].costEst*100)}% del costo previsto.`});
+ if(!attention.length)attention.push({tone:'good',view:'season',title:'Sin alertas financieras críticas',sub:'Los registros actuales no requieren atención inmediata.'});
+
+ const cashConfigured=cashReferenceConfigured();
+ const projected=realHomeProjection();
+
+ $('#view-home').innerHTML=header('Buenos días',`${dbContext.seasonName||'Temporada'} · Vista ejecutiva del negocio · métricas filtradas al ciclo seleccionado`,
+  cashConfigured&&['owner','admin'].includes(dbContext.role)?'<button class="btn secondary" id="editOperatingCash">Actualizar saldo</button>':
+  ['owner','admin'].includes(dbContext.role)?'<button class="btn" id="editOperatingCash">Configurar saldo actual</button>':'')+`
  <div class="grid hero-grid">
   <div class="card hero-card">
-   <div class="kpi-label">Disponible para operar hoy</div><div class="hero-value">${money(available)}</div><div class="hero-note">Saldo después de compromisos de eventos y reservas estratégicas.</div>
-   <button class="calc-link" id="calcToggle">Ver cálculo ↓</button>
-   <div class="calc-breakdown" id="calcBreakdown"><div class="calc-row"><span>Saldo registrado</span><strong>${money(shared.bank)}</strong></div><div class="calc-row"><span>Comprometido con eventos</span><strong>− ${money(shared.committed)}</strong></div><div class="calc-row"><span>Fondo Off Season reservado</span><strong>− ${money(shared.offReserved)}</strong></div><div class="calc-row total"><span>Disponible operativo</span><strong>${money(available)}</strong></div></div>
+   <div class="kpi-label">Disponible para operar hoy</div>
+   <div class="hero-value">${cashConfigured?money(available):'—'}</div>
+   <div class="hero-note">${cashConfigured?'Dinero libre después de proteger costos futuros de la temporada seleccionada y el Fondo Off Season.':'Configura el saldo líquido actual para obtener un disponible operativo real.'}</div>
+   ${cashConfigured?`<button class="calc-link" id="calcToggle">Ver cálculo ↓</button>
+   <div class="calc-breakdown" id="calcBreakdown">
+    <div class="calc-row"><span>Saldo líquido actual</span><strong>${money(cash)}</strong></div>
+    <div class="calc-row"><span>Comprometido con eventos</span><strong>− ${money(committed)}</strong></div>
+    <div class="calc-row"><span>Fondo Off Season acumulado</span><strong>− ${money(offReserved)}</strong></div>
+    <div class="calc-row total"><span>Disponible operativo</span><strong>${money(available)}</strong></div>
+   </div>`:`<button class="calc-link" id="heroConfigureCash">Configurar saldo actual →</button>`}
   </div>
-  <div class="card"><div class="section-title"><h2>Fondo Off Season</h2><button class="btn secondary small" data-jump="season">Ver temporada</button></div><div class="coverage">${pct(offPct)}</div><div class="kpi-sub">${money(shared.offReserved)} de ${money(shared.offTarget)}</div><div class="progress"><span style="width:${Math.min(offPct,100)}%"></span></div><div class="kpi-sub" style="margin-top:11px">Cobertura actual estimada: <strong style="color:var(--text)">0.9 de 4 meses</strong></div></div>
+  <div class="card">
+   <div class="section-title"><div><h2>Fondo Off Season</h2><div class="kpi-sub">Reserva protegida para julio — octubre.</div></div><button class="btn secondary small" data-jump="season">Ver temporada</button></div>
+   <div class="coverage">${pct(offPct)}</div>
+   <div class="kpi-sub">${money(offReserved)} acumulados de ${money(offTarget)}</div>
+   <div class="progress"><span style="width:${Math.min(offPct,100)}%"></span></div>
+   <div class="kpi-sub" style="margin-top:11px">Cobertura estimada: <strong style="color:var(--text)">${coverageMonths.toFixed(1)} de 4 meses</strong></div>
+  </div>
  </div>
- <div class="grid mini-kpis">${kpi('Por cobrar',money(seasonReceivableTotal()),'13 cobros pendientes')}${kpi('Próximos eventos','6','en los próximos 30 días')}${kpi('Comprometido',money(shared.committed),'costos futuros estimados')}${kpi('Temporada contratada',money(shared.seasonContracted),'38 eventos confirmados')}</div>
+
+ <div class="visual-kpi-grid" style="margin-top:14px">
+  ${visualKpi('wallet','Por cobrar',money(outstandingContractedReal()),`${Math.max(0,confirmedSeasonEvents().filter(e=>e.sale>e.collected).length)} eventos con saldo`)}
+  ${visualKpi('calendar','Próximos eventos',upcoming30.length,'en los próximos 30 días')}
+  ${visualKpi('clipboard','Comprometido',money(committed),'costos futuros de la temporada')}
+  ${visualKpi('coins','Temporada contratada',money(seasonContractedReal()),`${confirmedSeasonEvents().length} eventos confirmados`)}
+ </div>
+
  <div class="grid section-grid">
-  <div class="card"><div class="section-title"><h2>Necesita atención</h2><span class="status warn">9 pendientes</span></div><div class="attention-list">
-   <div class="attention-item" data-jump="movements"><span class="dot warn"></span><div class="meta"><strong>3 gastos por clasificar</strong><small>Se pueden completar después sin detener la operación.</small></div><span>›</span></div>
-   <div class="attention-item" data-jump="receivables"><span class="dot warn"></span><div class="meta"><strong>2 cobros próximos</strong><small>Revisar antes de los siguientes eventos.</small></div><span>›</span></div>
-   <div class="attention-item" data-open-event="e3"><span class="dot danger"></span><div class="meta"><strong>1 evento cerca del presupuesto</strong><small>Williams Wedding ha consumido 76% del costo previsto.</small></div><span>›</span></div>
-   <div class="attention-item" data-jump="season"><span class="dot good"></span><div class="meta"><strong>Vista financiera actualizada</strong><small>Revisa rápidamente el comportamiento financiero de la temporada.</small></div><span>›</span></div>
-  </div></div>
-  <div class="card"><div class="section-title"><h2>Próximos eventos</h2><button class="btn secondary small" data-jump="events">Ver todos</button></div><div class="event-list">${next.map(e=>{const d=new Date(e.date+'T12:00:00');const mon=d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase();return `<div class="event-row" data-open-event="${e.id}"><div class="event-date"><b>${mon}</b><span>${d.getDate()}</span></div><div class="meta"><strong>${e.name}</strong><small>${e.place}</small></div><div class="event-right"><strong>${Math.round(e.collected/e.sale*100)}% cobrado</strong><small>${money(e.costReal)} gastado</small></div></div>`}).join('')}</div></div>
+  <div class="card">
+   <div class="section-title"><h2>Necesita atención</h2><span class="status ${attention.some(a=>a.tone!=='good')?'warn':'good'}">${attention.filter(a=>a.tone!=='good').length||0} pendientes</span></div>
+   <div class="attention-list">${attention.map(a=>`<div class="attention-item" ${a.eventId?`data-open-event="${a.eventId}"`:`data-jump="${a.view}"`}><span class="dot ${a.tone}"></span><div class="meta"><strong>${escapeHtml(a.title)}</strong><small>${escapeHtml(a.sub)}</small></div><span>›</span></div>`).join('')}</div>
+  </div>
+
+  <div class="card">
+   <div class="section-title"><h2>Próximos eventos</h2><button class="btn secondary small" data-jump="events">Ver todos</button></div>
+   <div class="event-list">${next.length?next.map(e=>{
+    const d=new Date(e.date+'T12:00:00'),mon=d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase();
+    const collectedPct=e.sale>0?Math.round(e.collected/e.sale*100):0;
+    return `<div class="event-row" data-open-event="${e.id}"><div class="event-date"><b>${mon}</b><span>${d.getDate()}</span></div><div class="meta"><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(e.place)}</small></div><div class="event-right"><strong>${collectedPct}% cobrado</strong><small>${money(e.costReal)} gastado</small></div></div>`;
+   }).join(''):'<div class="placeholder" style="padding:24px 10px">No hay próximos eventos registrados.</div>'}</div>
+  </div>
  </div>
- <div class="card" style="margin-top:14px"><div class="section-title"><div><h2>Saldo de caja proyectado al cierre de cada mes</h2><div class="kpi-sub">Cuánto dinero esperamos tener disponible al finalizar cada mes.</div></div><button class="btn secondary small" data-jump="season">Ver temporada</button></div>${cashChartHTML(months,270)}</div>`;
- $('#calcToggle').onclick=()=>$('#calcBreakdown').classList.toggle('open');bindDynamic();
+
+ <div class="card" style="margin-top:14px">
+  <div class="section-title"><div><h2>Disponible operativo proyectado</h2><div class="kpi-sub">Proyección mensual basada en cuotas esperadas y dinero ya comprometido.</div></div><button class="btn secondary small" data-jump="receivables">Ver cobros</button></div>
+  ${realProjectionChartHTML(projected,270)}
+ </div>`;
+
+ const calc=$('#calcToggle');if(calc)calc.onclick=()=>$('#calcBreakdown').classList.toggle('open');
+ const cashBtn=$('#editOperatingCash');if(cashBtn)cashBtn.onclick=openOperatingCashModal;
+ const heroCash=$('#heroConfigureCash');if(heroCash)heroCash.onclick=openOperatingCashModal;
+ bindDynamic();
 }
 function renderSeason(monthKey=''){
- const selected=months.find(m=>m.key===monthKey)||null; const margin=shared.seasonContracted-shared.seasonCost;
- const filteredEvents=selected?events.filter(e=>e.date.startsWith(selected.key)):events;
- $('#view-season').innerHTML=header('Temporada 2026/2027','Noviembre 2026 — Junio 2027 · Off Season julio — octubre 2027','<button class="btn" id="newEventBtn">+ Evento</button>')+`
- <div class="grid season-summary">${kpi('Eventos confirmados','38')}${kpi('Valor contratado',money(shared.seasonContracted))}${kpi('Cobrado',money(seasonCollectedTotal()))}${kpi('Por cobrar',money(Math.max(0,shared.seasonContracted-seasonCollectedTotal())))}${kpi('Costos proyectados',money(shared.seasonCost))}${kpi('Margen bruto estimado',money(margin))}</div>
- <div class="card"><div class="section-title"><div><h2>Calendario financiero</h2><div class="kpi-sub">Selecciona un mes para filtrar su resumen y los eventos. Sin selección se muestra toda la temporada.</div></div>${selected?'<button class="btn secondary small" id="clearSeasonMonth">Ver toda la temporada</button>':''}</div><div class="month-strip">${months.map(m=>`<button class="month-pill ${selected&&m.key===selected.key?'active':''} ${m.off?'off':''}" data-month="${m.key}"><strong>${m.label}</strong><span>${m.events} evento${m.events===1?'':'s'}</span><span>${m.off?'Off Season':'Temporada'}</span></button>`).join('')}</div>${selected?`<div class="month-detail">${kpi('Eventos',selected.events)}${kpi('Ingresos esperados',money(selected.income))}${kpi('Costos estimados',money(selected.cost))}${kpi('Saldo proyectado',money(selected.balance))}</div>`:'<div class="kpi-sub" style="margin-top:12px">Selecciona un mes si quieres analizarlo de forma individual.</div>'}</div>
- <div class="card table-card" style="margin-top:14px"><div class="table-head"><div><strong>${selected?`Eventos · ${fullMonthLabel(selected.key)}`:'Eventos de toda la temporada'}</strong><div class="kpi-sub">${filteredEvents.length} evento${filteredEvents.length===1?'':'s'} en esta vista</div></div><button class="btn secondary small" data-jump="events">Abrir eventos</button></div><div class="table-wrap"><table><thead><tr><th>Evento</th><th>Fecha</th><th>Planner / contacto</th><th class="num">Venta</th><th class="num">Cobrado</th><th class="num">Costo estimado</th><th class="num">Resultado est.</th><th>Estado</th></tr></thead><tbody>${filteredEvents.map(e=>`<tr data-open-event="${e.id}" style="cursor:pointer"><td><strong>${e.name}</strong>${e.source==='db'?' <span class="status blue" style="margin-left:5px">Real</span>':' <span class="status" style="margin-left:5px">Demo</span>'}<br><small style="color:var(--muted)">${e.place}</small></td><td>${eventCardDate(e.date)}</td><td>${e.planner}</td><td class="num">${money(e.sale)}</td><td class="num">${money(e.collected)}</td><td class="num">${money(e.costEst)}</td><td class="num"><strong>${money(eventMargin(e))}</strong></td><td><span class="status ${statusClass(e.operational)}">${e.operational}</span></td></tr>`).join('')||'<tr><td colspan="8" class="kpi-sub">No hay eventos registrados para este mes.</td></tr>'}</tbody></table></div></div>`;
- $$('.month-pill').forEach(b=>b.onclick=()=>renderSeason(selected&&selected.key===b.dataset.month?'':b.dataset.month)); const clear=$('#clearSeasonMonth');if(clear)clear.onclick=()=>renderSeason(''); $('#newEventBtn').onclick=openEventModal;bindDynamic();
+ const monthModels=seasonMonthModels();const selected=monthModels.find(m=>m.key===monthKey)||null;
+ const cycleEvents=seasonEventsReal();const confirmed=confirmedSeasonEvents();const contracted=seasonContractedReal();const collected=seasonCollectedReal();const projectedCost=seasonProjectedCostReal();const actualCost=seasonActualCostReal();const margin=contracted-projectedCost;
+ const filteredEvents=selected?cycleEvents.filter(e=>e.date.startsWith(selected.key)):cycleEvents;
+ const fundTarget=fundUsd(dbContext.offseasonFundTarget),fundReserved=fundUsd(dbContext.offseasonFundReserved),fundPct=offseasonFundCoveragePct();
+ const monthlyNeed=fundTarget>0?fundTarget/4:0,coverageMonths=monthlyNeed>0?fundReserved/monthlyNeed:0;
+ $('#view-season').innerHTML=header(dbContext.seasonName||'Temporada',formatSeasonRange(),'<button class="btn" id="newEventBtn">+ Evento</button>')+`
+ <div class="visual-kpi-grid">
+  ${visualKpi('calendar','Eventos confirmados',confirmed.length)}
+  ${visualKpi('coins','Valor contratado',money(contracted))}
+  ${visualKpi('bars','Cobrado',money(collected),'','orange')}
+  ${visualKpi('pie','Por cobrar',money(Math.max(0,contracted-collected)))}
+ </div>
+ <div class="grid" style="grid-template-columns:minmax(0,1.5fr) minmax(310px,.65fr);gap:14px;margin-bottom:14px">
+  <div class="card">
+   <div class="section-title"><div><h2>Economía de la temporada</h2><div class="kpi-sub">Datos reales de eventos y presupuestos guardados en Supabase.</div></div></div>
+   <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+    ${kpi('Costos proyectados',money(projectedCost),'presupuesto interno')}
+    ${kpi('Gasto real asignado',money(actualCost),'registrado a la fecha')}
+    ${kpi('Margen bruto estimado',money(margin),contracted>0?pct(margin/contracted*100):'sin ventas confirmadas')}
+   </div>
+  </div>
+  <div class="card">
+   <div class="section-title"><div><h2>Fondo Off Season</h2><div class="kpi-sub">Reserva para julio — octubre.</div></div>${['owner','admin'].includes(dbContext.role)?'<button class="btn secondary small" id="editSeasonFund">Editar fondo</button>':''}</div>
+   <div class="coverage">${pct(fundPct)}</div><div class="kpi-sub">${money(fundReserved)} acumulados de ${money(fundTarget)}</div><div class="progress"><span style="width:${Math.min(fundPct,100)}%"></span></div>
+   <div class="kpi-sub" style="margin-top:11px">Cobertura estimada: <strong style="color:var(--text)">${coverageMonths.toFixed(1)} de 4 meses</strong></div>
+  </div>
+ </div>
+ <div class="card">
+  <div class="section-title"><div><h2>Calendario financiero</h2><div class="kpi-sub">Selecciona un mes para filtrar el resumen y los eventos. Sin selección se muestra todo el ciclo.</div></div>${selected?'<button class="btn secondary small" id="clearSeasonMonth">Ver toda la temporada</button>':''}</div>
+  <div class="month-strip">${monthModels.map(m=>`<button class="month-pill ${selected&&m.key===selected.key?'active':''} ${m.off?'off':''}" data-month="${m.key}"><strong>${m.label}</strong><span>${m.events} evento${m.events===1?'':'s'}</span><span>${m.off?'Off Season':'Temporada'}</span></button>`).join('')}</div>
+  ${selected?`<div class="month-detail">${kpi('Eventos',selected.events)}${kpi('Valor contratado',money(selected.contracted))}${kpi('Cobrado',money(selected.collected))}${kpi('Resultado proyectado',money(selected.balance))}</div>`:'<div class="kpi-sub" style="margin-top:12px">Selecciona un mes si quieres analizarlo de forma individual.</div>'}
+ </div>
+ <div class="card table-card" style="margin-top:14px">
+  <div class="table-head"><div><strong>${selected?`Eventos · ${fullMonthLabel(selected.key)}`:'Eventos de toda la temporada'}</strong><div class="kpi-sub">${filteredEvents.length} evento${filteredEvents.length===1?'':'s'} en esta vista · datos reales</div></div><button class="btn secondary small" data-jump="events">Abrir eventos</button></div>
+  <div class="table-wrap"><table><thead><tr><th>Evento</th><th>Fecha</th><th>Estado</th><th class="num">Venta</th><th class="num">Cobrado</th><th class="num">Costo estimado</th><th class="num">Gasto real</th><th class="num">Resultado est.</th></tr></thead><tbody>${filteredEvents.map(e=>`<tr data-open-event="${e.id}" style="cursor:pointer"><td><strong>${escapeHtml(e.name)}</strong><br><small style="color:var(--muted)">${escapeHtml(e.place)}</small></td><td>${eventCardDate(e.date)}</td><td><span class="status ${statusClass(e.operational)}">${e.operational}</span></td><td class="num">${money(e.sale)}</td><td class="num">${money(e.collected)}</td><td class="num">${money(e.costEst)}</td><td class="num">${money(e.costReal)}</td><td class="num"><strong>${money(eventMargin(e))}</strong></td></tr>`).join('')||'<tr><td colspan="8" class="kpi-sub">No hay eventos reales registrados para este periodo.</td></tr>'}</tbody></table></div>
+ </div>`;
+ $$('.month-pill').forEach(b=>b.onclick=()=>renderSeason(selected&&selected.key===b.dataset.month?'':b.dataset.month));
+ const clear=$('#clearSeasonMonth');if(clear)clear.onclick=()=>renderSeason('');
+ const editFund=$('#editSeasonFund');if(editFund)editFund.onclick=openSeasonFundModal;
+ $('#newEventBtn').onclick=openEventModal;bindDynamic();
 }
 function renderOperation(){
- const totalBudget=operations.reduce((s,o)=>s+operationBudget(o),0), totalActual=operations.reduce((s,o)=>s+operationActual(o),0);
- $('#view-operation').innerHTML=header('Operación','Presupuesto interno para ejecutar días y fines de semana de eventos','<button class="btn" id="newOperationBtn">+ Operativo</button>')+`
- <div class="grid mini-kpis" style="margin-top:0;margin-bottom:14px">${kpi('Operativos abiertos',operations.length)}${kpi('Presupuesto operativo',money(totalBudget))}${kpi('Gasto registrado',money(totalActual))}${kpi('Disponible operativo',money(Math.max(0,totalBudget-totalActual)),'vs presupuesto actual')}</div>
- ${operations.map(op=>{const b=operationBudget(op),a=operationActual(op),variance=a-b;return `<div class="card" style="margin-bottom:14px"><div class="section-title"><div><div class="eyebrow">${eventCardDate(op.start)} — ${eventCardDate(op.end)}</div><h2>${op.name}</h2><div class="kpi-sub">${op.eventIds.length} eventos · ${op.groups.length} bloque${op.groups.length===1?'':'s'} operativo${op.groups.length===1?'':'s'}</div></div><span class="status ${op.status==='Planificado'?'blue':'warn'}">${op.status}</span></div>
- <div class="grid finance-grid">${kpi('Presupuesto',money(b))}${kpi('Real / comprometido',money(a))}${kpi('Disponible',money(Math.max(0,b-a)))}${kpi('Desviación',`${variance>0?'+':''}${money(variance)}`,variance>0?'sobre presupuesto':'dentro del presupuesto')}</div>
- ${op.groups.map(g=>{const gb=g.budgetLines.reduce((s,r)=>s+r[1],0),ga=g.budgetLines.reduce((s,r)=>s+r[2],0);return `<div class="card table-card" style="margin-top:12px"><div class="table-head"><div><strong>${g.name}</strong><div class="kpi-sub">${g.people} personas · ${g.eventIds.map(id=>eventById(id)?.name).filter(Boolean).join(' · ')}</div></div><button class="btn small" data-operation-expense="${op.id}" data-group="${g.id}">+ Registrar gasto</button></div><div class="table-wrap"><table style="min-width:680px"><thead><tr><th>Categoría</th><th class="num">Presupuesto</th><th class="num">Real</th><th class="num">Disponible / desvío</th></tr></thead><tbody>${g.budgetLines.map(r=>{const d=r[1]-r[2];return `<tr><td>${r[0]}</td><td class="num">${money(r[1])}</td><td class="num">${money(r[2])}</td><td class="num"><strong>${d>=0?money(d):'+'+money(Math.abs(d))}</strong></td></tr>`}).join('')}</tbody></table></div><div class="table-head" style="border-top:1px solid var(--border);border-bottom:0"><strong>Total bloque</strong><div><strong>${money(ga)}</strong> <span class="kpi-sub">de ${money(gb)}</span></div></div></div>`}).join('')}</div>`}).join('')}`;
- $('#newOperationBtn').onclick=()=>showToast('El alta de nuevos operativos se conectará a base de datos en la siguiente fase.');
- $$('[data-operation-expense]').forEach(btn=>{btn.onclick=()=>{const op=operationById(btn.dataset.operationExpense),g=op?.groups.find(x=>x.id===btn.dataset.group);openRegister('',{operationId:op?.id||'',groupId:g?.id||'',eventIds:g?.eventIds||[]})}});bindDynamic();
+ const list=dbOperations.filter(op=>op.status!=='cancelled');
+ const open=list.filter(op=>!['closed','cancelled'].includes(op.status));
+ const totalBudget=list.reduce((s,o)=>s+operationBudgetReal(o),0);
+ const totalActual=list.reduce((s,o)=>s+operationActualReal(o),0);
+
+ $('#view-operation').innerHTML=
+  header('Operación','Presupuesto interno para ejecutar días y fines de semana de eventos.','<button class="btn" id="newOperationBtn">+ Operativo</button>')+
+  `<div class="visual-kpi-grid">
+    ${visualKpi('clipboard','Operativos abiertos',open.length)}
+    ${visualKpi('coins','Presupuesto operativo',money(totalBudget))}
+    ${visualKpi('bars','Gasto registrado',money(totalActual),'','orange')}
+    ${visualKpi('pie','Disponible operativo',money(Math.max(0,totalBudget-totalActual)),'vs presupuesto actual')}
+  </div>
+  ${list.length?list.map(op=>{
+   const budget=operationBudgetReal(op),actual=operationActualReal(op),variance=actual-budget;
+   const opEvents=op.eventIds.map(id=>eventById(id)?.name).filter(Boolean);
+   const ungrouped=globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id&&!m.operation_group_id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+   return `<section class="operation-shell">
+    <div class="operation-shell-head">
+      <div class="operation-shell-title">
+        <div class="operation-shell-icon">${uiIcon('calendar')}</div>
+        <div>
+          <div class="eyebrow">${eventCardDate(op.start)} — ${eventCardDate(op.end)}</div>
+          <h2>${escapeHtml(op.name)}</h2>
+          <div class="kpi-sub">${opEvents.length} evento${opEvents.length===1?'':'s'} · ${op.groups.length} bloque${op.groups.length===1?'':'s'} · ${opEvents.map(escapeHtml).join(' · ')}</div>
+        </div>
+      </div>
+      <div class="operation-shell-actions">
+        <span class="status ${statusClass(operationStatusLabel(op.status))}">${operationStatusLabel(op.status)}</span>
+        ${['owner','admin'].includes(dbContext.role)?`<button class="btn secondary small" data-edit-operation="${op.id}">${uiIcon('pencil')} Editar</button>`:''}
+      </div>
+    </div>
+
+    <div class="visual-metric-grid">
+      ${visualMetric('coins','Presupuesto',money(budget))}
+      ${visualMetric('bars','Real',money(actual),'','blue')}
+      ${visualMetric('pie','Disponible',money(Math.max(0,budget-actual)))}
+      ${visualMetric('trend',variance>0?'Sobre presupuesto':'Desviación',money(Math.abs(variance)),variance>0?'exceso real':'por debajo del presupuesto','red')}
+    </div>
+
+    ${ungrouped>0?`<div class="managed-card" style="margin:0 0 12px"><strong>Gasto general del operativo: ${money(ungrouped)}</strong><span>Registrado en este operativo sin bloque específico.</span></div>`:''}
+
+    ${op.groups.map(g=>{
+      const gb=g.budgetLines.reduce((s,r)=>s+r.amountUsd,0),ga=operationGroupActual(g),gd=gb-ga;
+      return `<div class="operation-block">
+        <div class="operation-block-head">
+          <div class="operation-block-title">
+            <div class="operation-location-icon">${uiIcon('pin')}</div>
+            <div>
+              <strong>${escapeHtml(g.name)}</strong>
+              <small>${g.location?escapeHtml(g.location)+' · ':''}${g.people} persona${g.people===1?'':'s'} · ${g.eventIds.map(id=>eventById(id)?.name).filter(Boolean).map(escapeHtml).join(' · ')}</small>
+            </div>
+          </div>
+          <button class="btn small" data-operation-expense="${op.id}" data-group="${g.id}">+ Registrar gasto</button>
+        </div>
+        <div class="table-wrap">
+          <table class="operation-table" style="min-width:820px">
+            <thead><tr><th>Categoría</th><th>Detalle</th><th class="num">Presupuesto</th><th class="num">Real</th><th class="num">Disponible / desvío</th></tr></thead>
+            <tbody>${g.budgetLines.length?g.budgetLines.map(r=>{
+              const real=operationGroupActual(g,r.categoryId),d=r.amountUsd-real;
+              return `<tr>
+                <td><div class="category-cell"><span class="cat-icon">${categoryVisualIcon(r.categoryName)}</span>${escapeHtml(r.categoryName)}</div></td>
+                <td>${escapeHtml(r.description||'—')}</td>
+                <td class="num">${money(r.amountUsd)}</td>
+                <td class="num">${money(real)}</td>
+                <td class="num ${d<0?'negative-number':'positive-number'}">${d>=0?money(d):'+'+money(Math.abs(d))}</td>
+              </tr>`;
+            }).join(''):'<tr><td colspan="5" class="kpi-sub">Sin líneas de presupuesto.</td></tr>'}</tbody>
+          </table>
+        </div>
+        <div class="operation-total-row">
+          <strong>Total bloque</strong>
+          <strong>${money(gb)}</strong>
+          <strong>${money(ga)}</strong>
+          <strong class="${gd<0?'negative-number':'positive-number'}">${gd>=0?money(gd):'+'+money(Math.abs(gd))}</strong>
+        </div>
+      </div>`;
+    }).join('')}
+   </section>`;
+  }).join(''):`<div class="card" style="padding:24px"><strong>Todavía no hay operativos reales.</strong><div class="kpi-sub" style="margin-top:6px">Crea el primero para planificar un día o fin de semana de eventos.</div></div>`}`;
+
+ $('#newOperationBtn').onclick=()=>openOperationModal();
+ $$('[data-edit-operation]').forEach(btn=>btn.onclick=()=>openOperationModal(btn.dataset.editOperation));
+ $$('[data-operation-expense]').forEach(btn=>btn.onclick=()=>{
+  const op=realOperationById(btn.dataset.operationExpense),g=op?.groups.find(x=>x.id===btn.dataset.group);
+  openRegister('',{operationId:op?.id||'',groupId:g?.id||'',eventIds:g?.eventIds||[]});
+ });
+ bindDynamic();
 }
 function renderEvents(){
- $('#view-events').innerHTML=header('Eventos','Economía individual de cada boda y evento','<button class="btn" id="eventAdd">+ Evento</button>')+`<div class="toolbar"><select id="eventViewFilter"><option>Próximos</option><option>Todos</option><option>Cerrados</option></select><select id="eventPlannerFilter"><option>Todos los planners</option><option>Pacific Weddings</option><option>Evergreen Weddings</option></select><input id="eventSearch" placeholder="Buscar evento..." style="min-width:220px"></div><div class="event-cards">${events.map(e=>`<article class="card event-card" data-open-event="${e.id}"><div class="event-card-top"><div><div class="eyebrow">${eventCardDate(e.date)}${e.source==='db'?' · REAL':' · DEMO'}</div><h3>${e.name}</h3><div class="place">${e.place}</div></div><span class="status ${statusClass(e.operational)}" style="align-self:flex-start;width:auto;max-width:max-content;flex:0 0 auto">${e.operational}</span></div><div class="event-card-stats"><div><label>Venta</label><strong>${money(e.sale)}</strong></div><div><label>Cobrado</label><strong>${e.sale>0?pct(e.collected/e.sale*100):'—'}</strong></div><div><label>Margen est.</label><strong>${e.costEst>0&&e.sale>0?pct(eventMargin(e)/e.sale*100):'—'}</strong></div></div></article>`).join('')}</div>`;
- $('#eventAdd').onclick=openEventModal;bindDynamic();
+ const list=realEventsOnly();
+ $('#view-events').innerHTML=header('Eventos','Economía individual de cada boda y evento','<button class="btn" id="eventAdd">+ Evento</button>')+`<div class="toolbar"><select id="eventViewFilter"><option>Próximos</option><option>Todos</option><option>Cerrados</option></select><input id="eventSearch" placeholder="Buscar evento..." style="min-width:220px"></div>${list.length?`<div class="event-cards">${list.map(e=>`<article class="card event-card" data-open-event="${e.id}"><div class="event-card-top"><div><div class="eyebrow">${eventCardDate(e.date)} · REAL</div><h3>${e.name}</h3><div class="place">${e.place}</div></div><span class="status ${statusClass(e.operational)}" style="align-self:flex-start;width:auto;max-width:max-content;flex:0 0 auto">${e.operational}</span></div><div class="event-card-stats"><div><label>Venta</label><strong>${money(e.sale)}</strong></div><div><label>Cobrado</label><strong>${e.sale>0?pct(e.collected/e.sale*100):'—'}</strong></div><div><label>Margen est.</label><strong>${e.costEst>0&&e.sale>0?pct(eventMargin(e)/e.sale*100):'—'}</strong></div></div></article>`).join('')}</div>`:`<div class="card" style="padding:24px"><strong>No hay eventos reales todavía.</strong><div class="kpi-sub" style="margin-top:6px">Crea el primer evento con el botón + Evento.</div></div>`}`;
+ $('#eventAdd').onclick=openEventModal;
+ const search=$('#eventSearch');if(search)search.oninput=()=>{const q=search.value.trim().toLowerCase();$$('#view-events .event-card').forEach(card=>card.style.display=card.textContent.toLowerCase().includes(q)?'':'none')};
+ bindDynamic();
 }
-function openEvent(id,tab='summary'){selectedEvent=id;eventDetailTab=tab;navTo('eventDetail')}
+async function openEvent(id,tab='summary'){
+ selectedEvent=id;eventDetailTab=tab;
+ const e=eventById(id);
+ if(e?.source==='db'){
+  try{
+   await loadRealEventFinancials(id);
+  }catch(err){
+   console.error(err);showToast(`No se pudo cargar el detalle: ${err.message}`);
+  }
+ }
+ navTo('eventDetail');
+}
 function eventTabButton(key,label){return `<button class="tab ${eventDetailTab===key?'active':''}" data-event-tab="${key}">${label}</button>`}
 function renderEventSummaryTab(e){
- const budgetRows=eventBudgets[e.id]||[]; const over=e.costReal-e.costEst;
- return `<div class="grid budget-grid"><div class="card table-card"><div class="table-head"><div><strong>Presupuesto vs. real</strong><div class="kpi-sub">Aprender del evento para cotizaciones futuras</div></div></div><div class="table-wrap"><table style="min-width:640px"><thead><tr><th>Categoría</th><th class="num">Estimado</th><th class="num">Real</th><th class="num">Diferencia</th></tr></thead><tbody>${budgetRows.map(r=>{const d=r[2]-r[1];return `<tr><td>${r[0]}</td><td class="num">${money(r[1])}</td><td class="num">${money(r[2])}</td><td class="num variance ${d>0?'plus':'minus'}">${d>0?'+':''}${money(d)}</td></tr>`}).join('')}</tbody></table></div></div><div class="grid" style="gap:14px"><div class="card"><div class="kpi-label">Estado financiero del evento</div><div class="kpi-value" style="font-size:1.1rem">${over>0?'Sobre presupuesto':'Dentro de presupuesto'}</div><div class="kpi-sub">${over>0?`${money(over)} por encima del costo previsto.`:`Aún quedan ${money(Math.max(0,e.costEst-e.costReal))} del presupuesto estimado.`}</div></div><div class="card"><div class="kpi-label">Calidad del registro</div><div class="kpi-value" style="font-size:1.1rem">${e.quality}</div><div class="kpi-sub">${e.quality==='Alta'?'Información suficiente para un cierre confiable.':'Hay gastos que todavía pueden requerir clasificación.'}</div></div><div class="card"><div class="kpi-label">Resultado actualizado estimado</div><div class="kpi-value">${money(eventActualMargin(e))}</div><div class="kpi-sub">Venta aprobada menos gastos registrados.</div></div></div></div>`
+ const budgetRows=eventBudgets[e.id]||[];
+ const over=e.costReal-e.costEst;
+ const hasBudget=e.costEst>0;
+ return `<div class="grid budget-grid"><div class="card table-card"><div class="table-head"><div><strong>Presupuesto vs. real</strong><div class="kpi-sub">${e.source==='db'?'Datos reales guardados en Supabase':'Datos demostrativos'}</div></div></div><div class="table-wrap"><table style="min-width:640px"><thead><tr><th>Categoría</th><th class="num">Estimado</th><th class="num">Real asignado</th><th class="num">Diferencia</th></tr></thead><tbody>${budgetRows.length?budgetRows.map(r=>{const d=r[2]-r[1];return `<tr><td>${r[0]}</td><td class="num">${money(r[1])}</td><td class="num">${money(r[2])}</td><td class="num variance ${d>0?'plus':'minus'}">${d>0?'+':''}${money(d)}</td></tr>`}).join(''):'<tr><td colspan="4" class="kpi-sub">Todavía no hay presupuesto interno ni gastos asignados.</td></tr>'}</tbody></table></div></div><div class="grid" style="gap:14px"><div class="card"><div class="kpi-label">Estado financiero del evento</div><div class="kpi-value" style="font-size:1.1rem">${!hasBudget?'Sin presupuesto interno':over>0?'Sobre presupuesto':'Dentro de presupuesto'}</div><div class="kpi-sub">${!hasBudget?'Agrega el costo previsto para poder medir desviaciones.':over>0?`${money(over)} por encima del costo previsto.`:`Quedan ${money(Math.max(0,e.costEst-e.costReal))} del presupuesto estimado.`}</div></div><div class="card"><div class="kpi-label">Gasto no presupuestado</div><div class="kpi-value" style="font-size:1.1rem">${money(unbudgetedExpenseForEvent(e.id))}</div><div class="kpi-sub">Costos reales sin respaldo en una categoría presupuestada.</div></div><div class="card"><div class="kpi-label">Resultado actualizado</div><div class="kpi-value">${money(eventActualMargin(e))}</div><div class="kpi-sub">Venta aprobada menos gastos reales asignados.</div></div></div></div>`
 }
 function renderEventCobrosTab(e){
  const items=receivables.filter(r=>r.eventId===e.id);
  const pending=items.filter(r=>r.status!=='Pagado').reduce((s,r)=>s+r.amount,0);
- return `<div class="grid finance-grid">${kpi('Cobrado',money(e.collected),'registrado a la fecha')}${kpi('Pendiente',money(Math.max(0,e.sale-e.collected)), 'según venta aprobada')}${kpi('Cuotas pendientes',items.filter(r=>r.status!=='Pagado').length)}${kpi('Próximo cobro', items.find(r=>r.status!=='Pagado')?dateLabel(items.find(r=>r.status!=='Pagado').due):'—', pending?money(pending):'sin saldos')}</div><div class="card table-card"><div class="table-head"><div><strong>Plan de cobros del evento</strong><div class="kpi-sub">Flexible según wedding planner o cliente.</div></div><div style="display:flex;gap:8px"><button class="btn secondary small" id="addExpectedReceivable">+ Cuota esperada</button><button class="btn small" id="addCollectedReceivable">Registrar cobro</button></div></div><div class="table-wrap"><table style="min-width:640px"><thead><tr><th>Concepto</th><th>Fecha esperada</th><th>Estado</th><th class="num">Monto</th><th></th></tr></thead><tbody>${items.map(r=>`<tr><td>${r.concept}</td><td>${dateLabel(r.due)}</td><td><span class="status ${r.status==='Pagado'?'good':'warn'}">${r.status}</span></td><td class="num">${money(r.amount)}</td><td>${r.status!=='Pagado'?`<button class="btn secondary small" data-register-receivable="${r.id}">Registrar</button>`:'<span class="kpi-sub">Aplicado</span>'}</td></tr>`).join('')||'<tr><td colspan="5" class="kpi-sub">No hay cuotas registradas para este evento.</td></tr>'}</tbody></table></div></div>`
+ return `<div class="grid finance-grid">${kpi('Cobrado',money(e.collected),'registrado a la fecha')}${kpi('Pendiente',money(Math.max(0,e.sale-e.collected)), 'según venta aprobada')}${kpi('Cuotas pendientes',items.filter(r=>r.status!=='Pagado').length)}${kpi('Próximo cobro', items.find(r=>r.status!=='Pagado')?dateLabel(items.find(r=>r.status!=='Pagado').due):'—', pending?money(pending):'sin saldos')}</div><div class="card table-card"><div class="table-head"><div><strong>Plan de cobros del evento</strong><div class="kpi-sub">Flexible según wedding planner o cliente.</div></div><div style="display:flex;gap:8px"><button class="btn secondary small" id="addExpectedReceivable">+ Cuota esperada</button><button class="btn small" id="addCollectedReceivable">Registrar cobro</button></div></div><div class="table-wrap"><table style="min-width:640px"><thead><tr><th>Concepto</th><th>Fecha esperada</th><th>Estado</th><th class="num">Monto</th><th></th></tr></thead><tbody>${items.map(r=>`<tr><td>${r.concept}</td><td>${dateLabel(r.due)}</td><td><span class="status ${r.status==='Pagado'?'good':'warn'}">${r.status}</span></td><td class="num">${money(r.amount)}</td><td>${r.status!=='Pagado'?`<div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap"><button class="btn secondary small" data-register-receivable="${r.id}">Registrar</button>${r.source==='db'&&dbContext.role==='owner'?`<button class="btn secondary small" data-edit-receivable="${r.id}">Editar</button>${Number(r.paidOriginal||0)===0?`<button class="btn secondary small" data-delete-receivable="${r.id}">Eliminar</button>`:''}`:''}</div>`:'<span class="kpi-sub">Aplicado</span>'}</td></tr>`).join('')||'<tr><td colspan="5" class="kpi-sub">No hay cuotas registradas para este evento.</td></tr>'}</tbody></table></div></div>`
 }
 function renderEventGastosTab(e){
  const items=movements.filter(m=>m.kind!=='income' && allocatedToEvent(m,e.id)>0);
  const direct=items.reduce((sum,m)=>sum+allocatedToEvent(m,e.id),0);
- return `<div class="grid finance-grid">${kpi('Gastos asignados',money(direct))}${kpi('Costo estimado',money(e.costEst))}${kpi('Diferencia',money(e.costEst-direct), direct>e.costEst?'sobre el estimado':'vs presupuesto')}${kpi('Movimientos asociados',items.length)}</div><div class="card table-card"><div class="table-head"><div><strong>Gastos del evento</strong><div class="kpi-sub">Incluye la porción asignada de gastos compartidos.</div></div><button class="btn" id="tabAddExpense">+ Gasto</button></div><div class="table-wrap"><table style="min-width:740px"><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Tipo</th><th>Medio</th><th class="num">Asignado al evento</th></tr></thead><tbody>${items.map(m=>{const a=allocationsForMovement(m);return `<tr><td>${shortDate(m.date)}</td><td>${m.category}</td><td>${m.description||'—'}</td><td>${a.length>1?'<span class="status blue">Compartido</span>':'<span class="status good">Directo</span>'}</td><td>${m.method}</td><td class="num"><strong>${money(allocatedToEvent(m,e.id))}</strong></td></tr>`}).join('')||'<tr><td colspan="6" class="kpi-sub">Todavía no hay gastos asociados a este evento.</td></tr>'}</tbody></table></div></div>`
+ return `<div class="grid finance-grid">${kpi('Gastos asignados',money(direct))}${kpi('Costo estimado',money(e.costEst))}${kpi('Diferencia',money(e.costEst-direct), direct>e.costEst?'sobre el estimado':'vs presupuesto')}${kpi('Movimientos asociados',items.length)}</div><div class="card table-card"><div class="table-head"><div><strong>Gastos del evento</strong><div class="kpi-sub">Incluye la porción asignada de gastos compartidos.</div></div><button class="btn" id="tabAddExpense">+ Gasto</button></div><div class="table-wrap"><table style="min-width:820px"><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Tipo</th><th>Medio</th><th class="num">Asignado al evento</th><th></th></tr></thead><tbody>${items.map(m=>{const a=allocationsForMovement(m);return `<tr><td>${shortDate(m.date)}</td><td>${m.category}</td><td>${m.description||'—'}</td><td>${a.length>1?'<span class="status blue">Compartido</span>':'<span class="status good">Directo</span>'}</td><td>${m.method}</td><td class="num"><strong>${money(allocatedToEvent(m,e.id))}</strong></td><td>${m.source==='db'?`<button class="btn secondary small" data-edit-expense="${m.id}">Editar</button>`:''}</td></tr>`}).join('')||'<tr><td colspan="7" class="kpi-sub">Todavía no hay gastos asociados a este evento.</td></tr>'}</tbody></table></div></div>`
 }
 function renderEventBudgetTab(e){
  const budgetRows=eventBudgets[e.id]||[];
- const totalEst=budgetRows.reduce((s,r)=>s+r[1],0); const totalReal=budgetRows.reduce((s,r)=>s+r[2],0);
+ const totalEst=e.costEst||0,totalReal=e.costReal||0;
+ if(e.source==='db'){
+  const detail=dbBudgetLinesByEvent[e.id]||[];
+  return `<div class="grid finance-grid">${kpi('Presupuesto interno',money(totalEst))}${kpi('Gasto real asignado',money(totalReal))}${kpi('Disponible',money(Math.max(0,totalEst-totalReal)))}${kpi(totalReal>totalEst?'Sobre presupuesto':'Disponible vs presupuesto',money(Math.abs(totalReal-totalEst)),totalReal>totalEst?'exceso de costo':'presupuesto todavía no consumido')}</div><div class="card table-card"><div class="table-head"><div><strong>Presupuesto interno del evento</strong><div class="kpi-sub">No tiene que ser idéntico a lo que ve el cliente en la cotización.</div></div><button class="btn small" id="addBudgetLine">+ Línea</button></div><div class="table-wrap"><table style="min-width:760px"><thead><tr><th>Categoría</th><th>Detalle interno</th><th>Cantidad</th><th class="num">Costo unit.</th><th class="num">Presupuesto</th></tr></thead><tbody>${detail.length?detail.map(r=>`<tr><td>${escapeHtml(r.categoryName||'Sin categoría')}</td><td>${escapeHtml(r.description)}</td><td>${r.quantity!=null?`${Number(r.quantity)} ${escapeHtml(r.unit||'')}`:'—'}</td><td class="num">${r.estimatedUnitCost!=null?fmtOriginal(r.estimatedUnitCost,r.currency):'—'}</td><td class="num"><strong>${fmtOriginal(r.originalAmount,r.currency)}</strong></td></tr>`).join(''):'<tr><td colspan="5" class="kpi-sub">Todavía no hay líneas de presupuesto interno.</td></tr>'}</tbody></table></div></div>`
+ }
  return `<div class="grid finance-grid">${kpi('Presupuesto total',money(totalEst))}${kpi('Real / comprometido',money(totalReal))}${kpi('Disponible',money(Math.max(0,totalEst-totalReal)))}${kpi('Desviación',money(totalReal-totalEst), totalReal>totalEst?'sobre presupuesto':'debajo del presupuesto')}</div><div class="card table-card"><div class="table-head"><div><strong>Presupuesto detallado del evento</strong><div class="kpi-sub">Comparación por categoría</div></div></div><div class="table-wrap"><table style="min-width:640px"><thead><tr><th>Categoría</th><th class="num">Estimado</th><th class="num">Real</th><th class="num">Diferencia</th></tr></thead><tbody>${budgetRows.map(r=>{const d=r[2]-r[1];return `<tr><td>${r[0]}</td><td class="num">${money(r[1])}</td><td class="num">${money(r[2])}</td><td class="num variance ${d>0?'plus':'minus'}">${d>0?'+':''}${money(d)}</td></tr>`}).join('')}</tbody></table></div></div>`
 }
 function renderEventFilesTab(e){
@@ -387,42 +1319,186 @@ function renderEventDetail(){
  const contentMap={summary:renderEventSummaryTab,cobros:renderEventCobrosTab,gastos:renderEventGastosTab,presupuesto:renderEventBudgetTab,archivos:renderEventFilesTab};
  $('#view-eventDetail').innerHTML=`<div class="event-detail-top"><button id="backEvents">←</button><span class="kpi-sub">Eventos / ${e.name}</span></div>`+header(e.name,`${dateLabel(e.date)} · ${e.place}`,'<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="addReceivableFromHeader">+ Cobro</button><button class="btn" id="addEventExpense">+ Gasto</button></div>')+`
  <div class="grid state-grid">${['Comercial|'+e.commercial,'Operativo|'+e.operational,'Financiero|'+e.financial].map(x=>{const [a,b]=x.split('|');return `<div class="card state-card"><span>Estado ${a.toLowerCase()}</span><strong class="status ${statusClass(b)}">${b}</strong></div>`}).join('')}</div>
- <div class="grid finance-grid">${kpi('Venta aprobada',money(e.sale),`Cotización aprobada`)}${kpi('Cobrado',money(e.collected),`${pct(e.collected/e.sale*100)} del total`)}${kpi('Costo estimado',money(e.costEst),`Gasto registrado ${money(e.costReal)}`)}${kpi('Resultado proyectado',money(eventMargin(e)),`${pct(eventMargin(e)/e.sale*100)} margen`)}</div>
+ <div class="grid finance-grid">${kpi('Venta aprobada',money(e.sale),`Cotización aprobada`)}${kpi('Cobrado',money(e.collected),e.sale>0?`${pct(e.collected/e.sale*100)} del total`:'sin venta registrada')}${kpi('Costo estimado',money(e.costEst),`Gasto registrado ${money(e.costReal)}`)}${kpi('Resultado proyectado',money(eventMargin(e)),e.sale>0?`${pct(eventMargin(e)/e.sale*100)} margen`:'sin venta registrada')}</div>
  <div class="tabs">${eventTabButton('summary','Resumen')}${eventTabButton('cobros','Cobros')}${eventTabButton('gastos','Gastos')}${eventTabButton('presupuesto','Presupuesto')}${eventTabButton('archivos','Archivos')}</div>
  ${contentMap[eventDetailTab](e)}`;
  $('#backEvents').onclick=()=>navTo('events');
  $('#addEventExpense').onclick=()=>openRegister(e.id);
- $('#addReceivableFromHeader').onclick=()=>openReceivableModal(e.id);
+ $('#addReceivableFromHeader').onclick=()=>openReceivableModal(e.id,'','payment');
  $$('.tab[data-event-tab]').forEach(btn=>btn.onclick=()=>{eventDetailTab=btn.dataset.eventTab;renderEventDetail()});
- const addCollected=$('#addCollectedReceivable'); if(addCollected) addCollected.onclick=()=>openReceivableModal(e.id);
+ const addCollected=$('#addCollectedReceivable'); if(addCollected) addCollected.onclick=()=>openReceivableModal(e.id,'','payment');
  const addExpected=$('#addExpectedReceivable'); if(addExpected) addExpected.onclick=()=>createExpectedReceivable(e.id);
- const tabAddExpense=$('#tabAddExpense'); if(tabAddExpense) tabAddExpense.onclick=()=>openRegister(e.id);
- $$('#view-eventDetail [data-register-receivable]').forEach(btn=>btn.onclick=()=>openReceivableModal(e.id, btn.dataset.registerReceivable));
+ const tabAddExpense=$('#tabAddExpense'); if(tabAddExpense) tabAddExpense.onclick=()=>openRegister(e.id); const addBudgetLine=$('#addBudgetLine'); if(addBudgetLine) addBudgetLine.onclick=()=>openBudgetLineModal(e.id); $$('[data-edit-expense]').forEach(btn=>btn.onclick=()=>openExpenseEdit(btn.dataset.editExpense));
+ $$('#view-eventDetail [data-register-receivable]').forEach(btn=>btn.onclick=()=>openReceivableModal(e.id,btn.dataset.registerReceivable,'payment'));
+ $$('#view-eventDetail [data-edit-receivable]').forEach(btn=>btn.onclick=()=>openReceivableModal(e.id,btn.dataset.editReceivable,'editExpected'));
+ $$('#view-eventDetail [data-delete-receivable]').forEach(btn=>btn.onclick=()=>deleteExpectedReceivable(btn.dataset.deleteReceivable));
  const addFileBtn=$('#addFileBtn'); if(addFileBtn) addFileBtn.onclick=()=>showToast('La gestión de archivos se profundiza en la siguiente fase.');
  const eventNotesBtn=$('#eventNotesBtn'); if(eventNotesBtn) eventNotesBtn.onclick=()=>showToast('Las notas del evento se habilitarán en la siguiente iteración.');
 }
 function renderMovements(){
  const filter=$('#movementTypeFilter')?.value||'Todos';
- const dataset=[...movements].reverse().filter(m=>filter==='Todos' || (filter==='Pendientes' ? m.status!=='Completo' : filter==='Gastos' ? m.kind!=='income' : m.kind==='income'));
- const pending=movements.filter(m=>m.status!=='Completo').length;
- const totalMonth=movements.filter(m=>m.kind!=='income').reduce((s,m)=>s+usd(m.amount,m.currency),0);
- $('#view-movements').innerHTML=header('Movimientos','Registro central de ingresos y gastos','<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="movAddIncome">+ Cobro</button><button class="btn" id="movAdd">+ Gasto</button></div>')+`<div class="grid mini-kpis" style="margin-top:0;margin-bottom:14px">${kpi('Movimientos registrados',movements.length)}${kpi('Pendientes',pending,'pueden revisarse después')}${kpi('Gastos marzo',money(totalMonth))}${kpi('Ingresos registrados',money(movements.filter(m=>m.kind==='income').reduce((s,m)=>s+usd(m.amount,m.currency),0)),'cobros registrados')}</div><div class="toolbar"><select id="movementTypeFilter"><option ${filter==='Todos'?'selected':''}>Todos</option><option ${filter==='Pendientes'?'selected':''}>Pendientes</option><option ${filter==='Gastos'?'selected':''}>Gastos</option><option ${filter==='Ingresos'?'selected':''}>Ingresos</option></select><select><option>Marzo 2027</option></select><input placeholder="Buscar movimiento..." style="min-width:220px"></div><div class="card table-card"><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Evento</th><th>Medio</th><th>Estado</th><th class="num">Monto</th></tr></thead><tbody>${dataset.map(m=>`<tr ${allocationsForMovement(m).length===1?`data-open-event="${allocationsForMovement(m)[0].eventId}" style="cursor:pointer"`:''}><td>${shortDate(m.date)}</td><td>${m.kind==='income'?'Cobro':'Gasto'}</td><td>${m.category}</td><td>${m.description||'—'}</td><td>${movementEventLabel(m)}</td><td>${m.method}</td><td><span class="status ${m.status==='Completo'?'good':'warn'}">${m.status}</span></td><td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong></td></tr>`).join('')}</tbody></table></div></div>`;
+ const query=($('#movementSearch')?.value||'').trim().toLowerCase();
+ const real=[...movements].filter(m=>m.source==='db');
+ const dataset=real
+  .filter(m=>filter==='Todos'||(filter==='Gastos'?m.kind==='expense':filter==='Ingresos'?m.kind==='income':true))
+  .filter(m=>!query||`${m.category} ${m.description||''} ${m.counterparty||''} ${movementEventLabel(m)} ${m.method||''}`.toLowerCase().includes(query))
+  .sort((a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+
+ const expenseTotal=real.filter(m=>m.kind==='expense').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ const incomeTotal=real.filter(m=>m.kind==='income').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ const unassigned=real.filter(m=>m.kind==='expense').reduce((sum,m)=>{
+  const allocated=allocationsForMovement(m).reduce((s,a)=>s+a.amountUsd,0);
+  return sum+Math.max(0,valueToUsd(m.amount,m.currency)-allocated);
+ },0);
+
+ $('#view-movements').innerHTML=
+  header('Movimientos','Una sola fuente de verdad para cada entrada y salida real','<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="movAddIncome">+ Cobro</button><button class="btn" id="movAdd">+ Gasto</button></div>')+
+  `<div class="visual-kpi-grid">
+    ${visualKpi('arrows','Movimientos reales',real.length)}
+    ${visualKpi('coins','Gastos registrados',money(expenseTotal))}
+    ${visualKpi('bars','Ingresos registrados',money(incomeTotal),'','orange')}
+    ${visualKpi('wallet','Gasto sin asignar',money(unassigned),'todavía no atribuido a eventos','red')}
+  </div>
+
+  <div class="visual-toolbar">
+    <select id="movementTypeFilter">
+      <option ${filter==='Todos'?'selected':''}>Todos</option>
+      <option ${filter==='Gastos'?'selected':''}>Gastos</option>
+      <option ${filter==='Ingresos'?'selected':''}>Ingresos</option>
+    </select>
+    <div class="visual-search"><input id="movementSearch" value="${escapeHtml($('#movementSearch')?.value||'')}" placeholder="Buscar movimiento..."></div>
+  </div>
+
+  <div class="card table-card movements-visual-card">
+    <div class="table-head">
+      <div><strong style="font-size:.95rem">Registro real</strong><div class="kpi-sub">Los gastos compartidos aparecen una sola vez; la columna Evento muestra su distribución.</div></div>
+    </div>
+    <div class="table-wrap">
+      <table class="movements-visual-table" style="min-width:1020px">
+        <thead><tr><th>Fecha</th><th>Tipo</th><th>Categoría</th><th>Descripción</th><th>Evento / asignación</th><th>Medio</th><th>Estado</th><th class="num">Monto real</th><th>Acción</th></tr></thead>
+        <tbody>${dataset.length?dataset.map(m=>`<tr>
+          <td>${shortDate(m.date)}</td>
+          <td><span class="movement-type ${m.kind==='income'?'income':'expense'}">${m.kind==='income'?'Cobro':'Gasto'}</span></td>
+          <td>${escapeHtml(m.category)}</td>
+          <td><strong>${escapeHtml(m.description||'—')}</strong>${m.counterparty?`<br><small style="color:var(--muted)">${escapeHtml(m.counterparty)}</small>`:''}</td>
+          <td>${escapeHtml(movementEventLabel(m))}</td>
+          <td>${escapeHtml(m.method||'—')}</td>
+          <td><span class="status good complete-dot">Completo</span></td>
+          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong></td>
+          <td>${m.kind==='expense'&&dbContext.role==='owner'?`<button class="btn secondary small movement-edit" data-edit-global-expense="${m.id}">${uiIcon('pencil')} Editar</button>`:'<span class="kpi-sub">—</span>'}</td>
+        </tr>`).join(''):'<tr><td colspan="9" class="kpi-sub">Todavía no hay movimientos reales.</td></tr>'}</tbody>
+      </table>
+    </div>
+  </div>`;
+
  $('#movAdd').onclick=()=>openRegister();
  $('#movAddIncome').onclick=()=>openReceivableModal();
  $('#movementTypeFilter').onchange=()=>renderMovements();
- bindDynamic();
+ $('#movementSearch').oninput=()=>renderMovements();
+ $$('[data-edit-global-expense]').forEach(btn=>btn.onclick=()=>openExpenseEdit(btn.dataset.editGlobalExpense));
+}
+function localTodayISO(){
+ const d=new Date(),pad=n=>String(n).padStart(2,'0');
+ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+}
+function addIsoDays(iso,days){
+ const d=new Date(`${iso}T12:00:00`);
+ d.setDate(d.getDate()+days);
+ return d.toISOString().slice(0,10);
+}
+function receivableRemainingOriginal(r){
+ return Math.max(0,Number(r.originalAmount||0)-Number(r.paidOriginal||0));
+}
+function receivableRemainingUsd(r){
+ return valueToUsd(receivableRemainingOriginal(r),r.dbCurrency||'USD');
+}
+function receivablePaidUsd(r){
+ return valueToUsd(Number(r.paidOriginal||0),r.dbCurrency||'USD');
 }
 function renderReceivables(){
- const rows=receivables.filter(r=>r.status!=='Pagado');
- const total=rows.reduce((s,r)=>s+r.amount,0);
- $('#view-receivables').innerHTML=header('Cobros','Qué falta recibir y de qué evento','<button class="btn" id="addGeneralReceivable">+ Registrar cobro</button>')+`<div class="grid mini-kpis" style="margin-top:0;margin-bottom:14px">${kpi('Pendiente total',money(total))}${kpi('Próximos 30 días',money(total-3900))}${kpi('Vencido',money(0),'demo sin atrasos')}${kpi('Eventos con saldo',new Set(rows.map(r=>r.eventId)).size)}</div><div class="card table-card"><div class="table-head"><div><strong>Cobros pendientes</strong><div class="kpi-sub">Aquí Laura o el equipo puede registrar ingresos recibidos.</div></div></div><div class="table-wrap"><table><thead><tr><th>Evento</th><th>Concepto</th><th>Fecha esperada</th><th>Estado</th><th class="num">Monto</th><th></th></tr></thead><tbody>${rows.map(r=>`<tr><td data-open-event="${r.eventId}" style="cursor:pointer"><strong>${eventById(r.eventId)?.name}</strong></td><td>${r.concept}</td><td>${dateLabel(r.due)}</td><td><span class="status warn">${r.status}</span></td><td class="num"><strong>${money(r.amount)}</strong></td><td><button class="btn secondary small" data-register-receivable="${r.id}">Registrar</button></td></tr>`).join('')}</tbody></table></div></div>`;
- $('#addGeneralReceivable').onclick=()=>openReceivableModal();
- $$('#view-receivables [data-register-receivable]').forEach(btn=>btn.onclick=()=>{const r=receivables.find(x=>x.id===btn.dataset.registerReceivable);openReceivableModal(r?.eventId||'', btn.dataset.registerReceivable)});
+ const today=localTodayISO(),next30=addIsoDays(today,30);
+ const filter=$('#receivableStatusFilter')?.value||'Pendientes';
+ const query=($('#receivableSearch')?.value||'').trim().toLowerCase();
+ const real=receivables.filter(r=>r.source==='db');
+
+ const openRows=real.filter(r=>!['Pagado','Cancelado'].includes(r.status));
+ const pendingTotal=openRows.reduce((s,r)=>s+receivableRemainingUsd(r),0);
+ const next30Total=openRows.filter(r=>r.due>=today&&r.due<=next30).reduce((s,r)=>s+receivableRemainingUsd(r),0);
+ const overdueTotal=openRows.filter(r=>r.due<today).reduce((s,r)=>s+receivableRemainingUsd(r),0);
+ const eventsWithBalance=new Set(openRows.filter(r=>receivableRemainingOriginal(r)>0).map(r=>r.eventId)).size;
+
+ let rows=real.filter(r=>{
+  if(filter==='Pendientes')return !['Pagado','Cancelado'].includes(r.status);
+  if(filter==='Vencidos')return !['Pagado','Cancelado'].includes(r.status)&&r.due<today;
+  if(filter==='Próximos 30 días')return !['Pagado','Cancelado'].includes(r.status)&&r.due>=today&&r.due<=next30;
+  if(filter==='Pagados')return r.status==='Pagado';
+  return true;
+ }).filter(r=>{
+  if(!query)return true;
+  const e=eventById(r.eventId);
+  return `${e?.name||''} ${r.concept||''} ${r.status||''}`.toLowerCase().includes(query);
+ }).sort((a,b)=>(a.due||'').localeCompare(b.due||''));
+
+ $('#view-receivables').innerHTML=
+  header('Cobros','Qué falta recibir, qué ya ingresó y de qué evento','<div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="addExpectedGlobal">+ Cuota esperada</button><button class="btn" id="addGeneralReceivable">+ Registrar cobro</button></div>')+
+  `<div class="grid mini-kpis" style="margin-top:0;margin-bottom:14px">
+    ${kpi('Pendiente total',money(pendingTotal))}
+    ${kpi('Próximos 30 días',money(next30Total))}
+    ${kpi('Vencido',money(overdueTotal))}
+    ${kpi('Eventos con saldo',eventsWithBalance)}
+  </div>
+  <div class="toolbar">
+    <select id="receivableStatusFilter">
+      <option ${filter==='Pendientes'?'selected':''}>Pendientes</option>
+      <option ${filter==='Vencidos'?'selected':''}>Vencidos</option>
+      <option ${filter==='Próximos 30 días'?'selected':''}>Próximos 30 días</option>
+      <option ${filter==='Pagados'?'selected':''}>Pagados</option>
+      <option ${filter==='Todos'?'selected':''}>Todos</option>
+    </select>
+    <input id="receivableSearch" value="${escapeHtml($('#receivableSearch')?.value||'')}" placeholder="Buscar evento o cobro..." style="min-width:240px">
+  </div>
+  <div class="card table-card">
+    <div class="table-head">
+      <div><strong>Plan de cobros real</strong><div class="kpi-sub">Cuotas y pagos almacenados en Supabase.</div></div>
+    </div>
+    <div class="table-wrap"><table style="min-width:940px">
+      <thead><tr><th>Evento</th><th>Concepto</th><th>Fecha esperada</th><th>Estado</th><th class="num">Esperado</th><th class="num">Cobrado</th><th class="num">Saldo</th><th></th></tr></thead>
+      <tbody>${rows.length?rows.map(r=>{
+       const ev=eventById(r.eventId),remaining=receivableRemainingOriginal(r),paid=Number(r.paidOriginal||0);
+       const statusClassName=r.status==='Pagado'?'good':r.due<today?'bad':r.status==='Parcial'?'warn':'blue';
+       return `<tr>
+        <td data-open-event="${r.eventId}" style="cursor:pointer"><strong>${escapeHtml(ev?.name||'Evento')}</strong></td>
+        <td>${escapeHtml(r.concept||'—')}</td>
+        <td>${dateLabel(r.due)}</td>
+        <td><span class="status ${statusClassName}">${r.status}</span></td>
+        <td class="num"><strong>${fmtOriginal(r.originalAmount,r.dbCurrency)}</strong></td>
+        <td class="num">${fmtOriginal(paid,r.dbCurrency)}</td>
+        <td class="num"><strong>${fmtOriginal(remaining,r.dbCurrency)}</strong></td>
+        <td>${!['Pagado','Cancelado'].includes(r.status)?`<div style="display:flex;gap:6px;justify-content:flex-end;flex-wrap:wrap"><button class="btn secondary small" data-register-receivable="${r.id}">Registrar</button>${dbContext.role==='owner'?`<button class="btn secondary small" data-edit-receivable="${r.id}">Editar</button>${Number(r.paidOriginal||0)===0?`<button class="btn secondary small" data-delete-receivable="${r.id}">Eliminar</button>`:''}`:''}</div>`:'<span class="kpi-sub">Aplicado</span>'}</td>
+       </tr>`;
+      }).join(''):'<tr><td colspan="8" class="kpi-sub">No hay cobros en este filtro.</td></tr>'}</tbody>
+    </table></div>
+  </div>`;
+
+ $('#addGeneralReceivable').onclick=()=>openReceivableModal('','','payment');
+ $('#addExpectedGlobal').onclick=()=>openReceivableModal('','','newExpected');
+ $('#receivableStatusFilter').onchange=()=>renderReceivables();
+ $('#receivableSearch').oninput=()=>renderReceivables();
+ $$('#view-receivables [data-register-receivable]').forEach(btn=>btn.onclick=()=>{
+  const r=receivables.find(x=>x.id===btn.dataset.registerReceivable);
+  openReceivableModal(r?.eventId||'',btn.dataset.registerReceivable,'payment');
+ });
+ $$('#view-receivables [data-edit-receivable]').forEach(btn=>btn.onclick=()=>{
+  const r=receivables.find(x=>x.id===btn.dataset.editReceivable);
+  openReceivableModal(r?.eventId||'',btn.dataset.editReceivable,'editExpected');
+ });
+ $$('#view-receivables [data-delete-receivable]').forEach(btn=>btn.onclick=()=>deleteExpectedReceivable(btn.dataset.deleteReceivable));
  bindDynamic();
 }
 function expenseCandidateEvents(){
- if(currentExpenseContext.eventIds?.length)return events.filter(e=>currentExpenseContext.eventIds.includes(e.id));
- return events;
+ const pool=databaseEvents.length?databaseEvents:events;
+ if(currentExpenseContext.eventIds?.length)return pool.filter(e=>currentExpenseContext.eventIds.includes(e.id));
+ return pool;
 }
 function renderExpenseAllocationRows(){
  const box=$('#expenseMultiAllocation'),rows=$('#expenseAllocationRows'); if(!box||!rows)return;
@@ -447,30 +1523,56 @@ function autoAllocateExpense(){
 }
 function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
- const modal=$('#registerModal');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${events.map(e=>`<option value="${e.id}" ${e.id===eventId?'selected':''}>${e.name}</option>`).join('')}`;
- $('#expenseDate').value=new Date().toISOString().slice(0,10);$('#expenseAmount').value='';$('#expenseNote').value='';$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
- const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(eventId?'single':'general');
+ const modal=$('#registerModal');const eventPool=databaseEvents.length?databaseEvents:events;const contextualEventId=eventId||((currentExpenseContext.eventIds||[]).length===1?currentExpenseContext.eventIds[0]:'');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===contextualEventId?'selected':''}>${e.name}</option>`).join('')}`;
+ populateDbCategorySelects();
+ $('#expenseDate').value=new Date().toISOString().slice(0,10);$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
+ const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(contextualEventId?'single':'general');
  const ctx=$('#expenseOperationContext');if(currentExpenseContext.operationId){const op=operationById(currentExpenseContext.operationId),g=op?.groups.find(x=>x.id===currentExpenseContext.groupId);ctx.style.display='block';ctx.innerHTML=`<div class="kpi-label">Operativo relacionado</div><strong>${op?.name||'Operativo'}</strong><div class="kpi-sub">${g?.name||''}</div>`}else{ctx.style.display='none';ctx.innerHTML=''}
  renderExpenseAllocationRows();
  modal.classList.add('open');modal.setAttribute('aria-hidden','false');setTimeout(()=>$('#expenseAmount').focus(),60)
 }
 function closeRegister(){$('#registerModal').classList.remove('open');$('#registerModal').setAttribute('aria-hidden','true');currentExpenseContext={operationId:'',groupId:'',eventIds:[]}}
-function saveExpense(pending=false){
+async function saveExpense(pending=false){
  const amount=Number($('#expenseAmount').value);if(!amount){showToast('Ingresa un monto.');return}
  const currency=$('#expenseCurrency').value, assignment=pending?'general':$('#expenseAssignmentType').value;
- let allocs=[];
+ let allocsOriginal=[];
  if(assignment==='single'){
   const eventId=$('#expenseEvent').value;if(!eventId){showToast('Selecciona el evento.');return}
-  allocs=[{eventId,amountUsd:usd(amount,currency)}];
+  allocsOriginal=[{eventId,amountOriginal:amount,method:'manual'}];
  }else if(assignment==='multi'){
-  allocs=$$('.alloc-check').filter(c=>c.checked).map(c=>{const inp=$(`.alloc-amount[data-event="${c.dataset.event}"]`);return {eventId:c.dataset.event,amountOriginal:Number(inp?.value||0)}}).filter(a=>a.amountOriginal>0);
-  const totalAllocated=allocs.reduce((s,a)=>s+a.amountOriginal,0);if(!allocs.length){showToast('Asigna un monto a por lo menos un evento.');return}if(totalAllocated>amount+0.01){showToast('La distribución no puede superar el gasto total.');return}
-  allocs=allocs.map(a=>({eventId:a.eventId,amountUsd:usd(a.amountOriginal,currency)}));
+  allocsOriginal=$$('.alloc-check').filter(c=>c.checked).map(c=>{const inp=$(`.alloc-amount[data-event="${c.dataset.event}"]`);return {eventId:c.dataset.event,amountOriginal:Number(inp?.value||0),method:'manual'}}).filter(a=>a.amountOriginal>0);
+  const totalAllocated=allocsOriginal.reduce((s,a)=>s+a.amountOriginal,0);
+  if(!allocsOriginal.length){showToast('Asigna un monto a por lo menos un evento.');return}
+  if(totalAllocated>amount+0.01){showToast('La distribución no puede superar el gasto total.');return}
  }
+ const allReal=allocsOriginal.every(a=>!!realEventById(a.eventId));
+ if(dbContext.businessId && (assignment==='general'||allReal)){
+  const categoryName=pending?'':$('#expenseCategory').value;
+  const categoryId=pending?null:categoryIdByName(categoryName);
+  const budgetStatus=pending?'unclassified':assignment==='general'?'general':'unclassified';
+  const payload=allocsOriginal.map(a=>({event_id:a.eventId,amount:a.amountOriginal,method:a.method}));
+  const {error}=await sb.rpc('record_expense',{
+   p_business_id:dbContext.businessId,p_category_id:categoryId,
+   p_operation_id:isUuid(currentExpenseContext.operationId)?currentExpenseContext.operationId:null,
+   p_operation_group_id:isUuid(currentExpenseContext.groupId)?currentExpenseContext.groupId:null,
+   p_movement_date:$('#expenseDate').value,p_description:$('#expenseNote').value.trim()||'Gasto registrado',
+   p_amount:amount,p_currency:currency,p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_payment_method:$('#expenseMethod').value,p_budget_status:budgetStatus,p_allocations:payload,
+   p_idempotency_key:crypto.randomUUID()
+  });
+  if(error){console.error(error);showToast(`No se pudo guardar: ${error.message}`);return}
+  for(const eventId of [...new Set(allocsOriginal.map(a=>a.eventId))])await loadRealEventFinancials(eventId);
+  await loadGlobalFinancialData();
+  await loadRealOperations();
+  closeRegister();showToast(pending?'Gasto guardado para clasificar':'Gasto real guardado en Supabase');refreshCurrentView();return;
+ }
+
+ // Fallback for old demo data.
+ const allocs=allocsOriginal.map(a=>({eventId:a.eventId,amountUsd:usd(a.amountOriginal,currency)}));
  const m={id:Date.now(),date:$('#expenseDate').value,category:pending?'Pendiente':$('#expenseCategory').value,description:$('#expenseNote').value||'Gasto registrado',eventId:allocs.length===1?allocs[0].eventId:'',amount,currency,method:$('#expenseMethod').value,status:pending?'Pendiente':'Completo',kind:'expense'};
  movements.push(m);shared.bank-=usd(m.amount,m.currency);
- allocs.forEach(a=>{const budget=budgetForCategory(a.eventId,m.category);expenseAllocations.push({movementId:m.id,eventId:a.eventId,amountUsd:a.amountUsd,operationId:currentExpenseContext.operationId||'',groupId:currentExpenseContext.groupId||'',budgeted:budget>0});const e=eventById(a.eventId);if(e){e.costReal+=a.amountUsd;if(e.costReal>e.costEst*.95&&e.quality==='Alta')e.quality='Media'}});
- closeRegister();showToast(pending?'Guardado para clasificar después':allocs.length>1?'Gasto guardado y distribuido entre eventos':'Gasto guardado');refreshCurrentView()
+ allocs.forEach(a=>{const budget=budgetForCategory(a.eventId,m.category);expenseAllocations.push({movementId:m.id,eventId:a.eventId,amountUsd:a.amountUsd,operationId:currentExpenseContext.operationId||'',groupId:currentExpenseContext.groupId||'',budgeted:budget>0});const ev=eventById(a.eventId);if(ev){ev.costReal+=a.amountUsd}});
+ closeRegister();showToast('Gasto demo guardado');refreshCurrentView()
 }
 function populateReceivablePending(eventId='', receivableId=''){
  const select=$('#receivablePending');
@@ -478,42 +1580,196 @@ function populateReceivablePending(eventId='', receivableId=''){
  select.innerHTML=`<option value="">Sin aplicar a cuota específica</option>${opts.map(r=>`<option value="${r.id}" ${r.id===receivableId?'selected':''}>${eventById(r.eventId)?.name} · ${r.concept} · ${moneyUSD(r.amount)}</option>`).join('')}`;
  if(receivableId) select.value=receivableId;
 }
-function openReceivableModal(eventId='', receivableId=''){
+function setReceivableModalMode(mode){
+ const title=$('#receivableModalTitle');
+ const heading=$('#receivableModeHeading');
+ const hint=$('#receivableModeHint');
+ const saveExpected=$('#savePendingReceivable');
+ const submitPayment=$('#submitReceivableBtn');
+ const pendingField=$('#receivablePending').closest('.field');
+ const methodField=$('#receivableMethod').closest('.field');
+
+ $('#receivableModal').dataset.mode=mode;
+
+ if(mode==='newExpected'){
+  title.textContent='Nueva cuota esperada';
+  if(heading)heading.textContent='Crear cuota esperada';
+  if(hint)hint.textContent='Úsalo para planificar pagos pendientes sin registrar todavía el ingreso real.';
+  saveExpected.textContent='Guardar cuota';
+  saveExpected.style.display='';
+  submitPayment.style.display='none';
+  pendingField.style.display='none';
+  methodField.style.display='none';
+ }else if(mode==='editExpected'){
+  title.textContent='Editar cuota esperada';
+  if(heading)heading.textContent='Editar cuota esperada';
+  if(hint)hint.textContent='Actualiza la fecha, el monto o el concepto pendiente sin duplicar el registro.';
+  saveExpected.textContent='Guardar cambios';
+  saveExpected.style.display='';
+  submitPayment.style.display='none';
+  pendingField.style.display='none';
+  methodField.style.display='none';
+ }else{
+  title.textContent='Registrar cobro';
+  if(heading)heading.textContent='Registrar ingreso recibido';
+  if(hint)hint.textContent='Registra un pago real y, si aplica, asígnalo a una cuota pendiente del evento.';
+  saveExpected.style.display='none';
+  submitPayment.style.display='';
+  pendingField.style.display='';
+  methodField.style.display='';
+ }
+}
+function openReceivableModal(eventId='', receivableId='', mode='payment'){
  currentReceivableContext={eventId,receivableId};
  const modal=$('#receivableModal');
- $('#receivableEvent').innerHTML=`<option value="">Elegir después</option>${events.map(e=>`<option value="${e.id}" ${e.id===eventId?'selected':''}>${e.name}</option>`).join('')}`;
- populateReceivablePending(eventId, receivableId);
- if(receivableId){const r=receivables.find(x=>x.id===receivableId);$('#receivableAmount').value=r?.amount||'';$('#receivableCurrency').value='USD';}
- else{$('#receivableAmount').value='';$('#receivableCurrency').value=displayCurrency==='CRC'?'CRC':'USD';}
+ const eventPool=databaseEvents.length?databaseEvents:events;
+ const r=receivableId?receivables.find(x=>x.id===receivableId):null;
+ const targetEventId=eventId||r?.eventId||'';
+
+ $('#receivableEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===targetEventId?'selected':''}>${e.name}</option>`).join('')}`;
+ populateReceivablePending(targetEventId, receivableId);
+
+ if(mode==='editExpected' && r){
+  $('#receivableAmount').value=r.originalAmount??r.amount??'';
+  $('#receivableCurrency').value=r.dbCurrency||'USD';
+  $('#receivableDate').value=r.due||new Date().toISOString().slice(0,10);
+  $('#receivableNote').value=r.concept||'';
+ }else if(mode==='payment' && r){
+  $('#receivableAmount').value=receivableRemainingOriginal(r);
+  $('#receivableCurrency').value=r.dbCurrency||'USD';
+  $('#receivableDate').value=new Date().toISOString().slice(0,10);
+  $('#receivableNote').value='';
+ }else{
+  $('#receivableAmount').value='';
+  $('#receivableCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
+  $('#receivableDate').value=new Date().toISOString().slice(0,10);
+  $('#receivableNote').value='';
+ }
+
  $('#receivableMethod').value='Transferencia';
- $('#receivableDate').value=new Date().toISOString().slice(0,10);
- $('#receivableNote').value='';
- modal.classList.add('open');modal.setAttribute('aria-hidden','false');
+ setReceivableModalMode(mode);
+ modal.classList.add('open');
+ modal.setAttribute('aria-hidden','false');
  setTimeout(()=>$('#receivableAmount').focus(),60);
 }
-function closeReceivableModal(){$('#receivableModal').classList.remove('open');$('#receivableModal').setAttribute('aria-hidden','true')}
-function saveReceivable(markPending=false){
- const amount=Number($('#receivableAmount').value); if(!amount){showToast('Ingresa el monto del cobro.'); return;}
- const eventId=$('#receivableEvent').value || currentReceivableContext.eventId;
- const pendingId=$('#receivablePending').value || currentReceivableContext.receivableId;
- if(!eventId && !markPending){showToast('Selecciona un evento para registrar el cobro.'); return;}
- if(markPending){
-   const concept=`Cobro pendiente por confirmar`;
-   receivables.push({id:'r'+Date.now(), eventId:eventId||events[0].id, concept, amount, due:$('#receivableDate').value, status:'Pendiente'});
-   closeReceivableModal(); showToast('Cobro pendiente guardado'); refreshCurrentView(); return;
+function closeReceivableModal(){
+ $('#receivableModal').classList.remove('open');
+ $('#receivableModal').setAttribute('aria-hidden','true');
+ delete $('#receivableModal').dataset.mode;
+}
+async function saveExpectedReceivable(){
+ const mode=$('#receivableModal').dataset.mode||'newExpected';
+ const amount=Number($('#receivableAmount').value);
+ const eventId=$('#receivableEvent').value||currentReceivableContext.eventId;
+ const receivableId=mode==='editExpected'?currentReceivableContext.receivableId:null;
+ const event=eventById(eventId);
+
+ if(!amount){showToast('Ingresa el monto esperado.');return}
+ if(!eventId){showToast('Selecciona un evento.');return}
+ if(event?.source!=='db'){showToast('Esta función requiere un evento real de Supabase.');return}
+
+ const btn=$('#savePendingReceivable');
+ btn.disabled=true;
+ const originalLabel=btn.textContent;
+ btn.textContent=mode==='editExpected'?'Guardando cambios…':'Guardando…';
+
+ const {error}=await sb.rpc('save_expected_receivable',{
+  p_business_id:dbContext.businessId,
+  p_receivable_id:receivableId||null,
+  p_event_id:eventId,
+  p_due_date:$('#receivableDate').value,
+  p_description:$('#receivableNote').value.trim()||'Cuota pendiente',
+  p_amount:amount,
+  p_currency:$('#receivableCurrency').value,
+  p_idempotency_key:crypto.randomUUID()
+ });
+
+ btn.disabled=false;
+ btn.textContent=originalLabel;
+
+ if(error){console.error(error);showToast(`No se pudo guardar: ${error.message}`);return}
+
+ await loadRealEventFinancials(eventId);
+ await loadGlobalFinancialData();
+ closeReceivableModal();
+ showToast(mode==='editExpected'?'Cuota actualizada':'Cuota esperada guardada');
+ refreshCurrentView();
+}
+async function saveReceivable(markPending=false){
+ if(markPending)return saveExpectedReceivable();
+
+ const amount=Number($('#receivableAmount').value);
+ if(!amount){showToast('Ingresa el monto del cobro.');return}
+ const eventId=$('#receivableEvent').value||currentReceivableContext.eventId;
+ const pendingId=$('#receivablePending').value||currentReceivableContext.receivableId;
+ const event=eventById(eventId);
+ if(!eventId){showToast('Selecciona un evento.');return}
+
+ if(event?.source==='db'){
+  const currency=$('#receivableCurrency').value;
+  const pending=receivables.find(r=>r.id===pendingId&&r.source==='db');
+  if(pending&&pending.dbCurrency!==currency){
+   showToast(`Esta cuota está en ${pending.dbCurrency}. Registra el cobro en la misma moneda.`);
+   return;
+  }
+
+  const btn=$('#submitReceivableBtn');
+  btn.disabled=true;btn.textContent='Registrando…';
+
+  const {error}=await sb.rpc('record_event_payment',{
+   p_business_id:dbContext.businessId,
+   p_event_id:eventId,
+   p_receivable_id:pendingId||null,
+   p_amount:amount,
+   p_currency:currency,
+   p_payment_date:$('#receivableDate').value,
+   p_payment_method:$('#receivableMethod').value,
+   p_note:$('#receivableNote').value.trim()||'Cobro de evento',
+   p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_idempotency_key:crypto.randomUUID()
+  });
+
+  btn.disabled=false;btn.textContent='Registrar cobro';
+
+  if(error){console.error(error);showToast(`No se pudo registrar: ${error.message}`);return}
+
+  await loadRealEventFinancials(eventId);
+  await loadGlobalFinancialData();
+  closeReceivableModal();
+  showToast('Cobro real registrado en Supabase');
+  refreshCurrentView();
+  return;
  }
+
  movements.push({id:Date.now(),date:$('#receivableDate').value,category:'Cobro',description:$('#receivableNote').value||'Cobro registrado',eventId,amount,currency:$('#receivableCurrency').value,method:$('#receivableMethod').value,status:'Completo',kind:'income'});
- shared.bank += usd(amount,$('#receivableCurrency').value);
- const e=eventById(eventId); if(e){e.collected += usd(amount,$('#receivableCurrency').value); updateEventFinancialStatus(e)}
- if(pendingId){const r=receivables.find(x=>x.id===pendingId); if(r){r.status='Pagado';}}
- closeReceivableModal(); showToast('Cobro registrado'); refreshCurrentView();
+ shared.bank+=usd(amount,$('#receivableCurrency').value);
+ if(event){event.collected+=usd(amount,$('#receivableCurrency').value);updateEventFinancialStatus(event)}
+ if(pendingId){const r=receivables.find(x=>x.id===pendingId);if(r)r.status='Pagado'}
+ closeReceivableModal();showToast('Cobro demo registrado');refreshCurrentView();
+}
+async function deleteExpectedReceivable(receivableId){
+ const r=receivables.find(x=>x.id===receivableId&&x.source==='db');
+ if(!r)return;
+ if(Number(r.paidOriginal||0)>0){showToast('Esta cuota ya tiene pagos aplicados y no se puede eliminar.');return}
+ if(!confirm(`¿Eliminar la cuota esperada de ${fmtOriginal(r.originalAmount,r.dbCurrency)}? Esta acción quedará registrada en auditoría.`))return;
+
+ const {error}=await sb.rpc('delete_expected_receivable_master',{
+  p_business_id:dbContext.businessId,
+  p_receivable_id:receivableId
+ });
+ if(error){console.error(error);showToast(`No se pudo eliminar: ${error.message}`);return}
+
+ await loadRealEventFinancials(r.eventId);
+ await loadGlobalFinancialData();
+ showToast('Cuota eliminada');
+ refreshCurrentView();
 }
 function createExpectedReceivable(eventId){
- const e=eventById(eventId); if(!e) return;
- const remaining=Math.max(0, e.sale - e.collected);
- if(!remaining){showToast('Este evento ya no tiene saldo pendiente.'); return;}
- receivables.push({id:'r'+Date.now(), eventId:e.id, concept:'Nueva cuota', amount:remaining, due:new Date().toISOString().slice(0,10), status:'Pendiente'});
- updateEventFinancialStatus(e); showToast('Se agregó una cuota esperada de cobro.'); renderEventDetail();
+ const e=eventById(eventId);if(!e)return;
+ if(e.source==='db'){openReceivableModal(eventId,'','newExpected');return}
+ const remaining=Math.max(0,e.sale-e.collected);if(!remaining){showToast('Este evento ya no tiene saldo pendiente.');return}
+ receivables.push({id:'r'+Date.now(),eventId:e.id,concept:'Nueva cuota',amount:remaining,due:new Date().toISOString().slice(0,10),status:'Pendiente'});
+ updateEventFinancialStatus(e);showToast('Se agregó una cuota esperada de cobro.');renderEventDetail();
 }
 
 function dbStatusToUi(status){
@@ -528,9 +1784,434 @@ function dbEventToUi(row){
   id:row.id,name:row.name,date:row.event_date,place:row.venue||row.location||'Lugar por definir',
   planner:'—',client:row.name,sale,collected:0,costEst:0,costReal:0,
   commercial:state[0],operational:state[1],financial:'Sin cobros',quality:'Inicial',
-  source:'db',dbCurrency:row.currency||'USD',dbAmount:raw,notes:row.notes||''
+  source:'db',dbStatus:row.status,dbCurrency:row.currency||'USD',dbAmount:raw,notes:row.notes||''
  };
 }
+
+
+async function loadGlobalFinancialData(){
+ const [movementRes,allocationRes,receivableRes,paymentRes,eventBudgetRes]=await Promise.all([
+  sb.from('movements').select('*').eq('business_id',dbContext.businessId).order('movement_date',{ascending:false}).order('created_at',{ascending:false}),
+  sb.from('expense_allocations').select('*').eq('business_id',dbContext.businessId),
+  sb.from('receivables').select('*').eq('business_id',dbContext.businessId),
+  sb.from('receivable_payments').select('*').eq('business_id',dbContext.businessId),
+  sb.from('event_budget_lines').select('*').eq('business_id',dbContext.businessId)
+ ]);
+ if(movementRes.error)throw movementRes.error;
+ if(allocationRes.error)throw allocationRes.error;
+ if(receivableRes.error)throw receivableRes.error;
+ if(paymentRes.error)throw paymentRes.error;
+ if(eventBudgetRes.error)throw eventBudgetRes.error;
+
+ globalDbMovements=movementRes.data||[];
+ globalDbAllocations=allocationRes.data||[];
+ globalDbReceivables=receivableRes.data||[];
+ globalDbPayments=paymentRes.data||[];
+ globalDbEventBudgetLines=eventBudgetRes.data||[];
+
+ const receivableMap=Object.fromEntries(globalDbReceivables.map(r=>[r.id,r]));
+ const paymentEventByMovement={};
+ const paidByReceivable={};
+ globalDbPayments.forEach(p=>{
+  const r=receivableMap[p.receivable_id];
+  if(r)paymentEventByMovement[p.movement_id]=r.event_id;
+  paidByReceivable[p.receivable_id]=(paidByReceivable[p.receivable_id]||0)+Number(p.amount_applied||0);
+ });
+
+ // Replace all real DB movement/allocation/receivable state in memory, leaving demo data untouched.
+ movements=movements.filter(m=>m.source!=='db');
+ expenseAllocations=expenseAllocations.filter(a=>a.source!=='db');
+ receivables=receivables.filter(r=>r.source!=='db');
+
+ const statusMap={pending:'Pendiente',partial:'Parcial',paid:'Pagado',cancelled:'Cancelado'};
+ globalDbReceivables.forEach(r=>{
+  receivables.push({
+   id:r.id,eventId:r.event_id,concept:r.description,
+   amount:valueToUsd(r.amount,r.currency),
+   originalAmount:Number(r.amount),
+   dbCurrency:r.currency,
+   due:r.due_date,
+   status:statusMap[r.status]||r.status,
+   source:'db',
+   paidOriginal:paidByReceivable[r.id]||0,
+   createdAt:r.created_at
+  });
+ });
+
+ globalDbAllocations.forEach(a=>{
+  const m=globalDbMovements.find(x=>x.id===a.movement_id);
+  if(!m)return;
+  expenseAllocations.push({
+   movementId:a.movement_id,
+   eventId:a.event_id,
+   amountUsd:valueToUsd(a.allocated_amount,m.currency),
+   operationId:m.operation_id||'',
+   groupId:m.operation_group_id||'',
+   budgeted:a.budget_status==='budgeted',
+   budgetStatus:a.budget_status||'unclassified',
+   budgetLineId:a.budget_line_id||null,
+   source:'db'
+  });
+ });
+
+ globalDbMovements.forEach(m=>{
+  movements.push({
+   id:m.id,
+   date:m.movement_date,
+   category:categoryById(m.category_id)?.name||'Sin categoría',
+   description:m.description,
+   eventId:paymentEventByMovement[m.id]||'',
+   amount:Number(m.amount),
+   currency:m.currency,
+   method:m.payment_method||'—',
+   status:'Completo',
+   kind:m.movement_type,
+   source:'db',
+   budgetStatus:m.budget_status,
+   counterparty:m.counterparty||'',
+   reference:m.reference||'',
+   createdAt:m.created_at
+  });
+ });
+ syncRealEventAggregates();
+}
+
+
+
+function uiIcon(name){
+ const base='fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"';
+ const icons={
+  calendar:`<svg viewBox="0 0 24 24" ${base}><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg>`,
+  clipboard:`<svg viewBox="0 0 24 24" ${base}><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M9 9h6M9 13h6M9 17h4"/></svg>`,
+  coins:`<svg viewBox="0 0 24 24" ${base}><ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v4c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 10v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4M5 14v4c0 1.7 3.1 3 7 3s7-1.3 7-3v-4"/></svg>`,
+  bars:`<svg viewBox="0 0 24 24" ${base}><path d="M5 20V12M12 20V5M19 20V9"/></svg>`,
+  pie:`<svg viewBox="0 0 24 24" ${base}><path d="M11 3a9 9 0 1 0 9 9h-9z"/><path d="M14 3.6A9 9 0 0 1 20.4 10H14z"/></svg>`,
+  trend:`<svg viewBox="0 0 24 24" ${base}><path d="m4 7 5 5 4-4 7 7"/><path d="M16 15h4v-4"/></svg>`,
+  pin:`<svg viewBox="0 0 24 24" ${base}><path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="2.5"/></svg>`,
+  pencil:`<svg viewBox="0 0 24 24" ${base}><path d="M4 20h4l11-11-4-4L4 16zM13.5 6.5l4 4"/></svg>`,
+  arrows:`<svg viewBox="0 0 24 24" ${base}><path d="M8 4v16M5 7l3-3 3 3M16 20V4M13 17l3 3 3-3"/></svg>`,
+  wallet:`<svg viewBox="0 0 24 24" ${base}><path d="M4 6h15a2 2 0 0 1 2 2v10H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M16 10h5v5h-5a2.5 2.5 0 0 1 0-5z"/></svg>`,
+  bed:`<svg viewBox="0 0 24 24" ${base}><path d="M3 18V8M21 18v-5a3 3 0 0 0-3-3H9v8M3 14h18M6 10h3"/></svg>`,
+  food:`<svg viewBox="0 0 24 24" ${base}><path d="M7 3v8M4 3v5a3 3 0 0 0 6 0V3M7 11v10M16 3v18M16 3c3 2 4 5 4 8h-4"/></svg>`,
+  car:`<svg viewBox="0 0 24 24" ${base}><path d="m5 11 2-5h10l2 5M4 11h16v6H4z"/><circle cx="7" cy="17" r="1.5"/><circle cx="17" cy="17" r="1.5"/></svg>`,
+  fuel:`<svg viewBox="0 0 24 24" ${base}><path d="M5 21V5a2 2 0 0 1 2-2h7a2 2 0 0 1 2 2v16M4 21h13M8 7h5v4H8zM16 8l3 3v6a1.5 1.5 0 0 0 3 0v-5l-3-3"/></svg>`,
+  dots:`<svg viewBox="0 0 24 24" ${base}><circle cx="5" cy="12" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/></svg>`
+ };
+ return icons[name]||icons.dots;
+}
+function categoryVisualIcon(name=''){
+ const n=String(name).toLowerCase();
+ if(n.includes('hosped'))return uiIcon('bed');
+ if(n.includes('aliment'))return uiIcon('food');
+ if(n.includes('transport'))return uiIcon('car');
+ if(n.includes('gasolina')||n.includes('combust'))return uiIcon('fuel');
+ return uiIcon('dots');
+}
+function visualKpi(icon,label,value,sub='',tone=''){
+ return `<div class="visual-kpi-card"><div class="visual-kpi-icon ${tone}">${uiIcon(icon)}</div><div class="visual-kpi-copy"><span>${label}</span><strong>${value}</strong>${sub?`<small>${sub}</small>`:''}</div><div class="visual-chevron">›</div></div>`;
+}
+function visualMetric(icon,label,value,sub='',tone=''){
+ return `<div class="visual-metric"><div class="visual-metric-icon ${tone}">${uiIcon(icon)}</div><div><span>${label}</span><strong>${value}</strong>${sub?`<small>${sub}</small>`:''}</div></div>`;
+}
+
+function operationStatusLabel(status){
+ return ({draft:'Borrador',planned:'Planificado',active:'En curso',closed:'Cerrado',cancelled:'Cancelado'})[status]||status;
+}
+function realOperationById(id){return dbOperations.find(o=>o.id===id)}
+function operationById(id){return realOperationById(id)||operations.find(o=>o.id===id)}
+function operationMovementRows(operationId,groupId=null){
+ return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===operationId&&(groupId===null?true:m.operation_group_id===groupId));
+}
+function operationGroupActual(group,categoryId=null){
+ return globalDbMovements
+  .filter(m=>m.movement_type==='expense'&&m.operation_group_id===group.id&&(!categoryId||m.category_id===categoryId))
+  .reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+}
+function operationBudgetReal(op){
+ return op.groups.reduce((sum,g)=>sum+g.budgetLines.reduce((s,r)=>s+r.amountUsd,0),0);
+}
+function operationActualReal(op){
+ return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+}
+async function loadRealOperations(){
+ const [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes]=await Promise.all([
+  sb.from('operations').select('*').eq('business_id',dbContext.businessId).order('start_date',{ascending:true}),
+  sb.from('operation_events').select('*').eq('business_id',dbContext.businessId),
+  sb.from('operation_groups').select('*').eq('business_id',dbContext.businessId).eq('is_active',true),
+  sb.from('operation_group_events').select('*').eq('business_id',dbContext.businessId),
+  sb.from('operation_budget_lines').select('*').eq('business_id',dbContext.businessId).eq('is_active',true)
+ ]);
+ for(const r of [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes])if(r.error)throw r.error;
+
+ const opEvents=eventsRes.data||[],groups=groupsRes.data||[],groupEvents=groupEventsRes.data||[],lines=budgetRes.data||[];
+ dbOperations=(opsRes.data||[]).map(op=>{
+  const opGroups=groups.filter(g=>g.operation_id===op.id).map(g=>({
+   id:g.id,name:g.name,location:g.location||'',people:Number(g.people_count||0),notes:g.notes||'',
+   eventIds:groupEvents.filter(ge=>ge.group_id===g.id).map(ge=>ge.event_id),
+   budgetLines:lines.filter(l=>l.operation_id===op.id&&l.group_id===g.id).map(l=>({
+    id:l.id,categoryId:l.category_id,categoryName:categoryById(l.category_id)?.name||'Sin categoría',
+    description:l.description,quantity:l.quantity==null?null:Number(l.quantity),unit:l.unit||'',
+    estimatedUnitCost:l.estimated_unit_cost==null?null:Number(l.estimated_unit_cost),
+    originalAmount:Number(l.budgeted_amount),currency:l.currency,
+    amountUsd:valueToUsd(l.budgeted_amount,l.currency),notes:l.notes||''
+   }))
+  }));
+  return {
+   id:op.id,name:op.name,start:op.start_date,end:op.end_date,status:op.status,notes:op.notes||'',
+   eventIds:opEvents.filter(oe=>oe.operation_id===op.id).map(oe=>oe.event_id),
+   groups:opGroups,source:'db'
+  };
+ });
+}
+function defaultOperationBudgetLines(){
+ const names=['Hospedaje','Alimentación','Transporte','Gasolina','Imprevistos'];
+ return names.map(name=>{
+  const c=dbCategories.find(x=>x.name===name);
+  return c?{id:'',categoryId:c.id,description:name,quantity:null,unit:'',estimatedUnitCost:null,originalAmount:0,currency:'USD',notes:''}:null;
+ }).filter(Boolean);
+}
+function operationCategoryOptions(selected=''){
+ return dbCategories.filter(c=>c.kind==='expense'||c.kind==='both').map(c=>`<option value="${c.id}" ${c.id===selected?'selected':''}>${escapeHtml(c.name)}</option>`).join('');
+}
+function operationBudgetLineEditorHtml(line={},groupKey=''){
+ const key=crypto.randomUUID();
+ const amount=line.originalAmount??line.budgetedAmount??'';
+ return `<div class="op-budget-line" data-line-id="${line.id||''}" data-line-key="${key}">
+   <div class="field"><label>Categoría</label><select class="op-line-category">${operationCategoryOptions(line.categoryId||'')}</select></div>
+   <div class="field"><label>Detalle</label><input class="op-line-description" value="${escapeHtml(line.description||'')}" placeholder="Ej. 2 noches de hospedaje"></div>
+   <div class="field"><label>Cant.</label><input class="op-line-qty" type="number" min="0" step="0.001" value="${line.quantity??''}" placeholder="0"></div>
+   <div class="field"><label>Unidad</label><input class="op-line-unit" value="${escapeHtml(line.unit||'')}" placeholder="noches"></div>
+   <div class="field"><label>Costo unit.</label><input class="op-line-unitcost" type="number" min="0" step="0.01" value="${line.estimatedUnitCost??''}" placeholder="0"></div>
+   <div class="field"><label>Total</label><input class="op-line-amount" type="number" min="0" step="0.01" value="${amount}" placeholder="0"></div>
+   <button type="button" class="icon-btn op-remove-line" title="Eliminar línea">×</button>
+   <select class="op-line-currency" style="display:none"><option value="USD" ${(line.currency||'USD')==='USD'?'selected':''}>USD</option><option value="CRC" ${line.currency==='CRC'?'selected':''}>CRC</option></select>
+ </div>`;
+}
+function operationGroupEditorHtml(group={}){
+ const key=crypto.randomUUID(),selectedEvents=new Set(group.eventIds||[]);
+ const lines=(group.budgetLines&&group.budgetLines.length)?group.budgetLines:defaultOperationBudgetLines();
+ return `<div class="op-group-editor" data-group-id="${group.id||''}" data-group-key="${key}">
+  <div class="op-group-head">
+   <div><strong>Bloque operativo</strong><div class="kpi-sub">Zona/equipo con logística y presupuesto propios.</div></div>
+   <button type="button" class="btn secondary small op-remove-group">Eliminar bloque</button>
+  </div>
+
+  <div class="form-grid">
+   <div class="field"><label>Nombre del bloque</label><input class="op-group-name" value="${escapeHtml(group.name||'')}" placeholder="Ej. Guanacaste · Equipo principal"></div>
+   <div class="field"><label>Zona / ubicación</label><input class="op-group-location" value="${escapeHtml(group.location||'')}" placeholder="Ej. Tamarindo"></div>
+   <div class="field"><label>Personas</label><input class="op-group-people" type="number" min="0" step="1" value="${group.people??''}" placeholder="0"></div>
+   <div class="field"><label>Nota</label><input class="op-group-notes" value="${escapeHtml(group.notes||'')}" placeholder="Ej. un solo equipo para 3 bodas"></div>
+  </div>
+
+  <div style="margin-top:4px">
+   <div class="kpi-label">Eventos de este bloque</div>
+   <div class="kpi-sub">Selecciona uno o más eventos que formarán parte de este operativo.</div>
+   <div class="op-event-grid">
+    ${databaseEvents.map(e=>`<label class="op-event-choice"><input type="checkbox" class="op-group-event" value="${e.id}" ${selectedEvents.has(e.id)?'checked':''}><span><strong>${escapeHtml(e.name)}</strong><small>${eventCardDate(e.date)} · ${escapeHtml(e.place)}</small></span></label>`).join('')}
+   </div>
+  </div>
+
+  <div class="op-budget-wrap">
+   <div class="op-budget-header">
+    <div><strong>Presupuesto del bloque</strong><div class="kpi-sub">Cantidad × costo unitario puede calcular el presupuesto automáticamente.</div></div>
+    <button type="button" class="btn secondary small op-add-line">+ Línea</button>
+   </div>
+   <div class="op-budget-table-head"><span>Categoría</span><span>Detalle</span><span>Cant.</span><span>Unidad</span><span>Costo unit.</span><span>Total</span><span></span></div>
+   <div class="op-budget-lines">${lines.map(l=>operationBudgetLineEditorHtml(l,key)).join('')}</div>
+   <div class="op-budget-total"><span>Total del bloque</span><strong class="op-group-total">$0</strong></div>
+  </div>
+ </div>`;
+}
+function refreshOperationEditorTotals(){
+ $$('.op-group-editor').forEach(group=>{
+  const total=[...group.querySelectorAll('.op-line-amount')].reduce((s,input)=>s+Number(input.value||0),0);
+  const label=group.querySelector('.op-group-total');
+  if(label)label.textContent=money(total);
+ });
+}
+function bindOperationEditorDynamic(){
+ $$('.op-remove-group').forEach(btn=>btn.onclick=()=>{btn.closest('.op-group-editor').remove();refreshOperationEditorTotals()});
+ $$('.op-add-line').forEach(btn=>btn.onclick=()=>{
+  const group=btn.closest('.op-group-editor'),container=group.querySelector('.op-budget-lines');
+  container.insertAdjacentHTML('beforeend',operationBudgetLineEditorHtml({},group.dataset.groupKey));
+  bindOperationEditorDynamic();refreshOperationEditorTotals();
+ });
+ $$('.op-remove-line').forEach(btn=>btn.onclick=()=>{btn.closest('.op-budget-line').remove();refreshOperationEditorTotals()});
+ $$('.op-line-qty,.op-line-unitcost').forEach(inp=>inp.oninput=()=>{
+  const row=inp.closest('.op-budget-line'),q=Number(row.querySelector('.op-line-qty').value||0),u=Number(row.querySelector('.op-line-unitcost').value||0);
+  if(q>0&&u>0)row.querySelector('.op-line-amount').value=(q*u).toFixed(2);
+  refreshOperationEditorTotals();
+ });
+ $$('.op-line-amount').forEach(inp=>inp.oninput=refreshOperationEditorTotals);
+ refreshOperationEditorTotals();
+}
+function collectOperationEditorPayload(){
+ const groups=$$('.op-group-editor').map(g=>{
+  const eventIds=[...g.querySelectorAll('.op-group-event:checked')].map(x=>x.value);
+  const budgetLines=[...g.querySelectorAll('.op-budget-line')].map(row=>({
+   id:row.dataset.lineId||null,
+   category_id:row.querySelector('.op-line-category').value,
+   description:row.querySelector('.op-line-description').value.trim()||row.querySelector('.op-line-category').selectedOptions[0]?.textContent||'Presupuesto operativo',
+   quantity:row.querySelector('.op-line-qty').value||null,
+   unit:row.querySelector('.op-line-unit').value.trim()||null,
+   estimated_unit_cost:row.querySelector('.op-line-unitcost').value||null,
+   budgeted_amount:Number(row.querySelector('.op-line-amount').value||0),
+   currency:row.querySelector('.op-line-currency').value||'USD',
+   notes:null
+  })).filter(l=>l.category_id&&l.budgeted_amount>=0);
+  return {
+   id:g.dataset.groupId||null,
+   name:g.querySelector('.op-group-name').value.trim(),
+   location:g.querySelector('.op-group-location').value.trim()||null,
+   people_count:Number(g.querySelector('.op-group-people').value||0),
+   notes:g.querySelector('.op-group-notes').value.trim()||null,
+   event_ids:eventIds,
+   budget_lines:budgetLines
+  };
+ });
+ const eventIds=[...new Set(groups.flatMap(g=>g.event_ids))];
+ return {groups,eventIds};
+}
+function openOperationModal(operationId=''){
+ const op=operationId?realOperationById(operationId):null;
+ $('#operationModal').dataset.operationId=operationId||'';
+ $('#operationModalTitle').textContent=op?'Editar operativo':'Crear operativo';
+ $('#operationName').value=op?.name||'';
+ $('#operationStart').value=op?.start||new Date().toISOString().slice(0,10);
+ $('#operationEnd').value=op?.end||$('#operationStart').value;
+ $('#operationStatus').value=op?.status||'draft';
+ $('#operationNotes').value=op?.notes||'';
+ $('#operationSaveError').style.display='none';
+ $('#operationGroupEditors').innerHTML=(op?.groups?.length?op.groups:[{}]).map(operationGroupEditorHtml).join('');
+ bindOperationEditorDynamic();
+ $('#operationModal').classList.add('open');$('#operationModal').setAttribute('aria-hidden','false');
+}
+function closeOperationModal(){
+ $('#operationModal').classList.remove('open');$('#operationModal').setAttribute('aria-hidden','true');
+}
+async function saveOperationPlan(e){
+ e.preventDefault();
+ const {groups,eventIds}=collectOperationEditorPayload(),err=$('#operationSaveError'),btn=$('#saveOperationBtn');
+ if(!$('#operationName').value.trim()){err.textContent='Ponle un nombre al operativo.';err.style.display='block';return}
+ if(!groups.length){err.textContent='Crea al menos un bloque operativo.';err.style.display='block';return}
+ if(groups.some(g=>!g.name)){err.textContent='Todos los bloques necesitan un nombre.';err.style.display='block';return}
+ if(groups.some(g=>!g.event_ids.length)){err.textContent='Cada bloque debe tener al menos un evento asociado.';err.style.display='block';return}
+ if(!eventIds.length){err.textContent='Asocia al menos un evento al operativo.';err.style.display='block';return}
+
+ btn.disabled=true;btn.textContent='Guardando…';err.style.display='none';
+ const {error}=await sb.rpc('save_operation_plan',{
+  p_business_id:dbContext.businessId,
+  p_operation_id:$('#operationModal').dataset.operationId||null,
+  p_name:$('#operationName').value.trim(),
+  p_start_date:$('#operationStart').value,
+  p_end_date:$('#operationEnd').value,
+  p_status:$('#operationStatus').value,
+  p_notes:$('#operationNotes').value.trim()||null,
+  p_event_ids:eventIds,
+  p_groups:groups
+ });
+ btn.disabled=false;btn.textContent='Guardar operativo';
+ if(error){console.error(error);err.textContent=error.message;err.style.display='block';return}
+ await loadRealOperations();closeOperationModal();showToast('Operativo guardado en Supabase');renderOperation();
+}
+
+async function loadCategories(){
+ const {data,error}=await sb.from('categories').select('id,name,kind,supports_quantity').eq('business_id',dbContext.businessId).eq('is_active',true).order('name');
+ if(error)throw error;
+ dbCategories=data||[];
+ populateDbCategorySelects();
+}
+function unbudgetedExpenseForEvent(eventId){
+ return expenseAllocations
+  .filter(a=>a.eventId===eventId&&a.source==='db'&&(a.budgetStatus==='unbudgeted'||(!a.budgetStatus&&!a.budgeted)))
+  .reduce((s,a)=>s+a.amountUsd,0);
+}
+async function loadRealEventFinancials(eventId){
+ const e=realEventById(eventId);if(!e)return;
+
+ const [budgetRes,receivableRes,allocRes]=await Promise.all([
+  sb.from('event_budget_lines').select('*').eq('business_id',dbContext.businessId).eq('event_id',eventId).order('created_at'),
+  sb.from('receivables').select('*').eq('business_id',dbContext.businessId).eq('event_id',eventId).order('due_date'),
+  sb.from('expense_allocations').select('*').eq('business_id',dbContext.businessId).eq('event_id',eventId)
+ ]);
+ if(budgetRes.error)throw budgetRes.error;if(receivableRes.error)throw receivableRes.error;if(allocRes.error)throw allocRes.error;
+
+ const budgetRows=budgetRes.data||[],recRows=receivableRes.data||[],allocRows=allocRes.data||[];
+ const movementIds=[...new Set(allocRows.map(a=>a.movement_id))];
+ const receivableIds=recRows.map(r=>r.id);
+
+ const [movementRes,paymentRes]=await Promise.all([
+  movementIds.length?sb.from('movements').select('*').in('id',movementIds):Promise.resolve({data:[],error:null}),
+  receivableIds.length?sb.from('receivable_payments').select('*').in('receivable_id',receivableIds):Promise.resolve({data:[],error:null})
+ ]);
+ if(movementRes.error)throw movementRes.error;if(paymentRes.error)throw paymentRes.error;
+ const movementRows=movementRes.data||[],paymentRows=paymentRes.data||[];
+
+ const movementMap=Object.fromEntries(movementRows.map(m=>[m.id,m]));
+ const budgetByCategory={};
+ const actualByCategory={};
+
+ dbBudgetLinesByEvent[eventId]=budgetRows.map(r=>{
+  const categoryName=categoryById(r.category_id)?.name||'Sin categoría';
+  const usdAmount=valueToUsd(r.budgeted_amount,r.currency);
+  budgetByCategory[categoryName]=(budgetByCategory[categoryName]||0)+usdAmount;
+  return {
+   id:r.id,categoryId:r.category_id,categoryName,description:r.description,
+   quantity:r.quantity==null?null:Number(r.quantity),unit:r.unit||'',
+   estimatedUnitCost:r.estimated_unit_cost==null?null:Number(r.estimated_unit_cost),
+   originalAmount:Number(r.budgeted_amount),currency:r.currency,amountUsd:usdAmount
+  };
+ });
+
+ // Replace only this event's DB allocation rows.
+ expenseAllocations=expenseAllocations.filter(a=>!(a.source==='db'&&a.eventId===eventId));
+ allocRows.forEach(a=>{
+  const m=movementMap[a.movement_id];if(!m)return;
+  const categoryName=categoryById(m.category_id)?.name||'Sin categoría';
+  const amountUsd=valueToUsd(a.allocated_amount,m.currency);
+  actualByCategory[categoryName]=(actualByCategory[categoryName]||0)+amountUsd;
+  expenseAllocations.push({
+   movementId:a.movement_id,eventId,amountUsd,operationId:m.operation_id||'',groupId:m.operation_group_id||'',
+   budgeted:a.budget_status==='budgeted',budgetStatus:a.budget_status||'unclassified',
+   budgetLineId:a.budget_line_id||null,source:'db'
+  });
+ });
+
+ // Refresh DB movements that participate in this event.
+ const refreshIds=new Set(movementIds);
+ movements=movements.filter(m=>!(m.source==='db'&&refreshIds.has(m.id)));
+ movementRows.forEach(m=>movements.push({
+  id:m.id,date:m.movement_date,category:categoryById(m.category_id)?.name||'Sin categoría',
+  description:m.description,eventId:'',amount:Number(m.amount),currency:m.currency,
+  method:m.payment_method||'—',status:'Completo',kind:m.movement_type,source:'db',budgetStatus:m.budget_status
+ }));
+
+ // Refresh receivables for this event.
+ receivables=receivables.filter(r=>!(r.source==='db'&&r.eventId===eventId));
+ const paymentByReceivable={};
+ paymentRows.forEach(p=>paymentByReceivable[p.receivable_id]=(paymentByReceivable[p.receivable_id]||0)+Number(p.amount_applied||0));
+ recRows.forEach(r=>{
+  const statusMap={pending:'Pendiente',partial:'Parcial',paid:'Pagado',cancelled:'Cancelado'};
+  receivables.push({
+   id:r.id,eventId,concept:r.description,amount:valueToUsd(r.amount,r.currency),
+   originalAmount:Number(r.amount),dbCurrency:r.currency,due:r.due_date,status:statusMap[r.status]||r.status,
+   source:'db',paidOriginal:paymentByReceivable[r.id]||0
+  });
+ });
+
+ const allLabels=[...new Set([...Object.keys(budgetByCategory),...Object.keys(actualByCategory)])];
+ eventBudgets[eventId]=allLabels.map(label=>[label,budgetByCategory[label]||0,actualByCategory[label]||0]);
+
+ e.costEst=Object.values(budgetByCategory).reduce((s,n)=>s+n,0);
+ e.costReal=Object.values(actualByCategory).reduce((s,n)=>s+n,0);
+ e.collected=recRows.reduce((sum,r)=>sum+valueToUsd(paymentByReceivable[r.id]||0,r.currency),0);
+ updateEventFinancialStatus(e);
+ e.quality=(e.costEst||e.costReal||recRows.length)?'Alta':'Inicial';
+
+ dbExpenseRowsByEvent[eventId]=allocRows;
+ dbReceivableRowsByEvent[eventId]=recRows;
+}
+
 async function loadDatabaseEvents(){
  if(!dbContext.businessId)return;
  const {data,error}=await sb.from('events').select('*').eq('business_id',dbContext.businessId).order('event_date',{ascending:true});
@@ -545,15 +2226,20 @@ async function loadBusinessContext(){
  if(!membership)throw new Error('Tu usuario existe, pero todavía no tiene acceso a ningún negocio en Rastro.');
  dbContext.businessId=membership.business_id;dbContext.role=membership.role;
 
- const {data:business,error:businessError}=await sb.from('businesses').select('id,name').eq('id',membership.business_id).single();
+ const {data:business,error:businessError}=await sb.from('businesses').select('id,name,operating_cash_balance,operating_cash_currency,operating_cash_reference_at').eq('id',membership.business_id).single();
  if(businessError)throw businessError;
- dbContext.businessName=business.name;
+ dbContext.businessName=business.name;dbContext.operatingCashBalance=Number(business.operating_cash_balance||0);dbContext.operatingCashCurrency=business.operating_cash_currency||'USD';dbContext.operatingCashReferenceAt=business.operating_cash_reference_at||'';
 
- const {data:season,error:seasonError}=await sb.from('seasons').select('id,name').eq('business_id',membership.business_id).eq('status','active').order('start_date',{ascending:false}).limit(1).maybeSingle();
+ const {data:season,error:seasonError}=await sb.from('seasons').select('id,name,start_date,end_date,offseason_start_date,offseason_end_date,offseason_fund_target,offseason_fund_reserved,offseason_currency').eq('business_id',membership.business_id).eq('status','active').order('start_date',{ascending:false}).limit(1).maybeSingle();
  if(seasonError)throw seasonError;
- if(season){dbContext.seasonId=season.id;dbContext.seasonName=season.name;}
+ if(season){
+  dbContext.seasonId=season.id;dbContext.seasonName=season.name;dbContext.seasonStart=season.start_date||'';dbContext.seasonEnd=season.end_date||'';dbContext.offseasonStart=season.offseason_start_date||'';dbContext.offseasonEnd=season.offseason_end_date||'';dbContext.offseasonFundTarget=Number(season.offseason_fund_target||0);dbContext.offseasonFundReserved=Number(season.offseason_fund_reserved||0);dbContext.offseasonCurrency=season.offseason_currency||'USD';
+ }
 
+ await loadCategories();
  await loadDatabaseEvents();
+ await loadGlobalFinancialData();
+ await loadRealOperations();
  $('#workspaceBusinessName').textContent=dbContext.businessName;
  $('#sessionBusiness').textContent=dbContext.businessName;
  $('#sessionUser').textContent=`${dbContext.user?.email||'Usuario'} · ${dbContext.role}`;
@@ -598,10 +2284,207 @@ async function handleLogin(e){
 }
 async function handleLogout(){
  await sb.auth.signOut();
- dbContext={user:null,businessId:'',businessName:'Stylos & Flores',role:'',seasonId:'',seasonName:'Temporada 2026/2027'};
+ dbContext={user:null,businessId:'',businessName:'Stylos & Flores',role:'',seasonId:'',seasonName:'Temporada 2026/2027',seasonStart:'',seasonEnd:'',offseasonStart:'',offseasonEnd:'',offseasonFundTarget:0,offseasonFundReserved:0,offseasonCurrency:'USD',operatingCashBalance:0,operatingCashCurrency:'USD',operatingCashReferenceAt:''};
  databaseEvents=[];events=[...demoEvents];
  showAuthGate();
 }
+
+
+async function openExpenseEdit(movementId){
+ if(dbContext.role!=='owner'){showToast('Esta edición está reservada al usuario maestro.');return}
+ const err=$('#expenseEditError');err.style.display='none';err.textContent='';
+ const [movementRes,allocRes,eventRes]=await Promise.all([
+  sb.from('movements').select('*').eq('business_id',dbContext.businessId).eq('id',movementId).single(),
+  sb.from('expense_allocations').select('*').eq('business_id',dbContext.businessId).eq('movement_id',movementId),
+  sb.from('events').select('*').eq('business_id',dbContext.businessId).order('event_date',{ascending:true})
+ ]);
+ if(movementRes.error){showToast(`No se pudo cargar el gasto: ${movementRes.error.message}`);return}
+ if(allocRes.error){showToast(`No se pudo cargar la distribución: ${allocRes.error.message}`);return}
+ if(eventRes.error){showToast(`No se pudieron cargar los eventos: ${eventRes.error.message}`);return}
+
+ const m=movementRes.data,allocs=allocRes.data||[];
+ const freshEvents=(eventRes.data||[]).map(dbEventToUi);
+
+ // Keep the shared event cache fresh, but render from the freshly queried list.
+ databaseEvents=freshEvents;
+ events=[...databaseEvents,...demoEvents];
+
+ $('#expenseEditModal').dataset.movementId=movementId;
+ $('#expenseEditModal').dataset.previousEventIds=JSON.stringify(allocs.map(a=>a.event_id));
+ $('#expenseEditTitle').textContent=`${m.description||'Gasto'} · ${fmtOriginal(m.amount,m.currency)}`;
+
+ $('#expenseEditCategory').innerHTML=dbCategories.filter(c=>c.kind==='expense'||c.kind==='both')
+  .map(c=>`<option value="${c.id}" ${c.id===m.category_id?'selected':''}>${escapeHtml(c.name)}</option>`).join('');
+ $('#expenseEditDate').value=m.movement_date;
+ $('#expenseEditCurrency').value=m.currency;
+ $('#expenseEditAmount').value=Number(m.amount);
+ $('#expenseEditMethod').value=[...$('#expenseEditMethod').options].some(o=>o.value===(m.payment_method||''))?(m.payment_method||''):'Otro';
+ $('#expenseEditCounterparty').value=m.counterparty||'';
+ $('#expenseEditDescription').value=m.description||'';
+ $('#expenseEditReference').value=m.reference||'';
+
+ renderExpenseEditAllocations(allocs,freshEvents);
+ refreshExpenseEditSummary();
+
+ $('#expenseEditModal').classList.add('open');
+ $('#expenseEditModal').setAttribute('aria-hidden','false');
+}
+function closeExpenseEditModal(){
+ $('#expenseEditModal').classList.remove('open');
+ $('#expenseEditModal').setAttribute('aria-hidden','true');
+}
+function renderExpenseEditAllocations(existingAllocations=[],eventPool=databaseEvents){
+ const map=Object.fromEntries(existingAllocations.map(a=>[a.event_id,Number(a.allocated_amount||0)]));
+ const container=$('#expenseEditAllocations');
+ const allocatedIds=new Set(existingAllocations.filter(a=>Number(a.allocated_amount||0)>0).map(a=>a.event_id));
+ const uniqueEvents=[...new Map((eventPool||[]).map(e=>[e.id,e])).values()];
+ const orderedEvents=uniqueEvents.sort((a,b)=>{
+  const aAssigned=allocatedIds.has(a.id)?1:0,bAssigned=allocatedIds.has(b.id)?1:0;
+  if(aAssigned!==bAssigned)return bAssigned-aAssigned;
+  return String(a.date||'').localeCompare(String(b.date||''));
+ });
+
+ const countLabel=$('#expenseEditAllocationCount');
+ if(countLabel)countLabel.textContent=`${allocatedIds.size} evento${allocatedIds.size===1?'':'s'} asignado${allocatedIds.size===1?'':'s'}`;
+
+ container.innerHTML=orderedEvents.map(e=>{
+  const current=map[e.id]||0,checked=current>0;
+  return `<div class="allocation-row" style="display:grid;grid-template-columns:auto minmax(0,1fr) 150px;gap:10px;align-items:center">
+    <input type="checkbox" class="master-alloc-check" data-event="${e.id}" ${checked?'checked':''}>
+    <div>
+      <strong>${escapeHtml(e.name)}</strong>
+      <div class="kpi-sub">${eventCardDate(e.date)} · ${escapeHtml(e.place||'')}</div>
+    </div>
+    <input class="master-alloc-amount" data-event="${e.id}" type="number" min="0" step="0.01" value="${checked?current:''}" ${checked?'':'disabled'} placeholder="0">
+  </div>`;
+ }).join('')||'<div class="kpi-sub">No hay eventos reales disponibles.</div>';
+
+ $$('.master-alloc-check').forEach(ch=>ch.onchange=()=>{
+  const inp=$(`.master-alloc-amount[data-event="${ch.dataset.event}"]`);
+  inp.disabled=!ch.checked;
+  if(!ch.checked)inp.value='';
+  else if(!inp.value)inp.value='0';
+  const assignedNow=$$('.master-alloc-check').filter(x=>x.checked).length;
+  if(countLabel)countLabel.textContent=`${assignedNow} evento${assignedNow===1?'':'s'} asignado${assignedNow===1?'':'s'}`;
+  refreshExpenseEditSummary();
+ });
+ $$('.master-alloc-amount').forEach(inp=>inp.oninput=refreshExpenseEditSummary);
+}
+function expenseEditAllocationPayload(){
+ return $$('.master-alloc-check').filter(ch=>ch.checked).map(ch=>{
+  const inp=$(`.master-alloc-amount[data-event="${ch.dataset.event}"]`);
+  return {event_id:ch.dataset.event,amount:Number(inp?.value||0),method:'manual'};
+ }).filter(a=>a.amount>0);
+}
+function refreshExpenseEditSummary(){
+ const amount=Number($('#expenseEditAmount').value||0);
+ const assigned=expenseEditAllocationPayload().reduce((s,a)=>s+a.amount,0);
+ const currency=$('#expenseEditCurrency').value||'USD';
+ $('#expenseEditTotalLabel').textContent=fmtOriginal(amount,currency);
+ $('#expenseEditAssignedLabel').textContent=fmtOriginal(assigned,currency);
+ const remaining=amount-assigned;
+ $('#expenseEditUnassignedLabel').textContent=remaining>=0?fmtOriginal(remaining,currency):`Exceso ${fmtOriginal(Math.abs(remaining),currency)}`;
+ $('#expenseEditUnassignedLabel').style.color=remaining<0?'var(--danger)':'';
+}
+function redistributeExpenseEditProportionally(){
+ const total=Number($('#expenseEditAmount').value||0);
+ const checked=$$('.master-alloc-check').filter(ch=>ch.checked);
+ if(!checked.length||total<=0){showToast('Selecciona eventos y define el monto real primero.');return}
+ const current=checked.map(ch=>{
+  const inp=$(`.master-alloc-amount[data-event="${ch.dataset.event}"]`);
+  return {ch,inp,value:Number(inp?.value||0)};
+ });
+ const currentTotal=current.reduce((s,x)=>s+x.value,0);
+ if(currentTotal>0){
+  let used=0;
+  current.forEach((x,i)=>{
+   const value=i===current.length-1?Math.max(0,total-used):Math.round((total*(x.value/currentTotal))*100)/100;
+   x.inp.value=value.toFixed(2);used+=value;
+  });
+ }else{
+  const each=Math.round((total/checked.length)*100)/100;let used=0;
+  current.forEach((x,i)=>{const value=i===current.length-1?Math.max(0,total-used):each;x.inp.value=value.toFixed(2);used+=value});
+ }
+ refreshExpenseEditSummary();
+}
+async function saveExpenseEdit(e){
+ e.preventDefault();
+ const movementId=$('#expenseEditModal').dataset.movementId;
+ const previousIds=JSON.parse($('#expenseEditModal').dataset.previousEventIds||'[]');
+ const amount=Number($('#expenseEditAmount').value||0),allocations=expenseEditAllocationPayload();
+ const assigned=allocations.reduce((s,a)=>s+a.amount,0);
+ const err=$('#expenseEditError'),btn=$('#saveExpenseEditBtn');
+
+ if(amount<=0){err.textContent='El monto real debe ser mayor que cero.';err.style.display='block';return}
+ if(assigned>amount+0.001){
+  err.textContent=`No puedes asignar ${fmtOriginal(assigned,$('#expenseEditCurrency').value)} si el gasto real es ${fmtOriginal(amount,$('#expenseEditCurrency').value)}. Ajusta la distribución antes de guardar.`;
+  err.style.display='block';return;
+ }
+
+ btn.disabled=true;btn.textContent='Guardando…';err.style.display='none';
+
+ const {error}=await sb.rpc('edit_expense_master',{
+  p_business_id:dbContext.businessId,
+  p_movement_id:movementId,
+  p_category_id:$('#expenseEditCategory').value,
+  p_movement_date:$('#expenseEditDate').value,
+  p_description:$('#expenseEditDescription').value.trim()||'Gasto registrado',
+  p_counterparty:$('#expenseEditCounterparty').value.trim()||null,
+  p_amount:amount,
+  p_currency:$('#expenseEditCurrency').value,
+  p_fx_rate_to_crc:$('#expenseEditCurrency').value==='CRC'?1:FX,
+  p_payment_method:$('#expenseEditMethod').value,
+  p_reference:$('#expenseEditReference').value.trim()||null,
+  p_allocations:allocations
+ });
+
+ if(error){
+  console.error(error);err.textContent=error.message;err.style.display='block';
+  btn.disabled=false;btn.textContent='Guardar cambios';return;
+ }
+
+ const impacted=[...new Set([...previousIds,...allocations.map(a=>a.event_id)])];
+ for(const eventId of impacted)await loadRealEventFinancials(eventId);
+ await loadGlobalFinancialData();
+ await loadRealOperations();
+
+ btn.disabled=false;btn.textContent='Guardar cambios';
+ closeExpenseEditModal();showToast('Gasto actualizado · cambio guardado en historial');
+ renderEventDetail();
+}
+
+function openBudgetLineModal(eventId){
+ const e=realEventById(eventId);if(!e){showToast('El presupuesto real solo está disponible para eventos de Supabase.');return}
+ $('#budgetLineCategory').innerHTML=dbCategories.filter(c=>c.kind==='expense'||c.kind==='both').map(c=>`<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('');
+ $('#budgetLineDescription').value='';$('#budgetLineQuantity').value='';$('#budgetLineUnit').value='';$('#budgetLineUnitCost').value='';$('#budgetLineAmount').value='';
+ $('#budgetLineCurrency').value=e.dbCurrency||'USD';$('#budgetLineNotes').value='';$('#budgetLineError').style.display='none';
+ $('#budgetLineModal').dataset.eventId=eventId;$('#budgetLineModal').classList.add('open');$('#budgetLineModal').setAttribute('aria-hidden','false');
+ setTimeout(()=>$('#budgetLineDescription').focus(),60);
+}
+function closeBudgetLineModal(){$('#budgetLineModal').classList.remove('open');$('#budgetLineModal').setAttribute('aria-hidden','true')}
+function updateBudgetLineAmount(){
+ const q=Number($('#budgetLineQuantity').value||0),u=Number($('#budgetLineUnitCost').value||0);
+ if(q>0&&u>0)$('#budgetLineAmount').value=(q*u).toFixed(2);
+}
+async function saveBudgetLine(e){
+ e.preventDefault();
+ const eventId=$('#budgetLineModal').dataset.eventId,event=realEventById(eventId);
+ if(!event)return;
+ const amount=Number($('#budgetLineAmount').value||0),desc=$('#budgetLineDescription').value.trim(),err=$('#budgetLineError'),btn=$('#saveBudgetLineBtn');
+ if(!desc||amount<0){err.textContent='Completa el detalle y el presupuesto.';err.style.display='block';return}
+ btn.disabled=true;btn.textContent='Guardando…';err.style.display='none';
+ const payload={
+  business_id:dbContext.businessId,event_id:eventId,category_id:$('#budgetLineCategory').value||null,
+  description:desc,quantity:$('#budgetLineQuantity').value?Number($('#budgetLineQuantity').value):null,
+  unit:$('#budgetLineUnit').value.trim()||null,estimated_unit_cost:$('#budgetLineUnitCost').value?Number($('#budgetLineUnitCost').value):null,
+  budgeted_amount:amount,currency:$('#budgetLineCurrency').value,visible_to_client:false,notes:$('#budgetLineNotes').value.trim()||null
+ };
+ const {error}=await sb.from('event_budget_lines').insert(payload);
+ btn.disabled=false;btn.textContent='Guardar línea';
+ if(error){err.textContent=error.message;err.style.display='block';return}
+ await loadRealEventFinancials(eventId);closeBudgetLineModal();showToast('Línea de presupuesto guardada');renderEventDetail();
+}
+
 function openEventModal(){
  if(!dbContext.businessId){showToast('Primero debes iniciar sesión.');return}
  $('#newEventName').value='';$('#newEventDate').value='';$('#newEventVenue').value='';$('#newEventLocation').value='';
@@ -651,6 +2534,32 @@ $$('[data-view]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.view
 $('#loginForm').addEventListener('submit',handleLogin);
 $('#logoutBtn').onclick=handleLogout;
 $('#eventForm').addEventListener('submit',saveNewEvent);
+$('#seasonFundForm').addEventListener('submit',saveSeasonFund);
+$('#operatingCashForm').addEventListener('submit',saveOperatingCash);
+$('#closeOperatingCashModal').onclick=closeOperatingCashModal;
+$('#cancelOperatingCashModal').onclick=closeOperatingCashModal;
+$('#operatingCashModal').addEventListener('click',e=>{if(e.target.id==='operatingCashModal')closeOperatingCashModal()});
+$('#closeSeasonFundModal').onclick=closeSeasonFundModal;
+$('#cancelSeasonFundModal').onclick=closeSeasonFundModal;
+$('#seasonFundModal').addEventListener('click',e=>{if(e.target.id==='seasonFundModal')closeSeasonFundModal()});
+$('#operationForm').addEventListener('submit',saveOperationPlan);
+$('#closeOperationModal').onclick=closeOperationModal;
+$('#cancelOperationModal').onclick=closeOperationModal;
+$('#addOperationGroup').onclick=()=>{const c=$('#operationGroupEditors');c.insertAdjacentHTML('beforeend',operationGroupEditorHtml({}));bindOperationEditorDynamic()};
+$('#operationModal').addEventListener('click',e=>{if(e.target.id==='operationModal')closeOperationModal()});
+$('#budgetLineForm').addEventListener('submit',saveBudgetLine);
+$('#expenseEditForm').addEventListener('submit',saveExpenseEdit);
+$('#closeExpenseEditModal').onclick=closeExpenseEditModal;
+$('#cancelExpenseEditModal').onclick=closeExpenseEditModal;
+$('#expenseEditModal').addEventListener('click',e=>{if(e.target.id==='expenseEditModal')closeExpenseEditModal()});
+$('#expenseEditAmount').oninput=refreshExpenseEditSummary;
+$('#expenseEditCurrency').onchange=refreshExpenseEditSummary;
+$('#expenseEditRedistribute').onclick=redistributeExpenseEditProportionally;
+$('#closeBudgetLineModal').onclick=closeBudgetLineModal;
+$('#cancelBudgetLineModal').onclick=closeBudgetLineModal;
+$('#budgetLineModal').addEventListener('click',e=>{if(e.target.id==='budgetLineModal')closeBudgetLineModal()});
+$('#budgetLineQuantity').oninput=updateBudgetLineAmount;
+$('#budgetLineUnitCost').oninput=updateBudgetLineAmount;
 $('#closeEventModal').onclick=closeEventModal;
 $('#cancelEventModal').onclick=closeEventModal;
 $('#eventModal').addEventListener('click',e=>{if(e.target.id==='eventModal')closeEventModal()});
@@ -664,11 +2573,11 @@ $('#savePending').onclick=()=>saveExpense(true);
 $('#closeReceivableModal').onclick=closeReceivableModal;
 $('#receivableModal').addEventListener('click',e=>{if(e.target.id==='receivableModal')closeReceivableModal()});
 $('#receivableForm').addEventListener('submit',e=>{e.preventDefault();saveReceivable(false)});
-$('#savePendingReceivable').onclick=()=>saveReceivable(true);
+$('#savePendingReceivable').onclick=()=>saveExpectedReceivable();
 $('#receivableEvent').onchange=e=>populateReceivablePending(e.target.value);
 $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView==='eventDetail')renderEventDetail();else navTo(currentView)};
 $('#themeBtn').onclick=()=>{const dark=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=dark?'light':'dark';$('#themeBtn').textContent=dark?'Oscuro':'Claro';document.querySelector('meta[name="theme-color"]').content=dark?'#f7f7f5':'#191919'};
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeRegister();closeReceivableModal();closeEventModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
 initializeSupabaseApp();
 </script>
 
