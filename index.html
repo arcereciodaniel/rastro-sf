@@ -2079,10 +2079,12 @@ function openOperationModal(operationId=''){
  $('#operationName').value=op?.name||'';
  $('#operationStart').value=op?.start||new Date().toISOString().slice(0,10);
  $('#operationEnd').value=op?.end||$('#operationStart').value;
- $('#operationStatus').value=op?.status||'draft';
+ $('#operationStatus').value=op?.status||'planned';
  $('#operationNotes').value=op?.notes||'';
  $('#operationSaveError').style.display='none';
- $('#operationGroupEditors').innerHTML=(op?.groups?.length?op.groups:[{}]).map(operationGroupEditorHtml).join('');
+ // V2.16: al crear un operativo nuevo, el editor inicia limpio.
+ // Los bloques se agregan únicamente cuando el usuario pulsa “+ Bloque”.
+ $('#operationGroupEditors').innerHTML=op?.groups?.length?op.groups.map(operationGroupEditorHtml).join(''):'';
  bindOperationEditorDynamic();
  $('#operationModal').classList.add('open');$('#operationModal').setAttribute('aria-hidden','false');
 }
