@@ -564,6 +564,33 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 
 .password-field-wrap{position:relative}.password-field-wrap input{padding-right:48px}.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;border-radius:999px}.password-toggle:hover{background:color-mix(in srgb,var(--text) 4%,transparent);color:var(--text)}.password-toggle:focus-visible{outline:2px solid color-mix(in srgb,var(--brand) 40%, white);outline-offset:2px}.password-toggle svg{width:18px;height:18px;display:block}
+
+/* ==========================================================
+   RASTRO V2.22 · Persistent navigation
+   Conserva la sección actual al recargar. También restaura
+   detalle de evento, pestaña activa y mes seleccionado.
+   ========================================================== */
+
+
+/* ==========================================================
+   RASTRO V2.23 · Desktop sidebar collapse
+   ========================================================== */
+.sidebar,.main,.sidebar-toggle{transition:transform .2s ease,margin-left .2s ease,left .2s ease,background .15s ease}
+.sidebar-toggle{display:none}
+@media(min-width:901px){
+  .sidebar-toggle{
+    display:grid;place-items:center;position:fixed;z-index:80;
+    top:136px;left:calc(var(--sidebarW) - 23px);
+    width:46px;height:46px;padding:0;border-radius:999px;
+    border:1px solid var(--border);background:var(--surface3);color:var(--muted);
+    box-shadow:0 3px 10px rgba(0,0,0,.08);font-size:1.45rem;font-weight:750;line-height:1
+  }
+  .sidebar-toggle:hover{color:var(--text);background:var(--surface2)}
+  .app.sidebar-collapsed .sidebar{transform:translateX(-100%)}
+  .app.sidebar-collapsed .main{margin-left:0}
+  .app.sidebar-collapsed .sidebar-toggle{left:12px}
+}
+
 </style>
 </head>
 <body>
@@ -607,10 +634,6 @@ html,body{max-width:100%;overflow-x:hidden}
       </nav>
     </div>
     <div class="sidebar-bottom">
-      <div class="managed-card">
-        <strong>Integración V1</strong>
-        <span>Eventos, Movimientos, Cobros, Operación, Temporada e Inicio ya usan Supabase real. Inicio respeta estrictamente el ciclo de temporada seleccionado en KPIs, alertas, cobros y próximos eventos.</span>
-      </div>
       <div class="managed-card" id="sessionCard">
       <strong id="sessionBusiness">Conectando…</strong>
       <span id="sessionUser">Supabase</span>
@@ -618,6 +641,7 @@ html,body{max-width:100%;overflow-x:hidden}
     </div>
     </div>
   </aside>
+  <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Ocultar menú lateral" aria-expanded="true"><span id="sidebarToggleIcon">«</span></button>
 
   <main class="main">
     <header class="topbar">
@@ -1068,6 +1092,7 @@ let selectedEvent='e1';
 let currentView='home';
 let displayCurrency='USD';
 let eventDetailTab='summary';
+let selectedSeasonMonth='';
 
 let currentReceivableContext={eventId:'',receivableId:''};
 
@@ -1095,9 +1120,22 @@ function moneyCRC(v){return new Intl.NumberFormat('es-CR',{style:'currency',curr
 function money(v){return displayCurrency==='USD'?moneyUSD(v):moneyCRC(v*FX)}
 function fmtOriginal(v,c){return c==='USD'?moneyUSD(v):moneyCRC(v)}
 function pct(v){return `${Math.round(v)}%`}
-function dateLabel(iso){return new Intl.DateTimeFormat('es-CR',{day:'numeric',month:'short',year:'numeric'}).format(new Date(iso+'T12:00:00'))}
-function shortDate(iso){return new Intl.DateTimeFormat('es-CR',{day:'2-digit',month:'short'}).format(new Date(iso+'T12:00:00')).replace('.','')}
-function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{day:'2-digit',month:'short',year:'numeric'}).format(new Date(iso+'T12:00:00')).replace('.','').toUpperCase()}
+const APP_TIME_ZONE='America/Costa_Rica';
+function costaRicaDateOnly(iso){return new Date(`${iso}T12:00:00-06:00`)}
+function costaRicaNowParts(date=new Date()){
+ const parts=new Intl.DateTimeFormat('en-US',{timeZone:APP_TIME_ZONE,year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',hourCycle:'h23'}).formatToParts(date);
+ return Object.fromEntries(parts.filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));
+}
+function costaRicaTodayISO(){const p=costaRicaNowParts();return `${p.year}-${p.month}-${p.day}`}
+function costaRicaGreeting(){
+ const hour=Number(costaRicaNowParts().hour||0);
+ if(hour>=5&&hour<12)return 'Buenos días';
+ if(hour>=12&&hour<18)return 'Buenas tardes';
+ return 'Buenas noches';
+}
+function dateLabel(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,day:'numeric',month:'short',year:'numeric'}).format(costaRicaDateOnly(iso))}
+function shortDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,day:'2-digit',month:'short'}).format(costaRicaDateOnly(iso)).replace('.','')}
+function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,day:'2-digit',month:'short',year:'numeric'}).format(costaRicaDateOnly(iso)).replace('.','').toUpperCase()}
 function eventById(id){return events.find(e=>e.id===id)}
 function isUuid(value=''){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value))}
 function valueToUsd(amount,currency){return currency==='CRC'?Number(amount||0)/FX:Number(amount||0)}
@@ -1125,7 +1163,7 @@ function statusClass(s){if(/completo|aprobado|alta|cerrado|pagado/i.test(s))retu
 function header(title,sub,actions=''){return `<div class="title-row"><div><div class="eyebrow">Rastro · Stylos & Flores</div><h1>${title}</h1><p>${sub}</p></div>${actions?`<div class="actions">${actions}</div>`:''}</div>`}
 function kpi(label,value,sub=''){return `<div class="card kpi"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div>${sub?`<div class="kpi-sub">${sub}</div>`:''}</div>`}
 function cashMinimumRecommended(){return Math.round(((shared.operatingSeason/8)+(shared.offTarget/4))/125)*125}
-function fullMonthLabel(key){return new Intl.DateTimeFormat('es-CR',{month:'long',year:'numeric'}).format(new Date(key+'-01T12:00:00')).replace(/^./,c=>c.toUpperCase())}
+function fullMonthLabel(key){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,month:'long',year:'numeric'}).format(costaRicaDateOnly(key+'-01')).replace(/^./,c=>c.toUpperCase())}
 function cashTooltip(m,i,dataset){
  const start=i===0?shared.bank:dataset[i-1].balance;
  const operations=Math.max(0,start+m.income-m.cost-m.balance);
@@ -1147,7 +1185,57 @@ function updateEventFinancialStatus(e){
   else if(e.collected>0){e.financial='Cobro parcial';}
   else{e.financial='Sin cobros';}
 }
-function navTo(view){currentView=view;$$('.view').forEach(v=>v.classList.remove('active'));const el=$(`#view-${view}`);if(el)el.classList.add('active');$$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));window.scrollTo({top:0,behavior:'instant'});if(view==='home')renderHome();if(view==='season')renderSeason();if(view==='operation')renderOperation();if(view==='events')renderEvents();if(view==='movements')renderMovements();if(view==='receivables')renderReceivables();if(view==='eventDetail')renderEventDetail();requestAnimationFrame(()=>enhanceMobileTables())}
+const VALID_APP_VIEWS=new Set(['home','season','operation','events','movements','receivables','eventDetail']);
+function navigationStorageKey(){return dbContext.user?.id?`rastro:navigation:${dbContext.user.id}`:'rastro:navigation'}
+function saveNavigationState(){
+ if(!dbContext.user?.id)return;
+ try{
+  localStorage.setItem(navigationStorageKey(),JSON.stringify({
+   view:currentView,
+   selectedEvent:currentView==='eventDetail'?selectedEvent:'',
+   eventDetailTab,
+   seasonMonth:selectedSeasonMonth||''
+  }));
+ }catch(err){console.warn('No se pudo guardar la navegación',err)}
+}
+function loadNavigationState(){
+ if(!dbContext.user?.id)return null;
+ try{
+  const raw=localStorage.getItem(navigationStorageKey());
+  if(!raw)return null;
+  const state=JSON.parse(raw);
+  return state&&VALID_APP_VIEWS.has(state.view)?state:null;
+ }catch(err){console.warn('No se pudo restaurar la navegación',err);return null}
+}
+async function restoreLastNavigation(){
+ const state=loadNavigationState();
+ if(!state){navTo('home');return}
+ selectedSeasonMonth=state.seasonMonth||'';
+ eventDetailTab=state.eventDetailTab||'summary';
+ if(state.view==='eventDetail'){
+  const event=eventById(state.selectedEvent);
+  if(event){await openEvent(state.selectedEvent,eventDetailTab);return}
+  navTo('events');return;
+ }
+ navTo(state.view);
+}
+function navTo(view){
+ if(!VALID_APP_VIEWS.has(view))view='home';
+ currentView=view;
+ $$('.view').forEach(v=>v.classList.remove('active'));
+ const el=$(`#view-${view}`);if(el)el.classList.add('active');
+ $$('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+ window.scrollTo({top:0,behavior:'instant'});
+ if(view==='home')renderHome();
+ if(view==='season')renderSeason(selectedSeasonMonth);
+ if(view==='operation')renderOperation();
+ if(view==='events')renderEvents();
+ if(view==='movements')renderMovements();
+ if(view==='receivables')renderReceivables();
+ if(view==='eventDetail')renderEventDetail();
+ saveNavigationState();
+ requestAnimationFrame(()=>enhanceMobileTables());
+}
 
 function enhanceMobileTables(scope=document){
  const tables=[...(scope||document).querySelectorAll('.table-wrap table')];
@@ -1189,9 +1277,9 @@ function seasonEventsReal(){
  return databaseEvents.filter(e=>dateInRange(e.date,start,end));
 }
 function confirmedSeasonEvents(){return seasonEventsReal().filter(e=>!['quote','cancelled'].includes(e.dbStatus||''))}
-function addMonthsIso(iso,offset){const d=new Date(`${iso}T12:00:00`);d.setMonth(d.getMonth()+offset);return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`}
+function addMonthsIso(iso,offset){const [y,m]=iso.slice(0,7).split('-').map(Number);const d=new Date(Date.UTC(y,m-1+offset,1));return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`}
 function monthStartIso(key){return `${key}-01`}
-function monthEndIso(key){const [y,m]=key.split('-').map(Number);return new Date(y,m,0,12).toISOString().slice(0,10)}
+function monthEndIso(key){const [y,m]=key.split('-').map(Number);const d=new Date(Date.UTC(y,m,0));return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`}
 function seasonMonthModels(){
  const start=dbContext.seasonStart||'2026-11-01';const end=seasonCycleEnd()||'2027-10-31';
  const startKey=start.slice(0,7),endKey=end.slice(0,7);const arr=[];let key=startKey,i=0;
@@ -1200,14 +1288,14 @@ function seasonMonthModels(){
   const ev=seasonEventsReal().filter(e=>e.date.startsWith(key));
   const confirmed=ev.filter(e=>!['quote','cancelled'].includes(e.dbStatus||''));
   const contracted=confirmed.reduce((s,e)=>s+e.sale,0),collected=ev.reduce((s,e)=>s+e.collected,0),cost=confirmed.reduce((s,e)=>s+e.costEst,0);
-  const d=new Date(`${key}-01T12:00:00`),label=d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase();
+  const d=costaRicaDateOnly(`${key}-01`),label=d.toLocaleDateString('es-CR',{timeZone:APP_TIME_ZONE,month:'short'}).replace('.','').toUpperCase();
   arr.push({key,label,off,events:ev.length,contracted,collected,cost,balance:contracted-cost});
   key=addMonthsIso(start,++i);
  }
  return arr;
 }
 function formatSeasonRange(){
- const fmt=iso=>iso?new Date(`${iso}T12:00:00`).toLocaleDateString('es-CR',{month:'long',year:'numeric'}):'';
+ const fmt=iso=>iso?costaRicaDateOnly(iso).toLocaleDateString('es-CR',{timeZone:APP_TIME_ZONE,month:'long',year:'numeric'}):'';
  return `${fmt(dbContext.seasonStart)} — ${fmt(dbContext.seasonEnd)}${dbContext.offseasonStart&&dbContext.offseasonEnd?` · Off Season ${fmt(dbContext.offseasonStart)} — ${fmt(dbContext.offseasonEnd)}`:''}`;
 }
 function seasonContractedReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e.sale,0)}
@@ -1236,14 +1324,10 @@ async function saveSeasonFund(e){
 }
 
 
-function todayIsoLocal(){
- const d=new Date(),pad=n=>String(n).padStart(2,'0');
- return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
+function todayIsoLocal(){return costaRicaTodayISO()}
 function addDaysLocal(iso,days){
- const d=new Date(`${iso}T12:00:00`);
- d.setDate(d.getDate()+days);
- return d.toISOString().slice(0,10);
+ const [y,m,d]=iso.split('-').map(Number),dt=new Date(Date.UTC(y,m-1,d+days));
+ return `${dt.getUTCFullYear()}-${String(dt.getUTCMonth()+1).padStart(2,'0')}-${String(dt.getUTCDate()).padStart(2,'0')}`;
 }
 function cashReferenceConfigured(){return !!dbContext.operatingCashReferenceAt}
 function homeSeasonStart(){return dbContext.seasonStart||''}
@@ -1337,20 +1421,20 @@ function realHomeProjection(){
  const end=homeSeasonEnd()||addDaysLocal(todayIsoLocal(),365);
  const today=todayIsoLocal();
  const projectionStart=(homeSeasonStart()&&today<homeSeasonStart())?homeSeasonStart():today;
- let d=new Date(`${projectionStart.slice(0,7)}-01T12:00:00`);
- const stop=new Date(`${end.slice(0,7)}-01T12:00:00`);
+ let d=new Date(Date.UTC(Number(projectionStart.slice(0,4)),Number(projectionStart.slice(5,7))-1,1));
+ const stop=new Date(Date.UTC(Number(end.slice(0,4)),Number(end.slice(5,7))-1,1));
  const rows=[],open=openReceivablesReal();
  let balance=available,guard=0;
  while(d<=stop&&guard<16){
-  const key=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+  const key=`${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}`;
   const income=open.filter(r=>String(r.due||'').startsWith(key)).reduce((s,r)=>s+receivableRemainingUsd(r),0);
   balance+=income;
   const off=dateInRange(`${key}-15`,dbContext.offseasonStart,dbContext.offseasonEnd);
   rows.push({
-   key,label:d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase(),
+   key,label:new Intl.DateTimeFormat('es-CR',{timeZone:'UTC',month:'short'}).format(d).replace('.','').toUpperCase(),
    income,cost:0,balance,off
   });
-  d.setMonth(d.getMonth()+1);guard++;
+  d.setUTCMonth(d.getUTCMonth()+1);guard++;
  }
  return rows;
 }
@@ -1412,7 +1496,7 @@ function renderHome(){
  const cashConfigured=cashReferenceConfigured();
  const projected=realHomeProjection();
 
- $('#view-home').innerHTML=header('Buenos días',`${dbContext.seasonName||'Temporada'} · Vista ejecutiva del negocio · métricas filtradas al ciclo seleccionado`,
+ $('#view-home').innerHTML=header(costaRicaGreeting(),`${dbContext.seasonName||'Temporada'} · Vista ejecutiva del negocio · métricas filtradas al ciclo seleccionado`,
   cashConfigured&&['owner','admin'].includes(dbContext.role)?'<button class="btn secondary" id="editOperatingCash">Actualizar saldo</button>':
   ['owner','admin'].includes(dbContext.role)?'<button class="btn" id="editOperatingCash">Configurar saldo actual</button>':'')+`
  <div class="grid hero-grid">
@@ -1453,9 +1537,9 @@ function renderHome(){
   <div class="card">
    <div class="section-title"><h2>Próximos eventos</h2><button class="btn secondary small" data-jump="events">Ver todos</button></div>
    <div class="event-list">${next.length?next.map(e=>{
-    const d=new Date(e.date+'T12:00:00'),mon=d.toLocaleDateString('es-CR',{month:'short'}).replace('.','').toUpperCase();
+    const d=costaRicaDateOnly(e.date),mon=d.toLocaleDateString('es-CR',{timeZone:APP_TIME_ZONE,month:'short'}).replace('.','').toUpperCase();
     const collectedPct=e.sale>0?Math.round(e.collected/e.sale*100):0;
-    return `<div class="event-row" data-open-event="${e.id}"><div class="event-date"><b>${mon}</b><span>${d.getDate()}</span></div><div class="meta"><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(e.place)}</small></div><div class="event-right"><strong>${collectedPct}% cobrado</strong><small>${money(e.costReal)} gastado</small></div></div>`;
+    return `<div class="event-row" data-open-event="${e.id}"><div class="event-date"><b>${mon}</b><span>${Number(e.date.slice(8,10))}</span></div><div class="meta"><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(e.place)}</small></div><div class="event-right"><strong>${collectedPct}% cobrado</strong><small>${money(e.costReal)} gastado</small></div></div>`;
    }).join(''):'<div class="placeholder" style="padding:24px 10px">No hay próximos eventos registrados.</div>'}</div>
   </div>
  </div>
@@ -1470,7 +1554,8 @@ function renderHome(){
  const heroCash=$('#heroConfigureCash');if(heroCash)heroCash.onclick=openOperatingCashModal;
  bindDynamic();
 }
-function renderSeason(monthKey=''){
+function renderSeason(monthKey=selectedSeasonMonth||''){
+ selectedSeasonMonth=monthKey||'';
  const monthModels=seasonMonthModels();const selected=monthModels.find(m=>m.key===monthKey)||null;
  const cycleEvents=seasonEventsReal();const confirmed=confirmedSeasonEvents();const contracted=seasonContractedReal();const collected=seasonCollectedReal();const projectedCost=seasonProjectedCostReal();const actualCost=seasonActualCostReal();const margin=contracted-projectedCost;
  const filteredEvents=selected?cycleEvents.filter(e=>e.date.startsWith(selected.key)):cycleEvents;
@@ -1510,7 +1595,7 @@ function renderSeason(monthKey=''){
  $$('.month-pill').forEach(b=>b.onclick=()=>renderSeason(selected&&selected.key===b.dataset.month?'':b.dataset.month));
  const clear=$('#clearSeasonMonth');if(clear)clear.onclick=()=>renderSeason('');
  const editFund=$('#editSeasonFund');if(editFund)editFund.onclick=openSeasonFundModal;
- $('#newEventBtn').onclick=openEventModal;bindDynamic();enhanceMobileTables($('#view-season'));
+ $('#newEventBtn').onclick=openEventModal;bindDynamic();enhanceMobileTables($('#view-season'));saveNavigationState();
 }
 function renderOperation(){
  const list=dbOperations.filter(op=>op.status!=='cancelled');
@@ -1663,7 +1748,7 @@ function renderEventDetail(){
  $('#backEvents').onclick=()=>navTo('events');
  $('#addEventExpense').onclick=()=>openRegister(e.id);
  $('#addReceivableFromHeader').onclick=()=>openReceivableModal(e.id,'','payment');
- $$('.tab[data-event-tab]').forEach(btn=>btn.onclick=()=>{eventDetailTab=btn.dataset.eventTab;renderEventDetail()});
+ $$('.tab[data-event-tab]').forEach(btn=>btn.onclick=()=>{eventDetailTab=btn.dataset.eventTab;renderEventDetail();saveNavigationState()});
  const addCollected=$('#addCollectedReceivable'); if(addCollected) addCollected.onclick=()=>openReceivableModal(e.id,'','payment');
  const addExpected=$('#addExpectedReceivable'); if(addExpected) addExpected.onclick=()=>createExpectedReceivable(e.id);
  const tabAddExpense=$('#tabAddExpense'); if(tabAddExpense) tabAddExpense.onclick=()=>openRegister(e.id); const addBudgetLine=$('#addBudgetLine'); if(addBudgetLine) addBudgetLine.onclick=()=>openBudgetLineModal(e.id); $$('[data-edit-expense]').forEach(btn=>btn.onclick=()=>openExpenseEdit(btn.dataset.editExpense));
@@ -1737,15 +1822,8 @@ function renderMovements(){
  $$('[data-edit-global-expense]').forEach(btn=>btn.onclick=()=>openExpenseEdit(btn.dataset.editGlobalExpense));
  enhanceMobileTables($('#view-movements'));
 }
-function localTodayISO(){
- const d=new Date(),pad=n=>String(n).padStart(2,'0');
- return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-}
-function addIsoDays(iso,days){
- const d=new Date(`${iso}T12:00:00`);
- d.setDate(d.getDate()+days);
- return d.toISOString().slice(0,10);
-}
+function localTodayISO(){return costaRicaTodayISO()}
+function addIsoDays(iso,days){return addDaysLocal(iso,days)}
 function receivableRemainingOriginal(r){
  return Math.max(0,Number(r.originalAmount||0)-Number(r.paidOriginal||0));
 }
@@ -1866,7 +1944,7 @@ function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
  const modal=$('#registerModal');const eventPool=databaseEvents.length?databaseEvents:events;const contextualEventId=eventId||((currentExpenseContext.eventIds||[]).length===1?currentExpenseContext.eventIds[0]:'');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===contextualEventId?'selected':''}>${e.name}</option>`).join('')}`;
  populateDbCategorySelects();
- $('#expenseDate').value=new Date().toISOString().slice(0,10);$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
+ $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
  const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(contextualEventId?'single':'general');
  const ctx=$('#expenseOperationContext');if(currentExpenseContext.operationId){const op=operationById(currentExpenseContext.operationId),g=op?.groups.find(x=>x.id===currentExpenseContext.groupId);ctx.style.display='block';ctx.innerHTML=`<div class="kpi-label">Operativo relacionado</div><strong>${op?.name||'Operativo'}</strong><div class="kpi-sub">${g?.name||''}</div>`}else{ctx.style.display='none';ctx.innerHTML=''}
  renderExpenseAllocationRows();
@@ -1973,17 +2051,17 @@ function openReceivableModal(eventId='', receivableId='', mode='payment'){
  if(mode==='editExpected' && r){
   $('#receivableAmount').value=r.originalAmount??r.amount??'';
   $('#receivableCurrency').value=r.dbCurrency||'USD';
-  $('#receivableDate').value=r.due||new Date().toISOString().slice(0,10);
+  $('#receivableDate').value=r.due||costaRicaTodayISO();
   $('#receivableNote').value=r.concept||'';
  }else if(mode==='payment' && r){
   $('#receivableAmount').value=receivableRemainingOriginal(r);
   $('#receivableCurrency').value=r.dbCurrency||'USD';
-  $('#receivableDate').value=new Date().toISOString().slice(0,10);
+  $('#receivableDate').value=costaRicaTodayISO();
   $('#receivableNote').value='';
  }else{
   $('#receivableAmount').value='';
   $('#receivableCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
-  $('#receivableDate').value=new Date().toISOString().slice(0,10);
+  $('#receivableDate').value=costaRicaTodayISO();
   $('#receivableNote').value='';
  }
 
@@ -2109,7 +2187,7 @@ function createExpectedReceivable(eventId){
  const e=eventById(eventId);if(!e)return;
  if(e.source==='db'){openReceivableModal(eventId,'','newExpected');return}
  const remaining=Math.max(0,e.sale-e.collected);if(!remaining){showToast('Este evento ya no tiene saldo pendiente.');return}
- receivables.push({id:'r'+Date.now(),eventId:e.id,concept:'Nueva cuota',amount:remaining,due:new Date().toISOString().slice(0,10),status:'Pendiente'});
+ receivables.push({id:'r'+Date.now(),eventId:e.id,concept:'Nueva cuota',amount:remaining,due:costaRicaTodayISO(),status:'Pendiente'});
  updateEventFinancialStatus(e);showToast('Se agregó una cuota esperada de cobro.');renderEventDetail();
 }
 
@@ -2418,7 +2496,7 @@ function openOperationModal(operationId=''){
  $('#operationModal').dataset.operationId=operationId||'';
  $('#operationModalTitle').textContent=op?'Editar operativo':'Crear operativo';
  $('#operationName').value=op?.name||'';
- $('#operationStart').value=op?.start||new Date().toISOString().slice(0,10);
+ $('#operationStart').value=op?.start||costaRicaTodayISO();
  $('#operationEnd').value=op?.end||$('#operationStart').value;
  $('#operationStatus').value=op?.status||'planned';
  $('#operationNotes').value=op?.notes||'';
@@ -2599,10 +2677,11 @@ async function enterApp(session){
  try{
   dbContext.user=session.user;
   showAppShell();
+  restoreSidebarState();
   $('#sessionBusiness').textContent='Cargando…';
   $('#sessionUser').textContent=session.user.email||'Usuario';
   await loadBusinessContext();
-  renderHome();
+  await restoreLastNavigation();
  }catch(err){
   console.error(err);
   await sb.auth.signOut();
@@ -2626,7 +2705,9 @@ async function handleLogin(e){
  await enterApp(data.session);
 }
 async function handleLogout(){
+ const savedNavigationKey=navigationStorageKey();
  await sb.auth.signOut();
+ try{localStorage.removeItem(savedNavigationKey)}catch(err){console.warn('No se pudo limpiar la navegación',err)}
  dbContext={user:null,businessId:'',businessName:'Stylos & Flores',role:'',seasonId:'',seasonName:'Temporada 2026/2027',seasonStart:'',seasonEnd:'',offseasonStart:'',offseasonEnd:'',offseasonFundTarget:0,offseasonFundReserved:0,offseasonCurrency:'USD',operatingCashBalance:0,operatingCashCurrency:'USD',operatingCashReferenceAt:''};
  databaseEvents=[];events=[...demoEvents];
  showAuthGate();
@@ -2873,6 +2954,26 @@ function refreshCurrentView(){
 function showToast(msg){const t=$('#toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),2400)}
 function bindDynamic(){$$('[data-jump]').forEach(el=>el.onclick=()=>navTo(el.dataset.jump));$$('[data-open-event]').forEach(el=>el.onclick=()=>openEvent(el.dataset.openEvent))}
 
+function sidebarStorageKey(){return dbContext.user?.id?`rastro:sidebar:${dbContext.user.id}`:'rastro:sidebar'}
+function setSidebarCollapsed(collapsed,{persist=true}={}){
+ const app=$('#appShell'),btn=$('#sidebarToggle'),icon=$('#sidebarToggleIcon');
+ if(!app||!btn)return;
+ app.classList.toggle('sidebar-collapsed',!!collapsed);
+ btn.setAttribute('aria-expanded',String(!collapsed));
+ btn.setAttribute('aria-label',collapsed?'Mostrar menú lateral':'Ocultar menú lateral');
+ if(icon)icon.textContent=collapsed?'»':'«';
+ if(persist&&dbContext.user?.id){try{localStorage.setItem(sidebarStorageKey(),collapsed?'1':'0')}catch(err){console.warn('No se pudo guardar el estado del menú',err)}}
+}
+function restoreSidebarState(){
+ let collapsed=false;
+ try{collapsed=localStorage.getItem(sidebarStorageKey())==='1'}catch(err){console.warn('No se pudo restaurar el menú',err)}
+ setSidebarCollapsed(collapsed,{persist:false});
+}
+function refreshGreeting(){
+ if(currentView!=='home')return;
+ const h=$('#view-home .title-row h1');if(h)h.textContent=costaRicaGreeting();
+}
+
 function openMobileSheet(id){const el=$(id);if(!el)return;el.classList.add('open');el.setAttribute('aria-hidden','false');document.body.style.overflow='hidden'}
 function closeMobileSheet(id){const el=$(id);if(!el)return;el.classList.remove('open');el.setAttribute('aria-hidden','true');if(!document.querySelector('.mobile-sheet.open'))document.body.style.overflow=''}
 function closeAllMobileSheets(){closeMobileSheet('#mobileQuickSheet');closeMobileSheet('#mobileMoreSheet')}
@@ -2894,6 +2995,7 @@ if(toggleLoginPassword&&toggleLoginPasswordIcon){toggleLoginPasswordIcon.innerHT
 
 $('#loginForm').addEventListener('submit',handleLogin);
 $('#logoutBtn').onclick=handleLogout;
+$('#sidebarToggle').onclick=()=>setSidebarCollapsed(!$('#appShell').classList.contains('sidebar-collapsed'));
 $('#eventForm').addEventListener('submit',saveNewEvent);
 $('#seasonFundForm').addEventListener('submit',saveSeasonFund);
 $('#operatingCashForm').addEventListener('submit',saveOperatingCash);
@@ -2948,6 +3050,7 @@ $('#receivableEvent').onchange=e=>populateReceivablePending(e.target.value);
 $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView==='eventDetail')renderEventDetail();else navTo(currentView)};
 $('#themeBtn').onclick=toggleTheme;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMobileSheets();closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
+setInterval(refreshGreeting,60000);
 initializeSupabaseApp();
 </script>
 
