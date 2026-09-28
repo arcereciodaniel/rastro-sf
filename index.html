@@ -21,8 +21,8 @@
       document.documentElement.style.colorScheme='dark';
       if(statusMeta)statusMeta.content='black-translucent';
     }else{
-      document.documentElement.style.removeProperty('background-color');
-      document.documentElement.style.removeProperty('color-scheme');
+      document.documentElement.style.backgroundColor='#f7f7f5';
+      document.documentElement.style.colorScheme='light';
       if(statusMeta)statusMeta.content='default';
     }
   }catch(_e){}
@@ -585,6 +585,28 @@ html,body{max-width:100%;overflow-x:hidden}
   .modal-actions{gap:8px}
   .modal-actions .btn{min-height:46px;font-size:.94rem}
 }
+
+/* ==========================================================
+   RASTRO V2.30 · Safari iOS 26 chrome tint fix
+   Safari 26 samples fixed/sticky edge elements. Keep those
+   surfaces opaque so browser chrome follows Rastro's theme.
+   ========================================================== */
+@media(max-width:900px){
+  .topbar{
+    background:var(--bg)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+  .mobile-nav{
+    background:var(--surface)!important;
+    backdrop-filter:none!important;
+    -webkit-backdrop-filter:none!important;
+  }
+}
+html[data-theme="light"] .topbar{background:#f7f7f5!important}
+html[data-theme="dark"] .topbar{background:#191919!important}
+html[data-theme="light"] .mobile-nav{background:#ffffff!important}
+html[data-theme="dark"] .mobile-nav{background:#252525!important}
 
 .password-field-wrap{position:relative}.password-field-wrap input{padding-right:48px}.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;border-radius:999px}.password-toggle:hover{background:color-mix(in srgb,var(--text) 4%,transparent);color:var(--text)}.password-toggle:focus-visible{outline:2px solid color-mix(in srgb,var(--brand) 40%, white);outline-offset:2px}.password-toggle svg{width:18px;height:18px;display:block}
 
@@ -3035,32 +3057,18 @@ function runMobileAction(action){
 const THEME_STORAGE_KEY='rastro:theme';
 function syncBrowserTheme(theme){
  const normalized=theme==='dark'?'dark':'light';
+ const isDark=normalized==='dark';
+ const pageColor=isDark?'#191919':'#f7f7f5';
  const themeMeta=document.getElementById('rastroThemeColor')||document.querySelector('meta[name="theme-color"]');
  const statusMeta=document.getElementById('rastroStatusBarStyle')||document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
- if(normalized==='dark'){
-  document.documentElement.style.backgroundColor='#191919';
-  document.documentElement.style.colorScheme='dark';
-  if(document.body){
-   document.body.style.setProperty('background-color','#191919','important');
-   document.body.style.colorScheme='dark';
-  }
-  if(themeMeta){
-   themeMeta.setAttribute('content','#191919');
-   themeMeta.remove();document.head.appendChild(themeMeta);
-  }
-  if(statusMeta)statusMeta.setAttribute('content','black-translucent');
- }else{
-  // En tema claro dejamos que Safari/iOS pinte su chrome de forma nativa.
-  // Solo informamos el color del sitio, sin forzar color-scheme ni fondos del navegador.
-  document.documentElement.style.removeProperty('background-color');
-  document.documentElement.style.removeProperty('color-scheme');
-  if(document.body){
-   document.body.style.removeProperty('background-color');
-   document.body.style.removeProperty('color-scheme');
-  }
-  if(themeMeta)themeMeta.setAttribute('content','#f7f7f5');
-  if(statusMeta)statusMeta.setAttribute('content','default');
+ document.documentElement.style.backgroundColor=pageColor;
+ document.documentElement.style.colorScheme=isDark?'dark':'light';
+ if(document.body){
+  document.body.style.setProperty('background-color',pageColor,'important');
+  document.body.style.colorScheme=isDark?'dark':'light';
  }
+ if(themeMeta)themeMeta.setAttribute('content',pageColor);
+ if(statusMeta)statusMeta.setAttribute('content',isDark?'black-translucent':'default');
 }
 function applyTheme(theme,{persist=false}={}){
  const normalized=theme==='dark'?'dark':'light';
