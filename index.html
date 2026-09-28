@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta id="rastroThemeColor" name="theme-color" content="#f7f7f5">
-<meta id="rastroColorScheme" name="color-scheme" content="light">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta id="rastroStatusBarStyle" name="apple-mobile-web-app-status-bar-style" content="default">
 <title>Rastro · Stylos & Flores</title>
@@ -13,16 +12,19 @@
   try{
     const saved=localStorage.getItem('rastro:theme');
     const theme=saved==='dark'?'dark':'light';
-    const color=theme==='dark'?'#191919':'#f7f7f5';
     document.documentElement.dataset.theme=theme;
-    document.documentElement.style.backgroundColor=color;
-    document.documentElement.style.colorScheme=theme;
     const themeMeta=document.getElementById('rastroThemeColor');
-    const schemeMeta=document.getElementById('rastroColorScheme');
     const statusMeta=document.getElementById('rastroStatusBarStyle');
-    if(themeMeta)themeMeta.content=color;
-    if(schemeMeta)schemeMeta.content=theme;
-    if(statusMeta)statusMeta.content=theme==='dark'?'black-translucent':'default';
+    if(themeMeta)themeMeta.content=theme==='dark'?'#191919':'#f7f7f5';
+    if(theme==='dark'){
+      document.documentElement.style.backgroundColor='#191919';
+      document.documentElement.style.colorScheme='dark';
+      if(statusMeta)statusMeta.content='black-translucent';
+    }else{
+      document.documentElement.style.removeProperty('background-color');
+      document.documentElement.style.removeProperty('color-scheme');
+      if(statusMeta)statusMeta.content='default';
+    }
   }catch(_e){}
 })();
 </script>
@@ -3033,23 +3035,32 @@ function runMobileAction(action){
 const THEME_STORAGE_KEY='rastro:theme';
 function syncBrowserTheme(theme){
  const normalized=theme==='dark'?'dark':'light';
- const color=normalized==='dark'?'#191919':'#f7f7f5';
- document.documentElement.style.backgroundColor=color;
- document.documentElement.style.colorScheme=normalized;
- if(document.body){
-  document.body.style.setProperty('background-color',color,'important');
-  document.body.style.colorScheme=normalized;
- }
  const themeMeta=document.getElementById('rastroThemeColor')||document.querySelector('meta[name="theme-color"]');
- const schemeMeta=document.getElementById('rastroColorScheme')||document.querySelector('meta[name="color-scheme"]');
  const statusMeta=document.getElementById('rastroStatusBarStyle')||document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
- if(themeMeta){
-  themeMeta.setAttribute('content',color);
-  // Reinsertarlo fuerza a Safari/iOS a reevaluar el color del chrome cuando cambia el tema.
-  themeMeta.remove();document.head.appendChild(themeMeta);
+ if(normalized==='dark'){
+  document.documentElement.style.backgroundColor='#191919';
+  document.documentElement.style.colorScheme='dark';
+  if(document.body){
+   document.body.style.setProperty('background-color','#191919','important');
+   document.body.style.colorScheme='dark';
+  }
+  if(themeMeta){
+   themeMeta.setAttribute('content','#191919');
+   themeMeta.remove();document.head.appendChild(themeMeta);
+  }
+  if(statusMeta)statusMeta.setAttribute('content','black-translucent');
+ }else{
+  // En tema claro dejamos que Safari/iOS pinte su chrome de forma nativa.
+  // Solo informamos el color del sitio, sin forzar color-scheme ni fondos del navegador.
+  document.documentElement.style.removeProperty('background-color');
+  document.documentElement.style.removeProperty('color-scheme');
+  if(document.body){
+   document.body.style.removeProperty('background-color');
+   document.body.style.removeProperty('color-scheme');
+  }
+  if(themeMeta)themeMeta.setAttribute('content','#f7f7f5');
+  if(statusMeta)statusMeta.setAttribute('content','default');
  }
- if(schemeMeta)schemeMeta.setAttribute('content',normalized);
- if(statusMeta)statusMeta.setAttribute('content',normalized==='dark'?'black-translucent':'default');
 }
 function applyTheme(theme,{persist=false}={}){
  const normalized=theme==='dark'?'dark':'light';
