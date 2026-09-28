@@ -470,72 +470,97 @@ html,body{max-width:100%;overflow-x:hidden}
 }
 
 /* ==========================================================
-   RASTRO V2.20 · Mobile UX refinement
-   ChatGPT-inspired interaction model without changing Rastro's visual identity.
+   RASTRO V2.21 · Mobile readability + icon refinement
+   Same Rastro visual identity, larger mobile hierarchy, centered FAB,
+   and line icons instead of emoji/symbol styling in mobile sheets.
    ========================================================== */
 .mobile-sheet{display:none}
 @media(max-width:620px){
-  .topbar{height:54px;background:color-mix(in srgb,var(--bg) 96%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top)}
-  .topbar .workspace-mini{font-size:.96rem;font-weight:760;letter-spacing:-.015em}
-  .content{padding-top:16px;padding-bottom:calc(96px + env(safe-area-inset-bottom))}
-  .title-row{gap:7px;margin-bottom:18px}
+  html,body{font-size:16px}
+  .topbar{height:62px;background:color-mix(in srgb,var(--bg) 96%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);padding-top:env(safe-area-inset-top);padding-left:20px;padding-right:20px}
+  .topbar .workspace-mini{font-size:1.08rem;font-weight:780;letter-spacing:-.018em}
+  .content{padding:22px 20px calc(112px + env(safe-area-inset-bottom))}
+  .title-row{gap:9px;margin-bottom:22px}
   .title-row .eyebrow{display:none}
-  .title-row h1{font-size:1.48rem;letter-spacing:-.035em}
-  .title-row p{font-size:.82rem;line-height:1.4;margin-top:4px}
-  .title-row .actions{margin-top:7px}
-  .title-row .actions .btn{min-height:38px;padding:8px 10px}
-  .card{border-radius:11px}
-  .hero-card{padding:16px}
-  .hero-value{font-size:2.25rem}
-  .section-grid{margin-top:10px}
-  .visual-kpi-grid,.visual-metric-grid{gap:8px}
-  .visual-kpi-card,.visual-metric{border-radius:10px}
-  .table-card{border-radius:11px;overflow:hidden}
-  .table-head{padding:13px 14px}
-  .responsive-stack tbody{padding:10px;gap:9px}
-  .responsive-stack tbody tr{border-radius:10px;padding:0 12px}
-  .responsive-stack tbody tr td{grid-template-columns:minmax(88px,100px) minmax(0,1fr);gap:10px;padding:9px 0!important}
-  .responsive-stack tbody tr td::before{font-size:.61rem;letter-spacing:.045em}
+  .title-row h1{font-size:2rem;line-height:1.05;letter-spacing:-.045em}
+  .title-row p{font-size:1rem;line-height:1.42;margin-top:7px}
+  .title-row .actions{margin-top:10px}
+  .title-row .actions .btn{min-height:46px;padding:10px 14px;font-size:.98rem;border-radius:9px}
+  .card{border-radius:13px}
+  .hero-card{padding:24px 22px}
+  .hero-card .kpi-label{font-size:.86rem}
+  .hero-value{font-size:3.15rem;line-height:1;letter-spacing:-.055em;margin-top:12px}
+  .hero-note{font-size:1rem;line-height:1.5}
+  .calc-link{font-size:1rem;margin-top:20px}
+  .section-grid{margin-top:14px;gap:14px}
+  .section-title h2{font-size:1.12rem}
+  .kpi-label{font-size:.78rem}
+  .kpi-value{font-size:1.48rem}
+  .kpi-sub{font-size:.84rem;line-height:1.45}
+  .coverage{font-size:2.6rem;margin-top:10px}
+  .progress{height:7px}
+
+  .visual-kpi-grid,.visual-metric-grid{gap:10px}
+  .visual-kpi-card,.visual-metric{border-radius:12px;min-height:102px;padding:15px 14px}
+  .visual-kpi-icon,.visual-metric-icon{width:46px;height:46px;border-radius:12px}
+  .visual-kpi-icon svg,.visual-metric-icon svg{width:24px;height:24px}
+  .visual-kpi-copy span,.visual-metric span{font-size:.78rem}
+  .visual-kpi-copy strong{font-size:1.45rem;margin-top:4px}
+  .visual-kpi-copy small,.visual-metric small{font-size:.72rem;line-height:1.35}
+  .visual-metric strong{font-size:1.3rem}
+
+  .table-card{border-radius:12px;overflow:hidden}
+  .table-head{padding:15px 16px}
+  .table-head strong{font-size:.98rem}
+  .responsive-stack tbody{padding:11px;gap:11px}
+  .responsive-stack tbody tr{border-radius:12px;padding:0 13px}
+  .responsive-stack tbody tr td{grid-template-columns:minmax(98px,112px) minmax(0,1fr);gap:11px;padding:11px 0!important;font-size:.88rem}
+  .responsive-stack tbody tr td::before{font-size:.67rem;letter-spacing:.04em}
   .responsive-stack tbody tr td:last-child:before{display:none}
   .month-strip{margin-left:-2px;margin-right:-2px}
-  .month-pill{border-radius:9px}
-  .tabs{gap:2px;margin-left:-2px;margin-right:-2px;padding:0 2px}
-  .tab{padding:8px 10px;font-size:.76rem}
+  .month-pill{border-radius:10px;padding:12px 11px!important}
+  .month-pill strong{font-size:.84rem!important}
+  .month-pill span{font-size:.71rem!important}
+  .tabs{gap:3px;margin-left:-2px;margin-right:-2px;padding:0 2px}
+  .tab{padding:10px 12px;font-size:.84rem}
 
-  .mobile-nav{min-height:67px;box-shadow:0 -1px 0 var(--border);border-top:0;padding-top:7px}
-  .mobile-nav button{font-size:.58rem;color:var(--muted)}
-  .mobile-nav button span:first-child{font-size:1rem}
-  .mobile-nav .fab{width:48px;height:48px;flex-basis:48px;margin:0 4px 10px;box-shadow:0 7px 18px rgba(0,0,0,.14)}
-  .mobile-nav #mobileMore span:first-child{font-size:1.05rem;letter-spacing:.08em}
+  .mobile-nav{min-height:82px;box-shadow:0 -1px 0 var(--border);border-top:0;padding:9px max(12px,env(safe-area-inset-right)) calc(11px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));align-items:flex-end}
+  .mobile-nav button{font-size:.69rem;color:var(--muted);gap:6px;padding:4px 2px 2px}
+  .mobile-nav button .mobile-nav-icon{display:grid;place-items:center;width:26px;height:26px;line-height:1}
+  .mobile-nav button .mobile-nav-icon svg{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mobile-nav #mobileMore .mobile-nav-icon{font-size:1.35rem;letter-spacing:.08em}
+  .mobile-nav .fab{display:grid!important;place-items:center!important;justify-content:center!important;align-items:center!important;width:58px!important;height:58px!important;flex:0 0 58px!important;margin:0 5px 8px!important;padding:0!important;border-radius:999px!important;font-size:2rem!important;font-weight:500!important;line-height:1!important;box-shadow:0 8px 22px rgba(0,0,0,.16)}
 
   .mobile-sheet{position:fixed;inset:0;z-index:160;background:rgba(0,0,0,.32);display:none;align-items:flex-end;padding:0}
   .mobile-sheet.open{display:flex}
-  .mobile-sheet-panel{width:100%;max-height:88dvh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-bottom:0;border-radius:18px 18px 0 0;padding:7px 14px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.16)}
-  .mobile-sheet-handle{width:38px;height:4px;background:var(--border);border-radius:999px;margin:2px auto 8px}
-  .mobile-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 2px 10px}
-  .mobile-sheet-head strong{display:block;font-size:1.05rem;letter-spacing:-.02em}
-  .mobile-sheet-head span{display:block;color:var(--muted);font-size:.72rem;margin-top:2px}
-  .mobile-sheet-list{display:grid;gap:0;border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
-  .mobile-sheet-list>button{display:grid;grid-template-columns:34px minmax(0,1fr) 18px;align-items:center;gap:10px;width:100%;border:0;border-bottom:1px solid var(--border);background:var(--surface);padding:12px 13px;text-align:left;color:var(--text)}
+  .mobile-sheet-panel{width:100%;max-height:88dvh;overflow:auto;background:var(--surface);border:1px solid var(--border);border-bottom:0;border-radius:22px 22px 0 0;padding:9px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(0,0,0,.16)}
+  .mobile-sheet-handle{width:42px;height:5px;background:var(--border);border-radius:999px;margin:1px auto 12px}
+  .mobile-sheet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 2px 14px}
+  .mobile-sheet-head strong{display:block;font-size:1.55rem;letter-spacing:-.035em}
+  .mobile-sheet-head span{display:block;color:var(--muted);font-size:.92rem;margin-top:4px}
+  .mobile-sheet-head .icon-btn{font-size:1.5rem}
+  .mobile-sheet-list{display:grid;gap:0;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface)}
+  .mobile-sheet-list>button{display:grid;grid-template-columns:48px minmax(0,1fr) 22px;align-items:center;gap:14px;width:100%;border:0;border-bottom:1px solid var(--border);background:var(--surface);padding:16px;text-align:left;color:var(--text)}
   .mobile-sheet-list>button:last-child{border-bottom:0}
   .mobile-sheet-list>button:active{background:var(--surface2)}
-  .mobile-sheet-list strong{display:block;font-size:.84rem}
-  .mobile-sheet-list small{display:block;color:var(--muted);font-size:.69rem;margin-top:2px}
-  .mobile-sheet-icon{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--surface2);color:var(--text);font-weight:760}
-  .mobile-sheet-chevron{color:var(--muted);font-size:1.2rem;text-align:right}
-  .mobile-sheet-footer{display:grid;gap:8px;margin-top:10px}
-  .mobile-secondary-action,.mobile-danger-action{min-height:42px;border-radius:9px;border:1px solid var(--border);background:var(--surface);font-weight:700}
+  .mobile-sheet-list strong{display:block;font-size:1rem}
+  .mobile-sheet-list small{display:block;color:var(--muted);font-size:.84rem;margin-top:3px;line-height:1.35}
+  .mobile-sheet-icon{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:var(--accentSoft);color:var(--accent);font-weight:760}
+  .mobile-sheet-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .mobile-sheet-chevron{color:var(--muted);font-size:1.55rem;text-align:right}
+  .mobile-sheet-footer{display:grid;gap:10px;margin-top:12px}
+  .mobile-secondary-action,.mobile-danger-action{min-height:50px;border-radius:11px;border:1px solid var(--border);background:var(--surface);font-size:1rem;font-weight:720}
   .mobile-danger-action{color:var(--danger);background:color-mix(in srgb,var(--danger) 5%,var(--surface))}
 
-  .modal-card,.workflow-modal .modal-card,#operationModal .modal-card{border-radius:18px 18px 0 0!important}
-  .modal-card:before,.workflow-modal .modal-card:before,#operationModal .modal-card:before{content:"";display:block;width:38px;height:4px;background:var(--border);border-radius:999px;margin:8px auto 0}
-  .modal-head{padding:11px 16px 10px;border-bottom:1px solid var(--border)}
-  .modal-head h2{font-size:1rem}
-  .workflow-intro{padding-top:13px;padding-bottom:13px}
-  .workflow-section{padding-top:14px;padding-bottom:14px}
-  .workflow-footer{padding-top:10px}
-  .modal-actions{gap:7px}
-  .modal-actions .btn{min-height:40px}
+  .modal-card,.workflow-modal .modal-card,#operationModal .modal-card{border-radius:20px 20px 0 0!important}
+  .modal-card:before,.workflow-modal .modal-card:before,#operationModal .modal-card:before{content:"";display:block;width:42px;height:5px;background:var(--border);border-radius:999px;margin:9px auto 0}
+  .modal-head{padding:14px 20px 12px;border-bottom:1px solid var(--border)}
+  .modal-head h2{font-size:1.12rem}
+  .workflow-intro{padding-top:16px;padding-bottom:16px}
+  .workflow-section{padding-top:17px;padding-bottom:17px}
+  .workflow-footer{padding-top:12px}
+  .modal-actions{gap:8px}
+  .modal-actions .btn{min-height:46px;font-size:.94rem}
 }
 
 .password-field-wrap{position:relative}.password-field-wrap input{padding-right:48px}.password-toggle{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:transparent;color:var(--muted);display:grid;place-items:center;cursor:pointer;border-radius:999px}.password-toggle:hover{background:color-mix(in srgb,var(--text) 4%,transparent);color:var(--text)}.password-toggle:focus-visible{outline:2px solid color-mix(in srgb,var(--brand) 40%, white);outline-offset:2px}.password-toggle svg{width:18px;height:18px;display:block}
@@ -616,11 +641,11 @@ html,body{max-width:100%;overflow-x:hidden}
   </main>
 
   <nav class="mobile-nav" id="mobileNav" aria-label="Navegación móvil">
-    <button data-view="home" class="active"><span>⌂</span><span>Inicio</span></button>
-    <button data-view="season"><span>◫</span><span>Temporada</span></button>
+    <button data-view="home" class="active"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10.5V20h13v-9.5"/><path d="M9.5 20v-6h5v6"/></svg></span><span>Inicio</span></button>
+    <button data-view="season"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg></span><span>Temporada</span></button>
     <button class="fab" id="mobileRegister" aria-label="Crear o registrar">+</button>
-    <button data-view="operation"><span>▦</span><span>Operación</span></button>
-    <button id="mobileMore" aria-label="Más secciones"><span>•••</span><span>Más</span></button>
+    <button data-view="operation"><span class="mobile-nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 4v16M15 4v16M4 10h16"/></svg></span><span>Operación</span></button>
+    <button id="mobileMore" aria-label="Más secciones"><span class="mobile-nav-icon">•••</span><span>Más</span></button>
   </nav>
 </div>
 
@@ -629,10 +654,10 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="mobile-sheet-handle"></div>
     <div class="mobile-sheet-head"><div><strong id="mobileQuickSheetTitle">Registrar</strong><span>Acciones rápidas</span></div><button type="button" class="icon-btn" id="closeMobileQuickSheet">×</button></div>
     <div class="mobile-sheet-list">
-      <button type="button" data-mobile-action="expense"><span class="mobile-sheet-icon">−</span><span><strong>Nuevo gasto</strong><small>Registrar una salida real</small></span><span class="mobile-sheet-chevron">›</span></button>
-      <button type="button" data-mobile-action="income"><span class="mobile-sheet-icon">+</span><span><strong>Nuevo cobro</strong><small>Registrar un ingreso recibido</small></span><span class="mobile-sheet-chevron">›</span></button>
-      <button type="button" data-mobile-action="operation"><span class="mobile-sheet-icon">▦</span><span><strong>Crear operativo</strong><small>Planificar ejecución y presupuesto</small></span><span class="mobile-sheet-chevron">›</span></button>
-      <button type="button" data-mobile-action="event"><span class="mobile-sheet-icon">◇</span><span><strong>Crear evento</strong><small>Agregar una boda o evento</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-action="expense"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><path d="M5 12h14"/></svg></span><span><strong>Nuevo gasto</strong><small>Registrar una salida real</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-action="income"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span><strong>Nuevo cobro</strong><small>Registrar un ingreso recibido</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-action="operation"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4.5V3h6v1.5M9 9h6M9 13h6M9 17h4"/></svg></span><span><strong>Crear operativo</strong><small>Planificar ejecución y presupuesto</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-action="event"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg></span><span><strong>Crear evento</strong><small>Agregar una boda o evento</small></span><span class="mobile-sheet-chevron">›</span></button>
     </div>
   </div>
 </div>
@@ -642,9 +667,9 @@ html,body{max-width:100%;overflow-x:hidden}
     <div class="mobile-sheet-handle"></div>
     <div class="mobile-sheet-head"><div><strong id="mobileMoreSheetTitle">Más</strong><span>Secciones secundarias</span></div><button type="button" class="icon-btn" id="closeMobileMoreSheet">×</button></div>
     <div class="mobile-sheet-list">
-      <button type="button" data-mobile-view="events"><span class="mobile-sheet-icon">◇</span><span><strong>Eventos</strong><small>Detalle económico por boda</small></span><span class="mobile-sheet-chevron">›</span></button>
-      <button type="button" data-mobile-view="movements"><span class="mobile-sheet-icon">↕</span><span><strong>Movimientos</strong><small>Entradas y salidas reales</small></span><span class="mobile-sheet-chevron">›</span></button>
-      <button type="button" data-mobile-view="receivables"><span class="mobile-sheet-icon">$</span><span><strong>Cobros</strong><small>Cuotas, pagos y saldos</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-view="events"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v4M17 3v4M3 10h18"/></svg></span><span><strong>Eventos</strong><small>Detalle económico por boda</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-view="movements"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><path d="M8 4v16M5 7l3-3 3 3M16 20V4M13 17l3 3 3-3"/></svg></span><span><strong>Movimientos</strong><small>Entradas y salidas reales</small></span><span class="mobile-sheet-chevron">›</span></button>
+      <button type="button" data-mobile-view="receivables"><span class="mobile-sheet-icon"><svg viewBox="0 0 24 24"><path d="M4 6h15a2 2 0 0 1 2 2v10H4a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z"/><path d="M16 10h5v5h-5a2.5 2.5 0 0 1 0-5z"/></svg></span><span><strong>Cobros</strong><small>Cuotas, pagos y saldos</small></span><span class="mobile-sheet-chevron">›</span></button>
     </div>
     <div class="mobile-sheet-footer">
       <button type="button" class="mobile-secondary-action" id="mobileThemeToggle">Cambiar tema</button>
