@@ -5,6 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f7f7f5">
 <title>Rastro · Stylos & Flores</title>
+<script>
+(function(){
+  try{
+    const saved=localStorage.getItem('rastro:theme');
+    if(saved==='dark'||saved==='light'){
+      document.documentElement.dataset.theme=saved;
+      const meta=document.querySelector('meta[name="theme-color"]');
+      if(meta)meta.content=saved==='dark'?'#191919':'#f7f7f5';
+    }
+  }catch(_e){}
+})();
+</script>
 <style>
 :root{
   --bg:#f7f7f5;--sidebar:#fbfbfa;--surface:#fff;--surface2:#f4f4f2;--surface3:#ededeb;
@@ -3009,7 +3021,24 @@ function runMobileAction(action){
  if(action==='operation')openOperationModal();
  if(action==='event')openEventModal();
 }
-function toggleTheme(){const dark=document.documentElement.dataset.theme==='dark';document.documentElement.dataset.theme=dark?'light':'dark';$('#themeBtn').textContent=dark?'Oscuro':'Claro';document.querySelector('meta[name="theme-color"]').content=dark?'#f7f7f5':'#191919'}
+const THEME_STORAGE_KEY='rastro:theme';
+function applyTheme(theme,{persist=false}={}){
+ const normalized=theme==='dark'?'dark':'light';
+ document.documentElement.dataset.theme=normalized;
+ const meta=document.querySelector('meta[name="theme-color"]');
+ if(meta)meta.content=normalized==='dark'?'#191919':'#f7f7f5';
+ const btn=$('#themeBtn');if(btn)btn.textContent=normalized==='dark'?'Claro':'Oscuro';
+ if(persist){try{localStorage.setItem(THEME_STORAGE_KEY,normalized)}catch(err){console.warn('No se pudo guardar el tema',err)}}
+}
+function restoreTheme(){
+ let saved='';
+ try{saved=localStorage.getItem(THEME_STORAGE_KEY)||''}catch(err){console.warn('No se pudo restaurar el tema',err)}
+ applyTheme(saved==='dark'?'dark':'light',{persist:false});
+}
+function toggleTheme(){
+ const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
+ applyTheme(next,{persist:true});
+}
 
 $$('[data-view]').forEach(b=>b.addEventListener('click',()=>navTo(b.dataset.view)));
 const toggleLoginPassword=document.getElementById('toggleLoginPassword');
@@ -3076,6 +3105,7 @@ $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView=
 $('#themeBtn').onclick=toggleTheme;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMobileSheets();closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
 setInterval(refreshGreeting,60000);
+restoreTheme();
 initializeSupabaseApp();
 </script>
 
