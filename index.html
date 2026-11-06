@@ -779,7 +779,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
           </div>
 
           <div id="expenseMultiAllocation" class="workflow-section workflow-soft" style="display:none">
-            <div class="workflow-section-head"><div><h3>Distribución entre eventos</h3><div class="kpi-sub">El gasto se registra una sola vez. Aquí defines qué parte corresponde a cada evento.</div></div><button type="button" class="btn secondary small" id="expenseAutoAllocate">Distribuir según presupuesto</button></div>
+            <div class="workflow-section-head"><div><h3>Distribución entre eventos</h3><div class="kpi-sub">El gasto se registra una sola vez. La sugerencia usa presupuestos por categoría cuando están completos. Revisá los montos antes de guardar.</div></div><button type="button" class="btn secondary small" id="expenseAutoAllocate">Sugerir distribución</button></div>
             <div id="expenseAllocationRows"></div>
             <div id="expenseAllocationSummary" class="kpi-sub"></div>
           </div>
@@ -1223,7 +1223,17 @@ function populateDbCategorySelects(){
 function allocationsForMovement(m){const rows=expenseAllocations.filter(a=>a.movementId===m.id);if(rows.length)return rows;if(m.eventId)return [{movementId:m.id,eventId:m.eventId,amountUsd:usd(m.amount,m.currency),operationId:'',groupId:'',budgeted:true}];return []}
 function allocatedToEvent(m,eventId){return allocationsForMovement(m).filter(a=>a.eventId===eventId).reduce((s,a)=>s+a.amountUsd,0)}
 function movementEventLabel(m){const a=allocationsForMovement(m);if(!a.length)return 'Operación general';if(a.length===1)return eventById(a[0].eventId)?.name||'1 evento';return `${a.length} eventos`}
-function budgetForCategory(eventId,category){const row=(eventBudgets[eventId]||[]).find(r=>r[0]===category);return row?Number(row[1]):0}
+function budgetForCategory(eventId,category){
+ if(realEventById(eventId)){
+  const categoryId=categoryIdByName(category);
+  if(!categoryId)return 0;
+  return globalDbEventBudgetLines
+   .filter(line=>line.event_id===eventId&&line.category_id===categoryId)
+   .reduce((sum,line)=>sum+valueToUsd(Number(line.budgeted_amount||0),line.currency||'USD'),0);
+ }
+ const row=(eventBudgets[eventId]||[]).find(r=>r[0]===category);
+ return row?Number(row[1]):0;
+}
 function operationBudget(op){return op.groups.reduce((sum,g)=>sum+g.budgetLines.reduce((s,r)=>s+Number(r[1]),0),0)}
 function operationActual(op){return op.groups.reduce((sum,g)=>sum+g.budgetLines.reduce((s,r)=>s+Number(r[2]),0),0)}
 function operatingAvailable(){return shared.bank-shared.committed-shared.offReserved}
@@ -2042,10 +2052,26 @@ function updateAllocationSummary(){
  const el=$('#expenseAllocationSummary');if(el)el.innerHTML=`Asignado: <strong>${fmtOriginal(allocated,$('#expenseCurrency').value)}</strong> · Sin asignar: <strong>${fmtOriginal(remaining,$('#expenseCurrency').value)}</strong>${over?` · <span style="color:var(--danger)">Exceso ${fmtOriginal(over,$('#expenseCurrency').value)}</span>`:''}`;
 }
 function autoAllocateExpense(){
- const total=Number($('#expenseAmount').value||0); if(!total){showToast('Ingresa primero el monto total.');return}
- const category=$('#expenseCategory').value; const checked=$$('.alloc-check').filter(c=>c.checked); if(!checked.length){showToast('Selecciona al menos un evento.');return}
- const weights=checked.map(c=>Math.max(0,budgetForCategory(c.dataset.event,category))); const sum=weights.reduce((a,b)=>a+b,0);
- checked.forEach((c,i)=>{const inp=$(`.alloc-amount[data-event="${c.dataset.event}"]`); const share=sum>0?total*(weights[i]/sum):total/checked.length; inp.value=share.toFixed(2)});updateAllocationSummary();
+ const total=Number($('#expenseAmount').value||0);
+ if(!Number.isFinite(total)||total<=0){showToast('Ingresa primero un monto mayor que cero.');return}
+ const category=$('#expenseCategory').value;
+ const checked=$$('.alloc-check').filter(c=>c.checked);
+ if(!checked.length){showToast('Selecciona al menos un evento.');return}
+ const budgetWeights=checked.map(c=>Math.max(0,budgetForCategory(c.dataset.event,category)));
+ // Use the budget ratio only when every selected event has a budget for this category.
+ const completeBudgets=budgetWeights.every(w=>w>0);
+ const weights=completeBudgets?budgetWeights:checked.map(()=>1);
+ const weightTotal=weights.reduce((sum,w)=>sum+w,0);
+ const cents=Math.round(total*100);
+ let remainingCents=cents;
+ checked.forEach((c,i)=>{
+  const inp=$(`.alloc-amount[data-event="${c.dataset.event}"]`);
+  const allocation=i===checked.length-1?remainingCents:Math.min(remainingCents,Math.round(cents*weights[i]/weightTotal));
+  remainingCents-=allocation;
+  if(inp)inp.value=(allocation/100).toFixed(2);
+ });
+ updateAllocationSummary();
+ showToast(completeBudgets?'Sugerencia según presupuestos. Revisá los montos.':'Faltan presupuestos: reparto igualitario sugerido. Revisá los montos.');
 }
 function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
@@ -2059,7 +2085,7 @@ function openRegister(eventId='',context={}){
 }
 function closeRegister(){$('#registerModal').classList.remove('open');$('#registerModal').setAttribute('aria-hidden','true');currentExpenseContext={operationId:'',groupId:'',eventIds:[]}}
 async function saveExpense(pending=false){
- const amount=Number($('#expenseAmount').value);if(!amount){showToast('Ingresa un monto.');return}
+ const amount=Number($('#expenseAmount').value);if(!Number.isFinite(amount)||amount<=0){showToast('Ingresa un monto mayor que cero.');return}
  const currency=$('#expenseCurrency').value, assignment=pending?'general':$('#expenseAssignmentType').value;
  let allocsOriginal=[];
  if(assignment==='single'){
