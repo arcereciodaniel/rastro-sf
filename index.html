@@ -2175,7 +2175,7 @@ function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
  const modal=$('#registerModal');const eventPool=databaseEvents.length?databaseEvents:events;const contextualEventId=eventId||((currentExpenseContext.eventIds||[]).length===1?currentExpenseContext.eventIds[0]:'');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===contextualEventId?'selected':''}>${e.name}</option>`).join('')}`;
  populateDbCategorySelects();
- $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';$('#expenseFxRate').value=String(FX);refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');
+ $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';resetFxForm('expense');refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');lookupFxRate('expense');
  const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(contextualEventId?'single':'general');
  const ctx=$('#expenseOperationContext');if(currentExpenseContext.operationId){const op=operationById(currentExpenseContext.operationId),g=op?.groups.find(x=>x.id===currentExpenseContext.groupId);ctx.style.display='block';ctx.innerHTML=`<div class="kpi-label">Operativo relacionado</div><strong>${op?.name||'Operativo'}</strong><div class="kpi-sub">${g?.name||''}</div>`}else{ctx.style.display='none';ctx.innerHTML=''}
  renderExpenseAllocationRows();
@@ -2300,8 +2300,9 @@ function openReceivableModal(eventId='', receivableId='', mode='payment'){
  }
 
  $('#receivableMethod').value='Transferencia';
- $('#receivableFxRate').value=String(FX);
+ resetFxForm('receivable');
  setReceivableModalMode(mode);
+ if(mode==='payment')lookupFxRate('receivable');
  modal.classList.add('open');
  modal.setAttribute('aria-hidden','false');
  setTimeout(()=>$('#receivableAmount').focus(),60);
@@ -2980,8 +2981,11 @@ async function openExpenseEdit(movementId){
  $('#expenseEditDate').value=m.movement_date;
  $('#expenseEditCurrency').value=m.currency;
  $('#expenseEditAmount').value=Number(m.amount);
- $('#expenseEditFxRate').value=Number(m.fx_rate_to_crc)>0?String(Number(m.fx_rate_to_crc)):String(FX);
+ fxRequestIds.expenseEdit+=1;
+ $('#expenseEditFxRate').value=Number(m.fx_rate_to_crc)>=100&&Number(m.fx_rate_to_crc)<=1500?String(Number(m.fx_rate_to_crc)):'';
+ $('#expenseEditFxRate').dataset.fxManual='';
  refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');
+ setFxStatus('expenseEdit',$('#expenseEditFxRate').value?'TC recuperado de este gasto. Se conservará si no lo cambiás.':'Este gasto no tiene un TC válido registrado. Consultá una referencia o ingresá el TC real.');
  $('#expenseEditMethod').value=[...$('#expenseEditMethod').options].some(o=>o.value===(m.payment_method||''))?(m.payment_method||''):'Otro';
  $('#expenseEditCounterparty').value=m.counterparty||'';
  $('#expenseEditDescription').value=m.description||'';
@@ -3321,6 +3325,9 @@ $('#receivableForm').addEventListener('submit',e=>{e.preventDefault();saveReceiv
 $('#savePendingReceivable').onclick=()=>saveExpectedReceivable();
 $('#receivableEvent').onchange=e=>populateReceivablePending(e.target.value);
 $('#receivableCurrency').onchange=()=>refreshTransactionFxField('#receivableCurrency','#receivableFxRateWrap','#receivableFxRate',$('#receivableModal').dataset.mode==='payment');
+setupFxForm('expense','#expenseFxRefresh');
+setupFxForm('receivable','#receivableFxRefresh');
+setupFxForm('expenseEdit','#expenseEditFxRefresh');
 $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView==='eventDetail')renderEventDetail();else navTo(currentView)};
 $('#themeBtn').onclick=toggleTheme;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMobileSheets();closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
