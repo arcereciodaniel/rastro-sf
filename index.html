@@ -1541,6 +1541,42 @@ async function saveOperatingCash(e){
  closeOperatingCashModal();showToast('Saldo líquido conciliado');renderHome();
 }
 
+
+/* BI V1: señales de captura incompleta. Solo información real de Supabase.
+   No certifican la utilidad ni sustituyen el cierre financiero. */
+function renderFinancialDataQualityPanel(){
+ const active=homeSeasonEvents().filter(e=>!['quote','cancelled'].includes(e.dbStatus||''));
+ const finished=active.filter(e=>e.dbStatus==='completed');
+ const budgeted=active.filter(e=>Number(e.costEst||0)>0).length;
+ const finishedWithoutExpenses=finished.filter(e=>Number(e.costReal||0)<=0).length;
+ const flagged=active.map(e=>{
+  const issues=[];
+  if(Number(e.sale||0)<=0)issues.push('Sin venta contratada');
+  if(Number(e.costEst||0)<=0)issues.push('Sin presupuesto');
+  if(e.dbStatus==='completed'&&Number(e.costReal||0)<=0)issues.push('Finalizado sin costos asignados');
+  return {e,issues};
+ }).filter(x=>x.issues.length>0);
+ const items=flagged.slice(0,8).map(({e,issues})=>`
+  <div class="attention-item" data-open-event="${escapeHtml(e.id)}" style="cursor:pointer">
+   <span class="dot warn"></span>
+   <div class="meta"><strong>${escapeHtml(e.name)}</strong><small>${escapeHtml(issues.join(' · '))}</small></div>
+   <span>›</span>
+  </div>`).join('');
+ return `
+ <div class="card" style="margin-top:14px">
+  <div class="section-title"><div><h2>Calidad de datos para BI</h2><div class="kpi-sub">Eventos reales de la temporada seleccionada · revisión de captura</div></div><button class="btn secondary small" data-jump="events">Ver eventos</button></div>
+  <div class="grid finance-grid">
+    ${kpi('Eventos confirmados',active.length)}
+    ${kpi('Con presupuesto',budgeted)}
+    ${kpi('Finalizados sin gastos',finishedWithoutExpenses)}
+    ${kpi('Registros por completar',flagged.length)}
+  </div>
+  <div class="attention-list" style="margin-top:14px">${items||'<div class="kpi-sub">No se detectaron ausencias básicas en los eventos evaluados.</div>'}</div>
+  ${flagged.length>8?`<div class="kpi-sub" style="margin-top:8px">Se muestran 8 de ${flagged.length} eventos con datos pendientes.</div>`:''}
+  <div class="kpi-sub" style="margin-top:12px">Estos controles detectan datos faltantes, pero no certifican un cierre completo. El resultado venta menos gastos registrados es preliminar hasta verificar compras, asignaciones, gastos generales y tipo de cambio.</div>
+ </div>`;
+}
+
 function renderHome(){
  const cash=currentLiquidCashUsd();
  const committed=futureCommittedCostsReal();
@@ -1617,7 +1653,8 @@ function renderHome(){
  <div class="card" style="margin-top:14px">
   <div class="section-title"><div><h2>Disponible operativo proyectado</h2><div class="kpi-sub">Proyección mensual basada en cuotas esperadas y dinero ya comprometido.</div></div><button class="btn secondary small" data-jump="receivables">Ver cobros</button></div>
   ${realProjectionChartHTML(projected,270)}
- </div>`;
+ </div>
+ ${renderFinancialDataQualityPanel()}`;
 
  const calc=$('#calcToggle');if(calc)calc.onclick=()=>$('#calcBreakdown').classList.toggle('open');
  const cashBtn=$('#editOperatingCash');if(cashBtn)cashBtn.onclick=openOperatingCashModal;
