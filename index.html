@@ -775,6 +775,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field" id="expenseSingleEventField"><label>Evento relacionado</label><select id="expenseEvent"></select></div>
               <div class="field"><label>Medio de pago</label><select id="expenseMethod"><option>Tarjeta</option><option>Transferencia</option><option>Efectivo</option><option>Otro</option></select></div>
               <div class="field"><label>Fecha</label><input id="expenseDate" type="date" required></div>
+<div class="field" id="expenseFxRateWrap" style="display:none"><label for="expenseFxRate">TC aplicado · ₡ por US$1</label><input id="expenseFxRate" type="number" min="0.01" step="0.01" value="520"><small class="kpi-sub">₡520 es referencia inicial; confirmá el tipo de cambio real del gasto.</small></div>
             </div>
           </div>
 
@@ -819,6 +820,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field"><label>Cuota / concepto pendiente</label><select id="receivablePending"></select></div>
               <div class="field"><label>Medio recibido</label><select id="receivableMethod"><option>Transferencia</option><option>Tarjeta</option><option>Efectivo</option><option>SINPE</option><option>Otro</option></select></div>
               <div class="field"><label>Fecha</label><input id="receivableDate" type="date" required></div>
+<div class="field" id="receivableFxRateWrap" style="display:none"><label for="receivableFxRate">TC aplicado · ₡ por US$1</label><input id="receivableFxRate" type="number" min="0.01" step="0.01" value="520"><small class="kpi-sub">Confirmá el tipo de cambio real del cobro.</small></div>
             </div>
           </div>
 
@@ -912,6 +914,10 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field">
                 <label>Monto real</label>
                 <input id="expenseEditAmount" type="number" min="0.01" step="0.01" required>
+              </div><div class="field" id="expenseEditFxRateWrap" style="display:none">
+                <label for="expenseEditFxRate">TC aplicado · ₡ por US$1</label>
+                <input id="expenseEditFxRate" type="number" min="0.01" step="0.01" value="520">
+                <small class="kpi-sub">Se recupera el TC original cuando estaba registrado.</small>
               </div>
               <div class="field">
                 <label>Medio de pago</label>
@@ -1209,6 +1215,20 @@ function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP
 function eventById(id){return events.find(e=>e.id===id)}
 function isUuid(value=''){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value))}
 function valueToUsd(amount,currency){return currency==='CRC'?Number(amount||0)/FX:Number(amount||0)}
+// Etapa 1: el RPC actual utiliza 1 para CRC (normalización de moneda).
+// La conversión histórica CRC->USD requiere una mejora posterior del modelo.
+function refreshTransactionFxField(currencyId,wrapperId,inputId,active=true){
+ const currency=$(currencyId),wrap=$(wrapperId),input=$(inputId);
+ if(!currency||!wrap||!input)return;
+ const visible=active&&currency.value==='USD';
+ wrap.style.display=visible?'':'none';input.disabled=!visible;
+ if(visible&&(!Number.isFinite(Number(input.value))||Number(input.value)<=0))input.value=String(FX);
+}
+function fxRateForTransaction(currencyId,inputId){
+ if($(currencyId).value==='CRC')return 1;
+ const rate=Number($(inputId).value);
+ return Number.isFinite(rate)&&rate>0?rate:null;
+}
 function categoryById(id){return dbCategories.find(c=>c.id===id)}
 function categoryIdByName(name){return dbCategories.find(c=>c.name===name)?.id||null}
 function realEventById(id){return databaseEvents.find(e=>e.id===id)}
