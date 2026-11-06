@@ -1945,7 +1945,7 @@ function renderMovements(){
           <td>${escapeHtml(movementEventLabel(m))}</td>
           <td>${escapeHtml(m.method||'—')}</td>
           <td><span class="status good complete-dot">Completo</span></td>
-          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong></td>
+          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='USD'&&Number(m.fxRate)>0?`<div class="kpi-sub">TC ₡${Number(m.fxRate).toLocaleString('es-CR')}/USD</div>`:''}</td>
           <td>${m.kind==='expense'&&dbContext.role==='owner'?`<button class="btn secondary small movement-edit" data-edit-global-expense="${m.id}">${uiIcon('pencil')} Editar</button>`:'<span class="kpi-sub">—</span>'}</td>
         </tr>`).join(''):'<tr><td colspan="9" class="kpi-sub">Todavía no hay movimientos reales.</td></tr>'}</tbody>
       </table>
@@ -2445,6 +2445,7 @@ async function loadGlobalFinancialData(){
    status:'Completo',
    kind:m.movement_type,
    source:'db',
+   fxRate:Number(m.fx_rate_to_crc||0),
    budgetStatus:m.budget_status,
    counterparty:m.counterparty||'',
    reference:m.reference||'',
@@ -2763,7 +2764,7 @@ async function loadRealEventFinancials(eventId){
  movementRows.forEach(m=>movements.push({
   id:m.id,date:m.movement_date,category:categoryById(m.category_id)?.name||'Sin categoría',
   description:m.description,eventId:'',amount:Number(m.amount),currency:m.currency,
-  method:m.payment_method||'—',status:'Completo',kind:m.movement_type,source:'db',budgetStatus:m.budget_status
+  method:m.payment_method||'—',status:'Completo',kind:m.movement_type,source:'db',budgetStatus:m.budget_status,fxRate:Number(m.fx_rate_to_crc||0)
  }));
 
  // Refresh receivables for this event.
@@ -3210,7 +3211,7 @@ $('#closeExpenseEditModal').onclick=closeExpenseEditModal;
 $('#cancelExpenseEditModal').onclick=closeExpenseEditModal;
 $('#expenseEditModal').addEventListener('click',e=>{if(e.target.id==='expenseEditModal')closeExpenseEditModal()});
 $('#expenseEditAmount').oninput=refreshExpenseEditSummary;
-$('#expenseEditCurrency').onchange=refreshExpenseEditSummary;
+$('#expenseEditCurrency').onchange=()=>{refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');refreshExpenseEditSummary()};
 $('#expenseEditRedistribute').onclick=redistributeExpenseEditProportionally;
 $('#closeBudgetLineModal').onclick=closeBudgetLineModal;
 $('#cancelBudgetLineModal').onclick=closeBudgetLineModal;
@@ -3234,13 +3235,14 @@ $('#mobileLogout').onclick=()=>{closeAllMobileSheets();handleLogout()};
 $('#closeModal').onclick=closeRegister;
 $('#registerModal').addEventListener('click',e=>{if(e.target.id==='registerModal')closeRegister()});
 $('#expenseForm').addEventListener('submit',e=>{e.preventDefault();saveExpense(false)});
-$('#expenseAssignmentType').onchange=()=>renderExpenseAllocationRows();$('#expenseCategory').onchange=()=>renderExpenseAllocationRows();$('#expenseAmount').oninput=()=>updateAllocationSummary();$('#expenseCurrency').onchange=()=>updateAllocationSummary();$('#expenseAutoAllocate').onclick=()=>autoAllocateExpense();
+$('#expenseAssignmentType').onchange=()=>renderExpenseAllocationRows();$('#expenseCategory').onchange=()=>renderExpenseAllocationRows();$('#expenseAmount').oninput=()=>updateAllocationSummary();$('#expenseCurrency').onchange=()=>{refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');updateAllocationSummary()};$('#expenseAutoAllocate').onclick=()=>autoAllocateExpense();
 $('#savePending').onclick=()=>saveExpense(true);
 $('#closeReceivableModal').onclick=closeReceivableModal;
 $('#receivableModal').addEventListener('click',e=>{if(e.target.id==='receivableModal')closeReceivableModal()});
 $('#receivableForm').addEventListener('submit',e=>{e.preventDefault();saveReceivable(false)});
 $('#savePendingReceivable').onclick=()=>saveExpectedReceivable();
 $('#receivableEvent').onchange=e=>populateReceivablePending(e.target.value);
+$('#receivableCurrency').onchange=()=>refreshTransactionFxField('#receivableCurrency','#receivableFxRateWrap','#receivableFxRate',$('#receivableModal').dataset.mode==='payment');
 $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView==='eventDetail')renderEventDetail();else navTo(currentView)};
 $('#themeBtn').onclick=toggleTheme;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMobileSheets();closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
