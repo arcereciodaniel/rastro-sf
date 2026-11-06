@@ -2097,7 +2097,7 @@ function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
  const modal=$('#registerModal');const eventPool=databaseEvents.length?databaseEvents:events;const contextualEventId=eventId||((currentExpenseContext.eventIds||[]).length===1?currentExpenseContext.eventIds[0]:'');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===contextualEventId?'selected':''}>${e.name}</option>`).join('')}`;
  populateDbCategorySelects();
- $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
+ $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';$('#expenseFxRate').value=String(FX);refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');
  const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(contextualEventId?'single':'general');
  const ctx=$('#expenseOperationContext');if(currentExpenseContext.operationId){const op=operationById(currentExpenseContext.operationId),g=op?.groups.find(x=>x.id===currentExpenseContext.groupId);ctx.style.display='block';ctx.innerHTML=`<div class="kpi-label">Operativo relacionado</div><strong>${op?.name||'Operativo'}</strong><div class="kpi-sub">${g?.name||''}</div>`}else{ctx.style.display='none';ctx.innerHTML=''}
  renderExpenseAllocationRows();
@@ -2107,6 +2107,8 @@ function closeRegister(){$('#registerModal').classList.remove('open');$('#regist
 async function saveExpense(pending=false){
  const amount=Number($('#expenseAmount').value);if(!Number.isFinite(amount)||amount<=0){showToast('Ingresa un monto mayor que cero.');return}
  const currency=$('#expenseCurrency').value, assignment=pending?'general':$('#expenseAssignmentType').value;
+ const transactionFx=fxRateForTransaction('#expenseCurrency','#expenseFxRate');
+ if(transactionFx===null){showToast('Ingresá un tipo de cambio válido para este gasto en dólares.');return}
  let allocsOriginal=[];
  if(assignment==='single'){
   const eventId=$('#expenseEvent').value;if(!eventId){showToast('Selecciona el evento.');return}
@@ -2128,7 +2130,7 @@ async function saveExpense(pending=false){
    p_operation_id:isUuid(currentExpenseContext.operationId)?currentExpenseContext.operationId:null,
    p_operation_group_id:isUuid(currentExpenseContext.groupId)?currentExpenseContext.groupId:null,
    p_movement_date:$('#expenseDate').value,p_description:$('#expenseNote').value.trim()||'Gasto registrado',
-   p_amount:amount,p_currency:currency,p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_amount:amount,p_currency:currency,p_fx_rate_to_crc:transactionFx,
    p_payment_method:$('#expenseMethod').value,p_budget_status:budgetStatus,p_allocations:payload,
    p_idempotency_key:crypto.randomUUID()
   });
@@ -2190,6 +2192,7 @@ function setReceivableModalMode(mode){
   pendingField.style.display='';
   methodField.style.display='';
  }
+ refreshTransactionFxField('#receivableCurrency','#receivableFxRateWrap','#receivableFxRate',mode==='payment');
 }
 function openReceivableModal(eventId='', receivableId='', mode='payment'){
  currentReceivableContext={eventId,receivableId};
@@ -2219,6 +2222,7 @@ function openReceivableModal(eventId='', receivableId='', mode='payment'){
  }
 
  $('#receivableMethod').value='Transferencia';
+ $('#receivableFxRate').value=String(FX);
  setReceivableModalMode(mode);
  modal.classList.add('open');
  modal.setAttribute('aria-hidden','false');
@@ -2279,6 +2283,8 @@ async function saveReceivable(markPending=false){
 
  if(event?.source==='db'){
   const currency=$('#receivableCurrency').value;
+  const paymentFx=fxRateForTransaction('#receivableCurrency','#receivableFxRate');
+  if(paymentFx===null){showToast('Ingresá un tipo de cambio válido para este cobro en dólares.');return}
   const pending=receivables.find(r=>r.id===pendingId&&r.source==='db');
   if(pending&&pending.dbCurrency!==currency){
    showToast(`Esta cuota está en ${pending.dbCurrency}. Registra el cobro en la misma moneda.`);
@@ -2297,7 +2303,7 @@ async function saveReceivable(markPending=false){
    p_payment_date:$('#receivableDate').value,
    p_payment_method:$('#receivableMethod').value,
    p_note:$('#receivableNote').value.trim()||'Cobro de evento',
-   p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_fx_rate_to_crc:paymentFx,
    p_idempotency_key:crypto.randomUUID()
   });
 
@@ -2895,6 +2901,8 @@ async function openExpenseEdit(movementId){
  $('#expenseEditDate').value=m.movement_date;
  $('#expenseEditCurrency').value=m.currency;
  $('#expenseEditAmount').value=Number(m.amount);
+ $('#expenseEditFxRate').value=Number(m.fx_rate_to_crc)>0?String(Number(m.fx_rate_to_crc)):String(FX);
+ refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');
  $('#expenseEditMethod').value=[...$('#expenseEditMethod').options].some(o=>o.value===(m.payment_method||''))?(m.payment_method||''):'Otro';
  $('#expenseEditCounterparty').value=m.counterparty||'';
  $('#expenseEditDescription').value=m.description||'';
@@ -2993,6 +3001,8 @@ async function saveExpenseEdit(e){
  const err=$('#expenseEditError'),btn=$('#saveExpenseEditBtn');
 
  if(amount<=0){err.textContent='El monto real debe ser mayor que cero.';err.style.display='block';return}
+ const editedFx=fxRateForTransaction('#expenseEditCurrency','#expenseEditFxRate');
+ if(editedFx===null){err.textContent='Ingresá un tipo de cambio válido para este gasto en dólares.';err.style.display='block';return}
  if(assigned>amount+0.001){
   err.textContent=`No puedes asignar ${fmtOriginal(assigned,$('#expenseEditCurrency').value)} si el gasto real es ${fmtOriginal(amount,$('#expenseEditCurrency').value)}. Ajusta la distribución antes de guardar.`;
   err.style.display='block';return;
@@ -3009,7 +3019,7 @@ async function saveExpenseEdit(e){
   p_counterparty:$('#expenseEditCounterparty').value.trim()||null,
   p_amount:amount,
   p_currency:$('#expenseEditCurrency').value,
-  p_fx_rate_to_crc:$('#expenseEditCurrency').value==='CRC'?1:FX,
+  p_fx_rate_to_crc:editedFx,
   p_payment_method:$('#expenseEditMethod').value,
   p_reference:$('#expenseEditReference').value.trim()||null,
   p_allocations:allocations
