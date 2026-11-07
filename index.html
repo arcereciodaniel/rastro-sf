@@ -1076,7 +1076,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const FX=520;
+const FX=520; // Solo referencia provisional de último recurso: USD es la moneda base.
 const months=[
  {key:'2026-11',label:'NOV',events:4,income:52000,cost:29500,balance:31000,off:false},
  {key:'2026-12',label:'DIC',events:6,income:68000,cost:40500,balance:35400,off:false},
@@ -1214,32 +1214,87 @@ function shortDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIM
 function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,day:'2-digit',month:'short',year:'numeric'}).format(costaRicaDateOnly(iso)).replace('.','').toUpperCase()}
 function eventById(id){return events.find(e=>e.id===id)}
 function isUuid(value=''){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value))}
-function valueToUsd(amount,currency){return currency==='CRC'?Number(amount||0)/FX:Number(amount||0)}
-// Etapa 1: el RPC actual utiliza 1 para CRC (normalización de moneda).
-// La conversión histórica CRC->USD requiere una mejora posterior del modelo.
+const fxHistory=new Map();
+const fxHistoryMissing=new Set();
+const fxPendingRequestDates=new Set();
+function fxRelevantDate(date){
+ const today=costaRicaTodayISO();
+ const source=String(date||'').slice(0,10);
+ return /^\d{4}-\d{2}-\d{2}$/.test(source)&&source<=today?source:today;
+}
+function fxReference(date){
+ return fxHistory.get(fxRelevantDate(date))||null;
+}
+function fxUsdConversion(amount,currency,date){
+ const value=Number(amount||0);
+ if(currency!=='CRC')return value;
+ // BCCR/Hacienda venta se usa uniformemente como referencia de conversión
+ // para reportar costos e ingresos en la moneda base USD. No equivale al TC bancario.
+ const rate=Number(fxReference(date)?.sell)||FX;
+ return value/rate;
+}
+function valueToUsd(amount,currency,date=''){
+ return fxUsdConversion(amount,currency,date);
+}
+function fxHistoryIncomplete(){
+ const dates=new Set();
+ const push=(amount,currency,date)=>{
+  if(currency==='CRC'&&Number(amount||0)!==0)dates.add(fxRelevantDate(date));
+ };
+ globalDbMovements.forEach(m=>push(m.amount,m.currency,m.movement_date));
+ globalDbEventBudgetLines.forEach(r=>push(r.budgeted_amount,r.currency,r.created_at||realEventById(r.event_id)?.date));
+ databaseEvents.forEach(e=>push(e.dbAmount,e.dbCurrency,e.dbContractDate||e.date));
+ return [...dates].filter(d=>!fxHistory.has(d)).length;
+}
+async function primeFxDates(rows=[]){
+ const dates=[...new Set(rows.filter(r=>r&&r.currency==='CRC')
+   .map(r=>fxRelevantDate(r.date||r.movement_date||r.created_at||r.due_date||r.event_date))
+   .filter(Boolean))].filter(d=>!fxHistory.has(d)&&!fxPendingRequestDates.has(d));
+ for(let i=0;i<dates.length;i+=100){
+  const chunk=dates.slice(i,i+100);
+  chunk.forEach(d=>fxPendingRequestDates.add(d));
+  try{
+   const response=await fetch('/api/fx?dates='+encodeURIComponent(chunk.join(',')),{headers:{Accept:'application/json'}});
+   const body=await response.json();
+   if(!response.ok)throw new Error(body.error||'Histórico cambiario no disponible');
+   Object.entries(body.rates||{}).forEach(([date,quote])=>{
+    const rate=Number(quote.sell);
+    if(rate>=100&&rate<=1500)fxHistory.set(date,quote);
+   });
+   chunk.filter(d=>!fxHistory.has(d)).forEach(d=>fxHistoryMissing.add(d));
+  }catch(error){
+   console.warn('No se pudo cargar un grupo de tipos de cambio históricos:',error.message);
+   chunk.forEach(d=>fxHistoryMissing.add(d));
+  }finally{chunk.forEach(d=>fxPendingRequestDates.delete(d))}
+ }
+}
+// El RPC anterior sigue usando fx_rate_to_crc=1 para operaciones CRC;
+// la conversión correcta CRC→USD se realiza para reportes en base a la fecha.
+
 function refreshTransactionFxField(currencyId,wrapperId,inputId,active=true){
  const currency=$(currencyId),wrap=$(wrapperId),input=$(inputId);
  if(!currency||!wrap||!input)return;
- const visible=active&&currency.value==='USD';
+ const visible=active&&currency.value==='CRC';
  wrap.style.display=visible?'':'none';
  input.disabled=!visible;
+ input.readOnly=visible;
 }
 function fxRateForTransaction(currencyId,inputId){
+ // Contrato vigente del RPC de Supabase: CRC→CRC = 1.
+ // El campo visual CRC/USD se utiliza exclusivamente para reportar en USD.
  if($(currencyId).value==='CRC')return 1;
- const input=$(inputId);
- const rate=input&&input.value.trim()!==''?Number(input.value):NaN;
- return Number.isFinite(rate)&&rate>=100&&rate<=1500?rate:null;
+ return FX;
 }
 const FX_FORMS={
  expense:{currency:'#expenseCurrency',date:'#expenseDate',input:'#expenseFxRate',status:'#expenseFxStatus',side:'sell',wrapper:'#expenseFxRateWrap'},
- receivable:{currency:'#receivableCurrency',date:'#receivableDate',input:'#receivableFxRate',status:'#receivableFxStatus',side:'buy',wrapper:'#receivableFxRateWrap'},
+ receivable:{currency:'#receivableCurrency',date:'#receivableDate',input:'#receivableFxRate',status:'#receivableFxStatus',side:'sell',wrapper:'#receivableFxRateWrap'},
  expenseEdit:{currency:'#expenseEditCurrency',date:'#expenseEditDate',input:'#expenseEditFxRate',status:'#expenseEditFxStatus',side:'sell',wrapper:'#expenseEditFxRateWrap'}
 };
 const fxQuoteCache=new Map();
 const fxRequestIds={expense:0,receivable:0,expenseEdit:0};
 function fxFormActive(name){
  const cfg=FX_FORMS[name];
- return $(cfg.currency).value==='USD'&&(name!=='receivable'||$('#receivableModal').dataset.mode==='payment');
+ return $(cfg.currency).value==='CRC'&&(name!=='receivable'||$('#receivableModal').dataset.mode==='payment');
 }
 function setFxStatus(name,message){$(FX_FORMS[name].status).textContent=message;}
 function resetFxForm(name){
@@ -1271,7 +1326,9 @@ async function lookupFxRate(name,{force=false}={}){
   const applied=cfg.side==='buy'?Number(quote.buy):Number(quote.sell);
   if(applied<100||applied>1500)throw new Error('La tasa recibida está fuera del rango esperado.');
   input.value=applied.toFixed(2);
+  fxHistory.set(date,quote);
   input.dataset.fxManual='';
+  renderFxEquivalent(name);
   input.dataset.fxSource=quote.source||'';
   input.dataset.fxDate=quote.sourceDate||'';
   const side=cfg.side==='buy'?'compra':'venta';
@@ -1283,28 +1340,22 @@ async function lookupFxRate(name,{force=false}={}){
   else setFxStatus(name,'No se pudo consultar la referencia: '+error.message+' Revisá el TC ingresado.');
  }
 }
+function renderFxEquivalent(name){
+ const cfg=FX_FORMS[name],input=$(cfg.input);
+ const target=$('#'+name+'FxEquivalent');
+ if(!target)return;
+ if($(cfg.currency).value!=='CRC'){target.textContent='';return;}
+ const amountInput=name==='expense'?'#expenseAmount':name==='receivable'?'#receivableAmount':'#expenseEditAmount';
+ const amount=Number($(amountInput).value||0),rate=Number(input.value)||0;
+ target.textContent=amount>0&&rate>0?'Equivalente para análisis: '+moneyUSD(amount/rate)+' (moneda base USD)':'Pendiente de tasa válida para calcular el equivalente USD';
+}
 function setupFxForm(name,buttonId){
  const cfg=FX_FORMS[name],input=$(cfg.input);
- input.addEventListener('input',()=>{
-  fxRequestIds[name]+=1;input.dataset.fxManual='1';
-  setFxStatus(name,'TC introducido manualmente. Verificá que coincida con el comprobante bancario.');
- });
- $(cfg.date).addEventListener('change',()=>{
-  if(name==='expenseEdit'){
-   fxRequestIds[name]+=1;
-   setFxStatus(name,'Se conserva el TC original. Si la fecha cambió, verificá si corresponde actualizarlo.');
-   return;
-  }
-  resetFxForm(name);lookupFxRate(name);
- });
- $(cfg.currency).addEventListener('change',()=>{
-  if(name==='expenseEdit'){
-   fxRequestIds[name]+=1;
-   setFxStatus(name,'Se conserva el tipo de cambio original. Usá Consultar referencia si necesitás uno nuevo.');
-   return;
-  }
-  resetFxForm(name);lookupFxRate(name);
- });
+ input.addEventListener('input',()=>{renderFxEquivalent(name);});
+ $(cfg.date).addEventListener('change',()=>{resetFxForm(name);lookupFxRate(name);renderFxEquivalent(name);});
+ $(cfg.currency).addEventListener('change',()=>{resetFxForm(name);lookupFxRate(name);renderFxEquivalent(name);});
+ const amountInput=name==='expense'?'#expenseAmount':name==='receivable'?'#receivableAmount':'#expenseEditAmount';
+ $(amountInput).addEventListener('input',()=>renderFxEquivalent(name));
  $(buttonId).onclick=()=>lookupFxRate(name,{force:true});
 }
 function categoryById(id){return dbCategories.find(c=>c.id===id)}
