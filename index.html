@@ -1377,7 +1377,7 @@ function budgetForCategory(eventId,category){
   if(!categoryId)return 0;
   return globalDbEventBudgetLines
    .filter(line=>line.event_id===eventId&&line.category_id===categoryId)
-   .reduce((sum,line)=>sum+valueToUsd(Number(line.budgeted_amount||0),line.currency||'USD'),0);
+   .reduce((sum,line)=>sum+valueToUsd(Number(line.budgeted_amount||0),line.currency||'USD',line.created_at||realEventById(line.event_id)?.date),0);
  }
  const row=(eventBudgets[eventId]||[]).find(r=>r[0]===category);
  return row?Number(row[1]):0;
@@ -1482,13 +1482,13 @@ function enhanceMobileTables(scope=document){
 
 
 function eventBudgetTotalUsd(eventId){
- return globalDbEventBudgetLines.filter(r=>r.event_id===eventId).reduce((s,r)=>s+valueToUsd(Number(r.budgeted_amount||0),r.currency||'USD'),0);
+ return globalDbEventBudgetLines.filter(r=>r.event_id===eventId).reduce((s,r)=>s+valueToUsd(Number(r.budgeted_amount||0),r.currency||'USD',r.created_at||realEventById(eventId)?.date),0);
 }
 function eventActualExpenseUsd(eventId){
  return expenseAllocations.filter(a=>a.source==='db'&&a.eventId===eventId).reduce((s,a)=>s+a.amountUsd,0);
 }
 function eventCollectedUsd(eventId){
- return movements.filter(m=>m.source==='db'&&m.kind==='income'&&m.eventId===eventId).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ return movements.filter(m=>m.source==='db'&&m.kind==='income'&&m.eventId===eventId).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
 }
 function syncRealEventAggregates(){
  databaseEvents.forEach(e=>{
@@ -1530,7 +1530,7 @@ function seasonContractedReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e
 function seasonCollectedReal(){return seasonEventsReal().reduce((s,e)=>s+e.collected,0)}
 function seasonProjectedCostReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e.costEst,0)}
 function seasonActualCostReal(){return seasonEventsReal().reduce((s,e)=>s+e.costReal,0)}
-function fundUsd(value){return valueToUsd(Number(value||0),dbContext.offseasonCurrency||'USD')}
+function fundUsd(value){return valueToUsd(Number(value||0),dbContext.offseasonCurrency||'USD',costaRicaTodayISO())}
 function offseasonFundCoveragePct(){const t=fundUsd(dbContext.offseasonFundTarget);return t>0?fundUsd(dbContext.offseasonFundReserved)/t*100:0}
 function openSeasonFundModal(){
  if(!['owner','admin'].includes(dbContext.role)){showToast('Solo owner/admin puede editar el fondo.');return}
@@ -1579,12 +1579,12 @@ function homeMovementInSelectedSeason(m){
 }
 function currentLiquidCashUsd(){
  if(!cashReferenceConfigured())return null;
- let balance=valueToUsd(dbContext.operatingCashBalance,dbContext.operatingCashCurrency||'USD');
+ let balance=valueToUsd(dbContext.operatingCashBalance,dbContext.operatingCashCurrency||'USD',dbContext.operatingCashReferenceAt);
  const ref=new Date(dbContext.operatingCashReferenceAt).getTime();
  globalDbMovements.forEach(m=>{
   const created=m.created_at?new Date(m.created_at).getTime():0;
   if(created<=ref)return;
-  const amount=valueToUsd(Number(m.amount||0),m.currency||'USD');
+  const amount=valueToUsd(Number(m.amount||0),m.currency||'USD',m.movement_date);
   if(m.movement_type==='income')balance+=amount;
   else if(m.movement_type==='expense')balance-=amount;
  });
@@ -1633,8 +1633,8 @@ function unassignedExpenseUsd(){
  return globalDbMovements
   .filter(m=>m.movement_type==='expense'&&homeMovementInSelectedSeason(m))
   .reduce((sum,m)=>{
-   const allocated=globalDbAllocations.filter(a=>a.movement_id===m.id).reduce((s,a)=>s+valueToUsd(Number(a.allocated_amount||0),m.currency||'USD'),0);
-   return sum+Math.max(0,valueToUsd(Number(m.amount||0),m.currency||'USD')-allocated);
+   const allocated=globalDbAllocations.filter(a=>a.movement_id===m.id).reduce((s,a)=>s+valueToUsd(Number(a.allocated_amount||0),m.currency||'USD',m.movement_date),0);
+   return sum+Math.max(0,valueToUsd(Number(m.amount||0),m.currency||'USD',m.movement_date)-allocated);
   },0);
 }
 function nearBudgetEventsReal(){
@@ -1879,7 +1879,7 @@ function renderOperation(){
   ${list.length?list.map(op=>{
    const budget=operationBudgetReal(op),actual=operationActualReal(op),variance=actual-budget;
    const opEvents=op.eventIds.map(id=>eventById(id)?.name).filter(Boolean);
-   const ungrouped=globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id&&!m.operation_group_id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+   const ungrouped=globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id&&!m.operation_group_id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
    return `<section class="operation-shell">
     <div class="operation-shell-head">
       <div class="operation-shell-title">
@@ -2033,11 +2033,11 @@ function renderMovements(){
   .filter(m=>!query||`${m.category} ${m.description||''} ${m.counterparty||''} ${movementEventLabel(m)} ${m.method||''}`.toLowerCase().includes(query))
   .sort((a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
 
- const expenseTotal=real.filter(m=>m.kind==='expense').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
- const incomeTotal=real.filter(m=>m.kind==='income').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ const expenseTotal=real.filter(m=>m.kind==='expense').reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
+ const incomeTotal=real.filter(m=>m.kind==='income').reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
  const unassigned=real.filter(m=>m.kind==='expense').reduce((sum,m)=>{
   const allocated=allocationsForMovement(m).reduce((s,a)=>s+a.amountUsd,0);
-  return sum+Math.max(0,valueToUsd(m.amount,m.currency)-allocated);
+  return sum+Math.max(0,valueToUsd(m.amount,m.currency,m.date)-allocated);
  },0);
 
  $('#view-movements').innerHTML=
@@ -2093,10 +2093,10 @@ function receivableRemainingOriginal(r){
  return Math.max(0,Number(r.originalAmount||0)-Number(r.paidOriginal||0));
 }
 function receivableRemainingUsd(r){
- return valueToUsd(receivableRemainingOriginal(r),r.dbCurrency||'USD');
+ return valueToUsd(receivableRemainingOriginal(r),r.dbCurrency||'USD',r.due);
 }
 function receivablePaidUsd(r){
- return valueToUsd(Number(r.paidOriginal||0),r.dbCurrency||'USD');
+ return valueToUsd(Number(r.paidOriginal||0),r.dbCurrency||'USD',r.due);
 }
 function renderReceivables(){
  const today=localTodayISO(),next30=addIsoDays(today,30);
@@ -2486,7 +2486,7 @@ function dbStatusToUi(status){
 function dbEventToUi(row){
  const state=dbStatusToUi(row.status);
  const raw=Number(row.contracted_amount||0);
- const sale=row.currency==='CRC'?usd(raw,'CRC'):raw;
+ const sale=valueToUsd(raw,row.currency||'USD',row.created_at||row.event_date);
  return {
   id:row.id,name:row.name,date:row.event_date,place:row.venue||row.location||'Lugar por definir',
   planner:'—',client:row.name,sale,collected:0,costEst:0,costReal:0,
@@ -2534,7 +2534,7 @@ async function loadGlobalFinancialData(){
  globalDbReceivables.forEach(r=>{
   receivables.push({
    id:r.id,eventId:r.event_id,concept:r.description,
-   amount:valueToUsd(r.amount,r.currency),
+   amount:valueToUsd(r.amount,r.currency,r.due_date),
    originalAmount:Number(r.amount),
    dbCurrency:r.currency,
    due:r.due_date,
@@ -2551,7 +2551,7 @@ async function loadGlobalFinancialData(){
   expenseAllocations.push({
    movementId:a.movement_id,
    eventId:a.event_id,
-   amountUsd:valueToUsd(a.allocated_amount,m.currency),
+   amountUsd:valueToUsd(a.allocated_amount,m.currency,m.movement_date),
    operationId:m.operation_id||'',
    groupId:m.operation_group_id||'',
    budgeted:a.budget_status==='budgeted',
@@ -2633,13 +2633,13 @@ function operationMovementRows(operationId,groupId=null){
 function operationGroupActual(group,categoryId=null){
  return globalDbMovements
   .filter(m=>m.movement_type==='expense'&&m.operation_group_id===group.id&&(!categoryId||m.category_id===categoryId))
-  .reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+  .reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
 }
 function operationBudgetReal(op){
  return op.groups.reduce((sum,g)=>sum+g.budgetLines.reduce((s,r)=>s+r.amountUsd,0),0);
 }
 function operationActualReal(op){
- return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
 }
 async function loadRealOperations(){
  const [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes]=await Promise.all([
@@ -2661,7 +2661,7 @@ async function loadRealOperations(){
     description:l.description,quantity:l.quantity==null?null:Number(l.quantity),unit:l.unit||'',
     estimatedUnitCost:l.estimated_unit_cost==null?null:Number(l.estimated_unit_cost),
     originalAmount:Number(l.budgeted_amount),currency:l.currency,
-    amountUsd:valueToUsd(l.budgeted_amount,l.currency),notes:l.notes||''
+    amountUsd:valueToUsd(l.budgeted_amount,l.currency,l.created_at||op.start_date),notes:l.notes||''
    }))
   }));
   return {
@@ -2863,7 +2863,7 @@ async function loadRealEventFinancials(eventId){
 
  dbBudgetLinesByEvent[eventId]=budgetRows.map(r=>{
   const categoryName=categoryById(r.category_id)?.name||'Sin categoría';
-  const usdAmount=valueToUsd(r.budgeted_amount,r.currency);
+  const usdAmount=valueToUsd(r.budgeted_amount,r.currency,r.created_at||e.date);
   budgetByCategory[categoryName]=(budgetByCategory[categoryName]||0)+usdAmount;
   return {
    id:r.id,categoryId:r.category_id,categoryName,description:r.description,
@@ -2878,7 +2878,7 @@ async function loadRealEventFinancials(eventId){
  allocRows.forEach(a=>{
   const m=movementMap[a.movement_id];if(!m)return;
   const categoryName=categoryById(m.category_id)?.name||'Sin categoría';
-  const amountUsd=valueToUsd(a.allocated_amount,m.currency);
+  const amountUsd=valueToUsd(a.allocated_amount,m.currency,m.movement_date);
   actualByCategory[categoryName]=(actualByCategory[categoryName]||0)+amountUsd;
   expenseAllocations.push({
    movementId:a.movement_id,eventId,amountUsd,operationId:m.operation_id||'',groupId:m.operation_group_id||'',
@@ -2903,7 +2903,7 @@ async function loadRealEventFinancials(eventId){
  recRows.forEach(r=>{
   const statusMap={pending:'Pendiente',partial:'Parcial',paid:'Pagado',cancelled:'Cancelado'};
   receivables.push({
-   id:r.id,eventId,concept:r.description,amount:valueToUsd(r.amount,r.currency),
+   id:r.id,eventId,concept:r.description,amount:valueToUsd(r.amount,r.currency,r.due_date),
    originalAmount:Number(r.amount),dbCurrency:r.currency,due:r.due_date,status:statusMap[r.status]||r.status,
    source:'db',paidOriginal:paymentByReceivable[r.id]||0
   });
@@ -2914,7 +2914,7 @@ async function loadRealEventFinancials(eventId){
 
  e.costEst=Object.values(budgetByCategory).reduce((s,n)=>s+n,0);
  e.costReal=Object.values(actualByCategory).reduce((s,n)=>s+n,0);
- e.collected=recRows.reduce((sum,r)=>sum+valueToUsd(paymentByReceivable[r.id]||0,r.currency),0);
+ e.collected=recRows.reduce((sum,r)=>sum+valueToUsd(paymentByReceivable[r.id]||0,r.currency,r.due_date),0);
  updateEventFinancialStatus(e);
  e.quality=(e.costEst||e.costReal||recRows.length)?'Alta':'Inicial';
 
