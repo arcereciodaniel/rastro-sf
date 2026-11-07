@@ -1169,6 +1169,7 @@ const dbReceivableRowsByEvent={};
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
 function usd(value,currency='USD'){return currency==='USD'?Number(value):Number(value)/FX}
 function moneyUSD(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v)}
+function moneyUSDExact(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(v)}
 function moneyCRC(v){return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',maximumFractionDigits:0}).format(v).replace('CRC','₡')}
 function money(v){return displayCurrency==='USD'?moneyUSD(v):moneyCRC(v*(Number(fxReference(costaRicaTodayISO())?.sell)||FX))}
 function fmtOriginal(v,c){return c==='USD'?moneyUSD(v):moneyCRC(v)}
@@ -2077,7 +2078,7 @@ function renderMovements(){
           <td>${escapeHtml(movementEventLabel(m))}</td>
           <td>${escapeHtml(m.method||'—')}</td>
           <td><span class="status good complete-dot">Completo</span></td>
-          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='CRC'?`<div class="kpi-sub">≈ ${moneyUSD(valueToUsd(m.amount,m.currency,m.date))} · USD base</div><div class="kpi-sub">Referencia ₡${(Number(fxReference(m.date)?.sell)||FX).toFixed(2)}/USD${fxReference(m.date)?'':' (provisional)'}</div>`:''}</td>
+          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='CRC'?`<div class="kpi-sub">≈ ${moneyUSDExact(valueToUsd(m.amount,m.currency,m.date))} · USD base</div><div class="kpi-sub">Referencia ₡${(Number(fxReference(m.date)?.sell)||FX).toFixed(2)}/USD${fxReference(m.date)?'':' (provisional)'}</div>`:''}</td>
           <td>${m.kind==='expense'&&dbContext.role==='owner'?`<button class="btn secondary small movement-edit" data-edit-global-expense="${m.id}">${uiIcon('pencil')} Editar</button>`:'<span class="kpi-sub">—</span>'}</td>
         </tr>`).join(''):'<tr><td colspan="9" class="kpi-sub">Todavía no hay movimientos reales.</td></tr>'}</tbody>
       </table>
