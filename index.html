@@ -695,7 +695,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
       <strong class="workspace-mini" id="workspaceBusinessName">Stylos &amp; Flores</strong>
       <div class="spacer"></div>
       <select class="season-select" id="seasonSelect"><option>Temporada 2026/2027</option></select>
-      <select class="currency-select" id="currencySelect"><option value="USD">$ USD</option><option value="CRC">₡ CRC</option></select>
+      <select class="currency-select" id="currencySelect"><option value="USD">$ USD · base</option><option value="CRC">₡ CRC · referencia</option></select>
       <button class="theme-btn ghost" id="themeBtn">Oscuro</button>
       <button class="primary" id="registerBtn">+ Registrar</button>
     </header>
@@ -775,6 +775,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field" id="expenseSingleEventField"><label>Evento relacionado</label><select id="expenseEvent"></select></div>
               <div class="field"><label>Medio de pago</label><select id="expenseMethod"><option>Tarjeta</option><option>Transferencia</option><option>Efectivo</option><option>Otro</option></select></div>
               <div class="field"><label>Fecha</label><input id="expenseDate" type="date" required></div>
+<div class="field" id="expenseFxRateWrap" style="display:none"><label for="expenseFxRate">TC de referencia para convertir ₡ → USD</label><input id="expenseFxRate" type="number" min="100" max="1500" step="0.01" placeholder="Buscando TC..." readonly><button type="button" class="btn secondary small" id="expenseFxRefresh" style="margin-top:6px">Actualizar referencia</button><small class="kpi-sub" id="expenseFxStatus" aria-live="polite">Consulta por fecha · referencia de venta de Hacienda. La base de S&F es USD.</small><div class="kpi-sub" id="expenseFxEquivalent" style="font-weight:700;margin-top:7px"></div></div>
             </div>
           </div>
 
@@ -819,6 +820,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field"><label>Cuota / concepto pendiente</label><select id="receivablePending"></select></div>
               <div class="field"><label>Medio recibido</label><select id="receivableMethod"><option>Transferencia</option><option>Tarjeta</option><option>Efectivo</option><option>SINPE</option><option>Otro</option></select></div>
               <div class="field"><label>Fecha</label><input id="receivableDate" type="date" required></div>
+<div class="field" id="receivableFxRateWrap" style="display:none"><label for="receivableFxRate">TC de referencia para convertir ₡ → USD</label><input id="receivableFxRate" type="number" min="100" max="1500" step="0.01" placeholder="Buscando TC..." readonly><button type="button" class="btn secondary small" id="receivableFxRefresh" style="margin-top:6px">Actualizar referencia</button><small class="kpi-sub" id="receivableFxStatus" aria-live="polite">Consulta por fecha · referencia de venta de Hacienda. La base de S&F es USD.</small><div class="kpi-sub" id="receivableFxEquivalent" style="font-weight:700;margin-top:7px"></div></div>
             </div>
           </div>
 
@@ -912,6 +914,10 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
               <div class="field">
                 <label>Monto real</label>
                 <input id="expenseEditAmount" type="number" min="0.01" step="0.01" required>
+              </div><div class="field" id="expenseEditFxRateWrap" style="display:none">
+                <label for="expenseEditFxRate">TC de referencia para convertir ₡ → USD</label>
+                <input id="expenseEditFxRate" type="number" min="100" max="1500" step="0.01" placeholder="Consultando TC..." readonly><button type="button" class="btn secondary small" id="expenseEditFxRefresh" style="margin-top:6px">Actualizar referencia</button>
+                <small class="kpi-sub" id="expenseEditFxStatus" aria-live="polite">Se consulta la referencia según la fecha. No se reemplaza el monto original en colones.</small><div class="kpi-sub" id="expenseEditFxEquivalent" style="font-weight:700;margin-top:7px"></div>
               </div>
               <div class="field">
                 <label>Medio de pago</label>
@@ -1070,7 +1076,7 @@ html[data-theme="dark"] .mobile-nav{background:#252525!important}
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const FX=520;
+const FX=520; // Solo referencia provisional de último recurso: USD es la moneda base.
 const months=[
  {key:'2026-11',label:'NOV',events:4,income:52000,cost:29500,balance:31000,off:false},
  {key:'2026-12',label:'DIC',events:6,income:68000,cost:40500,balance:35400,off:false},
@@ -1163,8 +1169,9 @@ const dbReceivableRowsByEvent={};
 const $=s=>document.querySelector(s); const $$=s=>[...document.querySelectorAll(s)];
 function usd(value,currency='USD'){return currency==='USD'?Number(value):Number(value)/FX}
 function moneyUSD(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v)}
+function moneyUSDExact(v){return new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(v)}
 function moneyCRC(v){return new Intl.NumberFormat('es-CR',{style:'currency',currency:'CRC',maximumFractionDigits:0}).format(v).replace('CRC','₡')}
-function money(v){return displayCurrency==='USD'?moneyUSD(v):moneyCRC(v*FX)}
+function money(v){return displayCurrency==='USD'?moneyUSD(v):moneyCRC(v*(Number(fxReference(costaRicaTodayISO())?.sell)||FX))}
 function fmtOriginal(v,c){return c==='USD'?moneyUSD(v):moneyCRC(v)}
 function pct(v){return `${Math.round(v)}%`}
 const APP_TIME_ZONE='America/Costa_Rica';
@@ -1208,7 +1215,151 @@ function shortDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIM
 function eventCardDate(iso){return new Intl.DateTimeFormat('es-CR',{timeZone:APP_TIME_ZONE,day:'2-digit',month:'short',year:'numeric'}).format(costaRicaDateOnly(iso)).replace('.','').toUpperCase()}
 function eventById(id){return events.find(e=>e.id===id)}
 function isUuid(value=''){return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value))}
-function valueToUsd(amount,currency){return currency==='CRC'?Number(amount||0)/FX:Number(amount||0)}
+const fxHistory=new Map();
+const fxHistoryMissing=new Set();
+const fxPendingRequestDates=new Set();
+function fxRelevantDate(date){
+ const today=costaRicaTodayISO();
+ const source=String(date||'').slice(0,10);
+ return /^\d{4}-\d{2}-\d{2}$/.test(source)&&source<=today?source:today;
+}
+function fxReference(date){
+ return fxHistory.get(fxRelevantDate(date))||null;
+}
+function fxUsdConversion(amount,currency,date){
+ const value=Number(amount||0);
+ if(currency!=='CRC')return value;
+ // BCCR/Hacienda venta se usa uniformemente como referencia de conversión
+ // para reportar costos e ingresos en la moneda base USD. No equivale al TC bancario.
+ const rate=Number(fxReference(date)?.sell)||FX;
+ return value/rate;
+}
+function valueToUsd(amount,currency,date=''){
+ return fxUsdConversion(amount,currency,date);
+}
+function fxHistoryIncomplete(){
+ const dates=new Set();
+ const push=(amount,currency,date)=>{
+  if(currency==='CRC'&&Number(amount||0)!==0)dates.add(fxRelevantDate(date));
+ };
+ globalDbMovements.forEach(m=>push(m.amount,m.currency,m.movement_date));
+ globalDbEventBudgetLines.forEach(r=>push(r.budgeted_amount,r.currency,r.created_at||realEventById(r.event_id)?.date));
+ globalDbReceivables.forEach(r=>push(r.amount,r.currency,r.due_date));
+ dbOperations.forEach(op=>(op.groups||[]).forEach(g=>(g.budgetLines||[]).forEach(r=>push(r.originalAmount,r.currency,r.createdAt||op.start))));
+ databaseEvents.forEach(e=>push(e.dbAmount,e.dbCurrency,e.dbContractDate||e.date));
+ return [...dates].filter(d=>!fxHistory.has(d)).length;
+}
+async function primeFxDates(rows=[]){
+ const dates=[...new Set(rows.filter(r=>r&&r.currency==='CRC')
+   .map(r=>fxRelevantDate(r.date||r.movement_date||r.created_at||r.due_date||r.event_date))
+   .filter(Boolean))].filter(d=>!fxHistory.has(d)&&!fxPendingRequestDates.has(d));
+ for(let i=0;i<dates.length;i+=100){
+  const chunk=dates.slice(i,i+100);
+  chunk.forEach(d=>fxPendingRequestDates.add(d));
+  try{
+   const response=await fetch('/api/fx?dates='+encodeURIComponent(chunk.join(',')),{headers:{Accept:'application/json'}});
+   const body=await response.json();
+   if(!response.ok)throw new Error(body.error||'Histórico cambiario no disponible');
+   Object.entries(body.rates||{}).forEach(([date,quote])=>{
+    const rate=Number(quote.sell);
+    if(rate>=100&&rate<=1500)fxHistory.set(date,quote);
+   });
+   chunk.filter(d=>!fxHistory.has(d)).forEach(d=>fxHistoryMissing.add(d));
+  }catch(error){
+   console.warn('No se pudo cargar un grupo de tipos de cambio históricos:',error.message);
+   chunk.forEach(d=>fxHistoryMissing.add(d));
+  }finally{chunk.forEach(d=>fxPendingRequestDates.delete(d))}
+ }
+}
+// El RPC anterior sigue usando fx_rate_to_crc=1 para operaciones CRC;
+// la conversión correcta CRC→USD se realiza para reportes en base a la fecha.
+
+function refreshTransactionFxField(currencyId,wrapperId,inputId,active=true){
+ const currency=$(currencyId),wrap=$(wrapperId),input=$(inputId);
+ if(!currency||!wrap||!input)return;
+ const visible=active&&currency.value==='CRC';
+ wrap.style.display=visible?'':'none';
+ input.disabled=!visible;
+ input.readOnly=visible;
+}
+function fxRateForTransaction(currencyId,inputId){
+ // Contrato vigente del RPC de Supabase: CRC→CRC = 1.
+ // El campo visual CRC/USD se utiliza exclusivamente para reportar en USD.
+ if($(currencyId).value==='CRC')return 1;
+ return FX;
+}
+const FX_FORMS={
+ expense:{currency:'#expenseCurrency',date:'#expenseDate',input:'#expenseFxRate',status:'#expenseFxStatus',side:'sell',wrapper:'#expenseFxRateWrap'},
+ receivable:{currency:'#receivableCurrency',date:'#receivableDate',input:'#receivableFxRate',status:'#receivableFxStatus',side:'sell',wrapper:'#receivableFxRateWrap'},
+ expenseEdit:{currency:'#expenseEditCurrency',date:'#expenseEditDate',input:'#expenseEditFxRate',status:'#expenseEditFxStatus',side:'sell',wrapper:'#expenseEditFxRateWrap'}
+};
+const fxQuoteCache=new Map();
+const fxRequestIds={expense:0,receivable:0,expenseEdit:0};
+function fxFormActive(name){
+ const cfg=FX_FORMS[name];
+ return $(cfg.currency).value==='CRC'&&(name!=='receivable'||$('#receivableModal').dataset.mode==='payment');
+}
+function setFxStatus(name,message){$(FX_FORMS[name].status).textContent=message;}
+function resetFxForm(name){
+ fxRequestIds[name]+=1;
+ const cfg=FX_FORMS[name],input=$(cfg.input);
+ input.value='';input.dataset.fxManual='';
+ setFxStatus(name,'Consultando tasa de referencia por fecha...');
+}
+async function lookupFxRate(name,{force=false}={}){
+ const cfg=FX_FORMS[name],input=$(cfg.input),date=$(cfg.date).value;
+ const id=++fxRequestIds[name];
+ if(!fxFormActive(name))return;
+ if(!date){setFxStatus(name,'Seleccioná una fecha para consultar el tipo de cambio.');return;}
+ if(!force&&input.dataset.fxManual==='1')return;
+ setFxStatus(name,'Buscando cotización para '+date+'...');
+ try{
+  const cached=fxQuoteCache.get(date);
+  let quote;
+  if(cached&&Date.now()-cached.time<(date===costaRicaTodayISO()?300000:86400000))quote=cached.quote;
+  else{
+   const response=await fetch('/api/fx?date='+encodeURIComponent(date),{headers:{Accept:'application/json'}});
+   const result=await response.json();
+   if(!response.ok)throw new Error(result.error||'No se pudo consultar la cotización.');
+   if(!Number.isFinite(Number(result.buy))||!Number.isFinite(Number(result.sell)))throw new Error('La respuesta no contiene tasas válidas.');
+   quote=result;fxQuoteCache.set(date,{quote,time:Date.now()});
+  }
+  if(id!==fxRequestIds[name]||$(cfg.date).value!==date||!fxFormActive(name))return;
+  if(!force&&input.dataset.fxManual==='1')return;
+  const applied=cfg.side==='buy'?Number(quote.buy):Number(quote.sell);
+  if(applied<100||applied>1500)throw new Error('La tasa recibida está fuera del rango esperado.');
+  input.value=applied.toFixed(2);
+  fxHistory.set(date,quote);
+  input.dataset.fxManual='';
+  renderFxEquivalent(name);
+  input.dataset.fxSource=quote.source||'';
+  input.dataset.fxDate=quote.sourceDate||'';
+  const side=cfg.side==='buy'?'compra':'venta';
+  const dateMessage=quote.sourceDate!==date?' · publicado '+quote.sourceDate:'';
+  setFxStatus(name,'TC de referencia '+side+' ₡'+applied.toFixed(2)+' por dólar · '+(quote.source||'Proveedor cambiario')+dateMessage+'. Los montos en CRC se dividen entre esta tasa para expresarlos en USD.');
+ }catch(error){
+  if(id!==fxRequestIds[name]||!fxFormActive(name))return;
+  setFxStatus(name,'No fue posible consultar la tasa de referencia para esta fecha. Se usará ₡520 solamente como cálculo provisional hasta actualizar el histórico.');
+ }
+}
+function renderFxEquivalent(name){
+ const cfg=FX_FORMS[name],input=$(cfg.input);
+ const target=$('#'+name+'FxEquivalent');
+ if(!target)return;
+ if($(cfg.currency).value!=='CRC'){target.textContent='';return;}
+ const amountInput=name==='expense'?'#expenseAmount':name==='receivable'?'#receivableAmount':'#expenseEditAmount';
+ const amount=Number($(amountInput).value||0),rate=Number(input.value)||0;
+ target.textContent=amount>0&&rate>0?'Costo/ingreso estimado en USD: '+new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',minimumFractionDigits:2,maximumFractionDigits:2}).format(amount/rate):'Pendiente de tasa válida para calcular el equivalente en USD';
+}
+function setupFxForm(name,buttonId){
+ const cfg=FX_FORMS[name],input=$(cfg.input);
+ input.addEventListener('input',()=>{renderFxEquivalent(name);});
+ $(cfg.date).addEventListener('change',()=>{resetFxForm(name);lookupFxRate(name);renderFxEquivalent(name);});
+ $(cfg.currency).addEventListener('change',()=>{resetFxForm(name);lookupFxRate(name);renderFxEquivalent(name);});
+ const amountInput=name==='expense'?'#expenseAmount':name==='receivable'?'#receivableAmount':'#expenseEditAmount';
+ $(amountInput).addEventListener('input',()=>renderFxEquivalent(name));
+ $(buttonId).onclick=()=>lookupFxRate(name,{force:true});
+}
 function categoryById(id){return dbCategories.find(c=>c.id===id)}
 function categoryIdByName(name){return dbCategories.find(c=>c.name===name)?.id||null}
 function realEventById(id){return databaseEvents.find(e=>e.id===id)}
@@ -1229,7 +1380,7 @@ function budgetForCategory(eventId,category){
   if(!categoryId)return 0;
   return globalDbEventBudgetLines
    .filter(line=>line.event_id===eventId&&line.category_id===categoryId)
-   .reduce((sum,line)=>sum+valueToUsd(Number(line.budgeted_amount||0),line.currency||'USD'),0);
+   .reduce((sum,line)=>sum+valueToUsd(Number(line.budgeted_amount||0),line.currency||'USD',line.created_at||realEventById(line.event_id)?.date),0);
  }
  const row=(eventBudgets[eventId]||[]).find(r=>r[0]===category);
  return row?Number(row[1]):0;
@@ -1334,13 +1485,13 @@ function enhanceMobileTables(scope=document){
 
 
 function eventBudgetTotalUsd(eventId){
- return globalDbEventBudgetLines.filter(r=>r.event_id===eventId).reduce((s,r)=>s+valueToUsd(Number(r.budgeted_amount||0),r.currency||'USD'),0);
+ return globalDbEventBudgetLines.filter(r=>r.event_id===eventId).reduce((s,r)=>s+valueToUsd(Number(r.budgeted_amount||0),r.currency||'USD',r.created_at||realEventById(eventId)?.date),0);
 }
 function eventActualExpenseUsd(eventId){
  return expenseAllocations.filter(a=>a.source==='db'&&a.eventId===eventId).reduce((s,a)=>s+a.amountUsd,0);
 }
 function eventCollectedUsd(eventId){
- return movements.filter(m=>m.source==='db'&&m.kind==='income'&&m.eventId===eventId).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ return movements.filter(m=>m.source==='db'&&m.kind==='income'&&m.eventId===eventId).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
 }
 function syncRealEventAggregates(){
  databaseEvents.forEach(e=>{
@@ -1382,7 +1533,7 @@ function seasonContractedReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e
 function seasonCollectedReal(){return seasonEventsReal().reduce((s,e)=>s+e.collected,0)}
 function seasonProjectedCostReal(){return confirmedSeasonEvents().reduce((s,e)=>s+e.costEst,0)}
 function seasonActualCostReal(){return seasonEventsReal().reduce((s,e)=>s+e.costReal,0)}
-function fundUsd(value){return valueToUsd(Number(value||0),dbContext.offseasonCurrency||'USD')}
+function fundUsd(value){return valueToUsd(Number(value||0),dbContext.offseasonCurrency||'USD',costaRicaTodayISO())}
 function offseasonFundCoveragePct(){const t=fundUsd(dbContext.offseasonFundTarget);return t>0?fundUsd(dbContext.offseasonFundReserved)/t*100:0}
 function openSeasonFundModal(){
  if(!['owner','admin'].includes(dbContext.role)){showToast('Solo owner/admin puede editar el fondo.');return}
@@ -1431,12 +1582,12 @@ function homeMovementInSelectedSeason(m){
 }
 function currentLiquidCashUsd(){
  if(!cashReferenceConfigured())return null;
- let balance=valueToUsd(dbContext.operatingCashBalance,dbContext.operatingCashCurrency||'USD');
+ let balance=valueToUsd(dbContext.operatingCashBalance,dbContext.operatingCashCurrency||'USD',dbContext.operatingCashReferenceAt);
  const ref=new Date(dbContext.operatingCashReferenceAt).getTime();
  globalDbMovements.forEach(m=>{
   const created=m.created_at?new Date(m.created_at).getTime():0;
   if(created<=ref)return;
-  const amount=valueToUsd(Number(m.amount||0),m.currency||'USD');
+  const amount=valueToUsd(Number(m.amount||0),m.currency||'USD',m.movement_date);
   if(m.movement_type==='income')balance+=amount;
   else if(m.movement_type==='expense')balance-=amount;
  });
@@ -1485,8 +1636,8 @@ function unassignedExpenseUsd(){
  return globalDbMovements
   .filter(m=>m.movement_type==='expense'&&homeMovementInSelectedSeason(m))
   .reduce((sum,m)=>{
-   const allocated=globalDbAllocations.filter(a=>a.movement_id===m.id).reduce((s,a)=>s+valueToUsd(Number(a.allocated_amount||0),m.currency||'USD'),0);
-   return sum+Math.max(0,valueToUsd(Number(m.amount||0),m.currency||'USD')-allocated);
+   const allocated=globalDbAllocations.filter(a=>a.movement_id===m.id).reduce((s,a)=>s+valueToUsd(Number(a.allocated_amount||0),m.currency||'USD',m.movement_date),0);
+   return sum+Math.max(0,valueToUsd(Number(m.amount||0),m.currency||'USD',m.movement_date)-allocated);
   },0);
 }
 function nearBudgetEventsReal(){
@@ -1602,7 +1753,9 @@ function renderHome(){
  const overdue=overdueReceivablesReal();
  const nearBudget=nearBudgetEventsReal();
  const unassigned=unassignedExpenseUsd();
+ const missingFxDates=fxHistoryIncomplete();
  const attention=[];
+ if(missingFxDates)attention.push({tone:'warn',view:'movements',title:missingFxDates+' fechas con tipo de cambio sin verificar',sub:'Los importes en CRC permanecen intactos. Algunos equivalentes USD utilizan temporalmente ₡520 hasta recuperar la referencia histórica.'});
  if(unassigned>.01)attention.push({tone:'warn',view:'movements',title:`${money(unassigned)} de gastos sin asignar`,sub:'Todavía no están atribuidos a eventos u operación.'});
  if(overdue.length)attention.push({tone:'danger',view:'receivables',title:`${overdue.length} cobro${overdue.length===1?' vencido':'s vencidos'}`,sub:'Revisar cuotas con fecha esperada ya pasada.'});
  if(upcomingCobros.length)attention.push({tone:'warn',view:'receivables',title:`${upcomingCobros.length} cobro${upcomingCobros.length===1?' próximo':'s próximos'}`,sub:`${money(upcomingCobros.reduce((s,r)=>s+receivableRemainingUsd(r),0))} esperados en los próximos 30 días.`});
@@ -1731,7 +1884,7 @@ function renderOperation(){
   ${list.length?list.map(op=>{
    const budget=operationBudgetReal(op),actual=operationActualReal(op),variance=actual-budget;
    const opEvents=op.eventIds.map(id=>eventById(id)?.name).filter(Boolean);
-   const ungrouped=globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id&&!m.operation_group_id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+   const ungrouped=globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id&&!m.operation_group_id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
    return `<section class="operation-shell">
     <div class="operation-shell-head">
       <div class="operation-shell-title">
@@ -1885,11 +2038,11 @@ function renderMovements(){
   .filter(m=>!query||`${m.category} ${m.description||''} ${m.counterparty||''} ${movementEventLabel(m)} ${m.method||''}`.toLowerCase().includes(query))
   .sort((a,b)=>(b.date||'').localeCompare(a.date||'')||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
 
- const expenseTotal=real.filter(m=>m.kind==='expense').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
- const incomeTotal=real.filter(m=>m.kind==='income').reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ const expenseTotal=real.filter(m=>m.kind==='expense').reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
+ const incomeTotal=real.filter(m=>m.kind==='income').reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.date),0);
  const unassigned=real.filter(m=>m.kind==='expense').reduce((sum,m)=>{
   const allocated=allocationsForMovement(m).reduce((s,a)=>s+a.amountUsd,0);
-  return sum+Math.max(0,valueToUsd(m.amount,m.currency)-allocated);
+  return sum+Math.max(0,valueToUsd(m.amount,m.currency,m.date)-allocated);
  },0);
 
  $('#view-movements').innerHTML=
@@ -1925,7 +2078,7 @@ function renderMovements(){
           <td>${escapeHtml(movementEventLabel(m))}</td>
           <td>${escapeHtml(m.method||'—')}</td>
           <td><span class="status good complete-dot">Completo</span></td>
-          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong></td>
+          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='CRC'?`<div class="kpi-sub">≈ ${moneyUSDExact(valueToUsd(m.amount,m.currency,m.date))} · USD base</div><div class="kpi-sub">Referencia ₡${(Number(fxReference(m.date)?.sell)||FX).toFixed(2)}/USD${fxReference(m.date)?'':' (provisional)'}</div>`:''}</td>
           <td>${m.kind==='expense'&&dbContext.role==='owner'?`<button class="btn secondary small movement-edit" data-edit-global-expense="${m.id}">${uiIcon('pencil')} Editar</button>`:'<span class="kpi-sub">—</span>'}</td>
         </tr>`).join(''):'<tr><td colspan="9" class="kpi-sub">Todavía no hay movimientos reales.</td></tr>'}</tbody>
       </table>
@@ -1945,10 +2098,10 @@ function receivableRemainingOriginal(r){
  return Math.max(0,Number(r.originalAmount||0)-Number(r.paidOriginal||0));
 }
 function receivableRemainingUsd(r){
- return valueToUsd(receivableRemainingOriginal(r),r.dbCurrency||'USD');
+ return valueToUsd(receivableRemainingOriginal(r),r.dbCurrency||'USD',r.due);
 }
 function receivablePaidUsd(r){
- return valueToUsd(Number(r.paidOriginal||0),r.dbCurrency||'USD');
+ return valueToUsd(Number(r.paidOriginal||0),r.dbCurrency||'USD',r.due);
 }
 function renderReceivables(){
  const today=localTodayISO(),next30=addIsoDays(today,30);
@@ -2077,7 +2230,7 @@ function openRegister(eventId='',context={}){
  currentExpenseContext={operationId:context.operationId||'',groupId:context.groupId||'',eventIds:context.eventIds||[]};
  const modal=$('#registerModal');const eventPool=databaseEvents.length?databaseEvents:events;const contextualEventId=eventId||((currentExpenseContext.eventIds||[]).length===1?currentExpenseContext.eventIds[0]:'');$('#expenseEvent').innerHTML=`<option value="">Elegir evento</option>${eventPool.map(e=>`<option value="${e.id}" ${e.id===contextualEventId?'selected':''}>${e.name}</option>`).join('')}`;
  populateDbCategorySelects();
- $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';
+ $('#expenseDate').value=costaRicaTodayISO();$('#expenseAmount').value='';$('#expenseNote').value='';if([...$('#expenseCategory').options].some(o=>o.value==='Flores'))$('#expenseCategory').value='Flores';$('#expenseMethod').value='Tarjeta';$('#expenseCurrency').value=displayCurrency==='CRC'?'CRC':'USD';resetFxForm('expense');refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');lookupFxRate('expense');
  const type=$('#expenseAssignmentType'); type.value=currentExpenseContext.eventIds.length>1?'multi':(contextualEventId?'single':'general');
  const ctx=$('#expenseOperationContext');if(currentExpenseContext.operationId){const op=operationById(currentExpenseContext.operationId),g=op?.groups.find(x=>x.id===currentExpenseContext.groupId);ctx.style.display='block';ctx.innerHTML=`<div class="kpi-label">Operativo relacionado</div><strong>${op?.name||'Operativo'}</strong><div class="kpi-sub">${g?.name||''}</div>`}else{ctx.style.display='none';ctx.innerHTML=''}
  renderExpenseAllocationRows();
@@ -2087,6 +2240,8 @@ function closeRegister(){$('#registerModal').classList.remove('open');$('#regist
 async function saveExpense(pending=false){
  const amount=Number($('#expenseAmount').value);if(!Number.isFinite(amount)||amount<=0){showToast('Ingresa un monto mayor que cero.');return}
  const currency=$('#expenseCurrency').value, assignment=pending?'general':$('#expenseAssignmentType').value;
+ const transactionFx=fxRateForTransaction('#expenseCurrency','#expenseFxRate');
+ if(transactionFx===null){showToast('Ingresá un tipo de cambio válido para este gasto en dólares.');return}
  let allocsOriginal=[];
  if(assignment==='single'){
   const eventId=$('#expenseEvent').value;if(!eventId){showToast('Selecciona el evento.');return}
@@ -2108,7 +2263,7 @@ async function saveExpense(pending=false){
    p_operation_id:isUuid(currentExpenseContext.operationId)?currentExpenseContext.operationId:null,
    p_operation_group_id:isUuid(currentExpenseContext.groupId)?currentExpenseContext.groupId:null,
    p_movement_date:$('#expenseDate').value,p_description:$('#expenseNote').value.trim()||'Gasto registrado',
-   p_amount:amount,p_currency:currency,p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_amount:amount,p_currency:currency,p_fx_rate_to_crc:transactionFx,
    p_payment_method:$('#expenseMethod').value,p_budget_status:budgetStatus,p_allocations:payload,
    p_idempotency_key:crypto.randomUUID()
   });
@@ -2170,6 +2325,7 @@ function setReceivableModalMode(mode){
   pendingField.style.display='';
   methodField.style.display='';
  }
+ refreshTransactionFxField('#receivableCurrency','#receivableFxRateWrap','#receivableFxRate',mode==='payment');
 }
 function openReceivableModal(eventId='', receivableId='', mode='payment'){
  currentReceivableContext={eventId,receivableId};
@@ -2199,7 +2355,9 @@ function openReceivableModal(eventId='', receivableId='', mode='payment'){
  }
 
  $('#receivableMethod').value='Transferencia';
+ resetFxForm('receivable');
  setReceivableModalMode(mode);
+ if(mode==='payment')lookupFxRate('receivable');
  modal.classList.add('open');
  modal.setAttribute('aria-hidden','false');
  setTimeout(()=>$('#receivableAmount').focus(),60);
@@ -2259,6 +2417,8 @@ async function saveReceivable(markPending=false){
 
  if(event?.source==='db'){
   const currency=$('#receivableCurrency').value;
+  const paymentFx=fxRateForTransaction('#receivableCurrency','#receivableFxRate');
+  if(paymentFx===null){showToast('Ingresá un tipo de cambio válido para este cobro en dólares.');return}
   const pending=receivables.find(r=>r.id===pendingId&&r.source==='db');
   if(pending&&pending.dbCurrency!==currency){
    showToast(`Esta cuota está en ${pending.dbCurrency}. Registra el cobro en la misma moneda.`);
@@ -2277,7 +2437,7 @@ async function saveReceivable(markPending=false){
    p_payment_date:$('#receivableDate').value,
    p_payment_method:$('#receivableMethod').value,
    p_note:$('#receivableNote').value.trim()||'Cobro de evento',
-   p_fx_rate_to_crc:currency==='CRC'?1:FX,
+   p_fx_rate_to_crc:paymentFx,
    p_idempotency_key:crypto.randomUUID()
   });
 
@@ -2331,12 +2491,12 @@ function dbStatusToUi(status){
 function dbEventToUi(row){
  const state=dbStatusToUi(row.status);
  const raw=Number(row.contracted_amount||0);
- const sale=row.currency==='CRC'?usd(raw,'CRC'):raw;
+ const sale=valueToUsd(raw,row.currency||'USD',row.created_at||row.event_date);
  return {
   id:row.id,name:row.name,date:row.event_date,place:row.venue||row.location||'Lugar por definir',
   planner:'—',client:row.name,sale,collected:0,costEst:0,costReal:0,
   commercial:state[0],operational:state[1],financial:'Sin cobros',quality:'Inicial',
-  source:'db',dbStatus:row.status,dbCurrency:row.currency||'USD',dbAmount:raw,notes:row.notes||''
+  source:'db',dbStatus:row.status,dbCurrency:row.currency||'USD',dbAmount:raw,dbContractDate:row.created_at||row.event_date,notes:row.notes||''
  };
 }
 
@@ -2355,6 +2515,11 @@ async function loadGlobalFinancialData(){
  if(paymentRes.error)throw paymentRes.error;
  if(eventBudgetRes.error)throw eventBudgetRes.error;
 
+ await primeFxDates([
+  ...(movementRes.data||[]).map(m=>({currency:m.currency,date:m.movement_date})),
+  ...(eventBudgetRes.data||[]).map(r=>({currency:r.currency,date:r.created_at||realEventById(r.event_id)?.date})),
+  ...(receivableRes.data||[]).map(r=>({currency:r.currency,date:r.due_date}))
+ ]);
  globalDbMovements=movementRes.data||[];
  globalDbAllocations=allocationRes.data||[];
  globalDbReceivables=receivableRes.data||[];
@@ -2379,7 +2544,7 @@ async function loadGlobalFinancialData(){
  globalDbReceivables.forEach(r=>{
   receivables.push({
    id:r.id,eventId:r.event_id,concept:r.description,
-   amount:valueToUsd(r.amount,r.currency),
+   amount:valueToUsd(r.amount,r.currency,r.due_date),
    originalAmount:Number(r.amount),
    dbCurrency:r.currency,
    due:r.due_date,
@@ -2396,7 +2561,7 @@ async function loadGlobalFinancialData(){
   expenseAllocations.push({
    movementId:a.movement_id,
    eventId:a.event_id,
-   amountUsd:valueToUsd(a.allocated_amount,m.currency),
+   amountUsd:valueToUsd(a.allocated_amount,m.currency,m.movement_date),
    operationId:m.operation_id||'',
    groupId:m.operation_group_id||'',
    budgeted:a.budget_status==='budgeted',
@@ -2419,6 +2584,7 @@ async function loadGlobalFinancialData(){
    status:'Completo',
    kind:m.movement_type,
    source:'db',
+   fxRate:Number(m.fx_rate_to_crc||0),
    budgetStatus:m.budget_status,
    counterparty:m.counterparty||'',
    reference:m.reference||'',
@@ -2477,13 +2643,13 @@ function operationMovementRows(operationId,groupId=null){
 function operationGroupActual(group,categoryId=null){
  return globalDbMovements
   .filter(m=>m.movement_type==='expense'&&m.operation_group_id===group.id&&(!categoryId||m.category_id===categoryId))
-  .reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+  .reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
 }
 function operationBudgetReal(op){
  return op.groups.reduce((sum,g)=>sum+g.budgetLines.reduce((s,r)=>s+r.amountUsd,0),0);
 }
 function operationActualReal(op){
- return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency),0);
+ return globalDbMovements.filter(m=>m.movement_type==='expense'&&m.operation_id===op.id).reduce((s,m)=>s+valueToUsd(m.amount,m.currency,m.movement_date),0);
 }
 async function loadRealOperations(){
  const [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes]=await Promise.all([
@@ -2496,6 +2662,7 @@ async function loadRealOperations(){
  for(const r of [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes])if(r.error)throw r.error;
 
  const opEvents=eventsRes.data||[],groups=groupsRes.data||[],groupEvents=groupEventsRes.data||[],lines=budgetRes.data||[];
+ await primeFxDates(lines.map(l=>({currency:l.currency,date:l.created_at||(opsRes.data||[]).find(op=>op.id===l.operation_id)?.start_date})));
  dbOperations=(opsRes.data||[]).map(op=>{
   const opGroups=groups.filter(g=>g.operation_id===op.id).map(g=>({
    id:g.id,name:g.name,location:g.location||'',people:Number(g.people_count||0),notes:g.notes||'',
@@ -2505,7 +2672,7 @@ async function loadRealOperations(){
     description:l.description,quantity:l.quantity==null?null:Number(l.quantity),unit:l.unit||'',
     estimatedUnitCost:l.estimated_unit_cost==null?null:Number(l.estimated_unit_cost),
     originalAmount:Number(l.budgeted_amount),currency:l.currency,
-    amountUsd:valueToUsd(l.budgeted_amount,l.currency),notes:l.notes||''
+    amountUsd:valueToUsd(l.budgeted_amount,l.currency,l.created_at||op.start_date),createdAt:l.created_at,notes:l.notes||''
    }))
   }));
   return {
@@ -2701,13 +2868,18 @@ async function loadRealEventFinancials(eventId){
  if(movementRes.error)throw movementRes.error;if(paymentRes.error)throw paymentRes.error;
  const movementRows=movementRes.data||[],paymentRows=paymentRes.data||[];
 
+ await primeFxDates([
+  ...budgetRows.map(r=>({currency:r.currency,date:r.created_at||e.date})),
+  ...movementRows.map(m=>({currency:m.currency,date:m.movement_date})),
+  ...recRows.map(r=>({currency:r.currency,date:r.due_date}))
+ ]);
  const movementMap=Object.fromEntries(movementRows.map(m=>[m.id,m]));
  const budgetByCategory={};
  const actualByCategory={};
 
  dbBudgetLinesByEvent[eventId]=budgetRows.map(r=>{
   const categoryName=categoryById(r.category_id)?.name||'Sin categoría';
-  const usdAmount=valueToUsd(r.budgeted_amount,r.currency);
+  const usdAmount=valueToUsd(r.budgeted_amount,r.currency,r.created_at||e.date);
   budgetByCategory[categoryName]=(budgetByCategory[categoryName]||0)+usdAmount;
   return {
    id:r.id,categoryId:r.category_id,categoryName,description:r.description,
@@ -2722,7 +2894,7 @@ async function loadRealEventFinancials(eventId){
  allocRows.forEach(a=>{
   const m=movementMap[a.movement_id];if(!m)return;
   const categoryName=categoryById(m.category_id)?.name||'Sin categoría';
-  const amountUsd=valueToUsd(a.allocated_amount,m.currency);
+  const amountUsd=valueToUsd(a.allocated_amount,m.currency,m.movement_date);
   actualByCategory[categoryName]=(actualByCategory[categoryName]||0)+amountUsd;
   expenseAllocations.push({
    movementId:a.movement_id,eventId,amountUsd,operationId:m.operation_id||'',groupId:m.operation_group_id||'',
@@ -2737,7 +2909,7 @@ async function loadRealEventFinancials(eventId){
  movementRows.forEach(m=>movements.push({
   id:m.id,date:m.movement_date,category:categoryById(m.category_id)?.name||'Sin categoría',
   description:m.description,eventId:'',amount:Number(m.amount),currency:m.currency,
-  method:m.payment_method||'—',status:'Completo',kind:m.movement_type,source:'db',budgetStatus:m.budget_status
+  method:m.payment_method||'—',status:'Completo',kind:m.movement_type,source:'db',budgetStatus:m.budget_status,fxRate:Number(m.fx_rate_to_crc||0)
  }));
 
  // Refresh receivables for this event.
@@ -2747,7 +2919,7 @@ async function loadRealEventFinancials(eventId){
  recRows.forEach(r=>{
   const statusMap={pending:'Pendiente',partial:'Parcial',paid:'Pagado',cancelled:'Cancelado'};
   receivables.push({
-   id:r.id,eventId,concept:r.description,amount:valueToUsd(r.amount,r.currency),
+   id:r.id,eventId,concept:r.description,amount:valueToUsd(r.amount,r.currency,r.due_date),
    originalAmount:Number(r.amount),dbCurrency:r.currency,due:r.due_date,status:statusMap[r.status]||r.status,
    source:'db',paidOriginal:paymentByReceivable[r.id]||0
   });
@@ -2758,7 +2930,14 @@ async function loadRealEventFinancials(eventId){
 
  e.costEst=Object.values(budgetByCategory).reduce((s,n)=>s+n,0);
  e.costReal=Object.values(actualByCategory).reduce((s,n)=>s+n,0);
- e.collected=recRows.reduce((sum,r)=>sum+valueToUsd(paymentByReceivable[r.id]||0,r.currency),0);
+ // Real collections are converted using the payment movement date, not the due date.
+ e.collected=recRows.reduce((sum,r)=>{
+  const applied=paymentRows.filter(p=>p.receivable_id===r.id);
+  return sum+applied.reduce((subtotal,p)=>{
+   const movement=globalDbMovements.find(m=>m.id===p.movement_id);
+   return subtotal+valueToUsd(p.amount_applied,r.currency,movement?.movement_date||r.due_date);
+  },0);
+ },0);
  updateEventFinancialStatus(e);
  e.quality=(e.costEst||e.costReal||recRows.length)?'Alta':'Inicial';
 
@@ -2770,6 +2949,7 @@ async function loadDatabaseEvents(){
  if(!dbContext.businessId)return;
  const {data,error}=await sb.from('events').select('*').eq('business_id',dbContext.businessId).order('event_date',{ascending:true});
  if(error)throw error;
+ await primeFxDates((data||[]).map(r=>({currency:r.currency,date:r.created_at||r.event_date})));
  databaseEvents=(data||[]).map(dbEventToUi);
  events=[...databaseEvents,...demoEvents];
  if(databaseEvents.length)selectedEvent=databaseEvents[0].id;
@@ -2875,6 +3055,12 @@ async function openExpenseEdit(movementId){
  $('#expenseEditDate').value=m.movement_date;
  $('#expenseEditCurrency').value=m.currency;
  $('#expenseEditAmount').value=Number(m.amount);
+ fxRequestIds.expenseEdit+=1;
+ $('#expenseEditFxRate').value=Number(m.fx_rate_to_crc)>=100&&Number(m.fx_rate_to_crc)<=1500?String(Number(m.fx_rate_to_crc)):'';
+ $('#expenseEditFxRate').dataset.fxManual='';
+ refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');
+ resetFxForm('expenseEdit');
+ if($('#expenseEditCurrency').value==='CRC')lookupFxRate('expenseEdit');
  $('#expenseEditMethod').value=[...$('#expenseEditMethod').options].some(o=>o.value===(m.payment_method||''))?(m.payment_method||''):'Otro';
  $('#expenseEditCounterparty').value=m.counterparty||'';
  $('#expenseEditDescription').value=m.description||'';
@@ -2973,6 +3159,8 @@ async function saveExpenseEdit(e){
  const err=$('#expenseEditError'),btn=$('#saveExpenseEditBtn');
 
  if(amount<=0){err.textContent='El monto real debe ser mayor que cero.';err.style.display='block';return}
+ const editedFx=fxRateForTransaction('#expenseEditCurrency','#expenseEditFxRate');
+ if(editedFx===null){err.textContent='Ingresá un tipo de cambio válido para este gasto en dólares.';err.style.display='block';return}
  if(assigned>amount+0.001){
   err.textContent=`No puedes asignar ${fmtOriginal(assigned,$('#expenseEditCurrency').value)} si el gasto real es ${fmtOriginal(amount,$('#expenseEditCurrency').value)}. Ajusta la distribución antes de guardar.`;
   err.style.display='block';return;
@@ -2989,7 +3177,7 @@ async function saveExpenseEdit(e){
   p_counterparty:$('#expenseEditCounterparty').value.trim()||null,
   p_amount:amount,
   p_currency:$('#expenseEditCurrency').value,
-  p_fx_rate_to_crc:$('#expenseEditCurrency').value==='CRC'?1:FX,
+  p_fx_rate_to_crc:editedFx,
   p_payment_method:$('#expenseEditMethod').value,
   p_reference:$('#expenseEditReference').value.trim()||null,
   p_allocations:allocations
@@ -3180,7 +3368,7 @@ $('#closeExpenseEditModal').onclick=closeExpenseEditModal;
 $('#cancelExpenseEditModal').onclick=closeExpenseEditModal;
 $('#expenseEditModal').addEventListener('click',e=>{if(e.target.id==='expenseEditModal')closeExpenseEditModal()});
 $('#expenseEditAmount').oninput=refreshExpenseEditSummary;
-$('#expenseEditCurrency').onchange=refreshExpenseEditSummary;
+$('#expenseEditCurrency').onchange=()=>{refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');refreshExpenseEditSummary()};
 $('#expenseEditRedistribute').onclick=redistributeExpenseEditProportionally;
 $('#closeBudgetLineModal').onclick=closeBudgetLineModal;
 $('#cancelBudgetLineModal').onclick=closeBudgetLineModal;
@@ -3204,13 +3392,17 @@ $('#mobileLogout').onclick=()=>{closeAllMobileSheets();handleLogout()};
 $('#closeModal').onclick=closeRegister;
 $('#registerModal').addEventListener('click',e=>{if(e.target.id==='registerModal')closeRegister()});
 $('#expenseForm').addEventListener('submit',e=>{e.preventDefault();saveExpense(false)});
-$('#expenseAssignmentType').onchange=()=>renderExpenseAllocationRows();$('#expenseCategory').onchange=()=>renderExpenseAllocationRows();$('#expenseAmount').oninput=()=>updateAllocationSummary();$('#expenseCurrency').onchange=()=>updateAllocationSummary();$('#expenseAutoAllocate').onclick=()=>autoAllocateExpense();
+$('#expenseAssignmentType').onchange=()=>renderExpenseAllocationRows();$('#expenseCategory').onchange=()=>renderExpenseAllocationRows();$('#expenseAmount').oninput=()=>updateAllocationSummary();$('#expenseCurrency').onchange=()=>{refreshTransactionFxField('#expenseCurrency','#expenseFxRateWrap','#expenseFxRate');updateAllocationSummary()};$('#expenseAutoAllocate').onclick=()=>autoAllocateExpense();
 $('#savePending').onclick=()=>saveExpense(true);
 $('#closeReceivableModal').onclick=closeReceivableModal;
 $('#receivableModal').addEventListener('click',e=>{if(e.target.id==='receivableModal')closeReceivableModal()});
 $('#receivableForm').addEventListener('submit',e=>{e.preventDefault();saveReceivable(false)});
 $('#savePendingReceivable').onclick=()=>saveExpectedReceivable();
 $('#receivableEvent').onchange=e=>populateReceivablePending(e.target.value);
+$('#receivableCurrency').onchange=()=>refreshTransactionFxField('#receivableCurrency','#receivableFxRateWrap','#receivableFxRate',$('#receivableModal').dataset.mode==='payment');
+setupFxForm('expense','#expenseFxRefresh');
+setupFxForm('receivable','#receivableFxRefresh');
+setupFxForm('expenseEdit','#expenseEditFxRefresh');
 $('#currencySelect').onchange=e=>{displayCurrency=e.target.value;if(currentView==='eventDetail')renderEventDetail();else navTo(currentView)};
 $('#themeBtn').onclick=toggleTheme;
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllMobileSheets();closeRegister();closeReceivableModal();closeEventModal();closeBudgetLineModal();closeExpenseEditModal();closeSeasonFundModal();closeOperationModal()}if((e.metaKey||e.ctrlKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openRegister()}});
