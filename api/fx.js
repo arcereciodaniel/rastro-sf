@@ -74,8 +74,32 @@ function todayInCostaRica(){
 module.exports=async function handler(req,res){
   res.setHeader('Content-Type','application/json; charset=utf-8');
   if(req.method!=='GET'){res.setHeader('Allow','GET');return res.status(405).json({error:'Solo GET'});}
-  const date=req.query?.date;
   const today=todayInCostaRica();
+  // Bulk historical rates: one upstream request serves many CRC transactions.
+  // Only published dates on or before each requested date are eligible.
+  if(req.query?.dates){
+    const raw=String(req.query.dates);
+    const dates=[...new Set(raw.split(',').map(x=>x.trim()))].sort();
+    if(!dates.length||dates.length>100||dates.some(d=>!isDate(d)||d>today||d<'2013-01-01')){
+      return res.status(400).json({error:'Indica entre 1 y 100 fechas válidas no futuras.'});
+    }
+    res.setHeader('Cache-Control','public, s-maxage=3600, stale-while-revalidate=86400');
+    try{
+      const start=minusDays(dates[0],10),end=dates[dates.length-1];
+      const url=HACIENDA+'/historico?d='+start+'&h='+end;
+      const rows=extractOfficialRows(await getJson(url));
+      const rates={},missing=[];
+      for(const date of dates){
+        const row=latestOnOrBefore(rows,date);
+        if(row)rates[date]={requestedDate:date,sourceDate:row.date,buy:row.buy,sell:row.sell,source:'Hacienda (referencia oficial)',official:true};
+        else missing.push(date);
+      }
+      return res.status(200).json({rates,missing});
+    }catch(error){
+      return res.status(503).json({error:'No se pudo consultar el histórico por fechas.',detail:error.message});
+    }
+  }
+  const date=req.query?.date;
   if(!isDate(date)||date>'9999-12-31'||date>today||date<'2013-01-01'){
     return res.status(400).json({error:'Fecha inválida, futura o anterior a 2013.'});
   }
