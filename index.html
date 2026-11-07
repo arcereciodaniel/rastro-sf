@@ -1243,6 +1243,8 @@ function fxHistoryIncomplete(){
  };
  globalDbMovements.forEach(m=>push(m.amount,m.currency,m.movement_date));
  globalDbEventBudgetLines.forEach(r=>push(r.budgeted_amount,r.currency,r.created_at||realEventById(r.event_id)?.date));
+ globalDbReceivables.forEach(r=>push(r.amount,r.currency,r.due_date));
+ dbOperations.forEach(op=>(op.groups||[]).forEach(g=>(g.budgetLines||[]).forEach(r=>push(r.originalAmount,r.currency,r.createdAt||op.start))));
  databaseEvents.forEach(e=>push(e.dbAmount,e.dbCurrency,e.dbContractDate||e.date));
  return [...dates].filter(d=>!fxHistory.has(d)).length;
 }
@@ -2669,7 +2671,7 @@ async function loadRealOperations(){
     description:l.description,quantity:l.quantity==null?null:Number(l.quantity),unit:l.unit||'',
     estimatedUnitCost:l.estimated_unit_cost==null?null:Number(l.estimated_unit_cost),
     originalAmount:Number(l.budgeted_amount),currency:l.currency,
-    amountUsd:valueToUsd(l.budgeted_amount,l.currency,l.created_at||op.start_date),notes:l.notes||''
+    amountUsd:valueToUsd(l.budgeted_amount,l.currency,l.created_at||op.start_date),createdAt:l.created_at,notes:l.notes||''
    }))
   }));
   return {
@@ -2927,7 +2929,14 @@ async function loadRealEventFinancials(eventId){
 
  e.costEst=Object.values(budgetByCategory).reduce((s,n)=>s+n,0);
  e.costReal=Object.values(actualByCategory).reduce((s,n)=>s+n,0);
- e.collected=recRows.reduce((sum,r)=>sum+valueToUsd(paymentByReceivable[r.id]||0,r.currency,r.due_date),0);
+ // Real collections are converted using the payment movement date, not the due date.
+ e.collected=recRows.reduce((sum,r)=>{
+  const applied=paymentRows.filter(p=>p.receivable_id===r.id);
+  return sum+applied.reduce((subtotal,p)=>{
+   const movement=globalDbMovements.find(m=>m.id===p.movement_id);
+   return subtotal+valueToUsd(p.amount_applied,r.currency,movement?.movement_date||r.due_date);
+  },0);
+ },0);
  updateEventFinancialStatus(e);
  e.quality=(e.costEst||e.costReal||recRows.length)?'Alta':'Inicial';
 
