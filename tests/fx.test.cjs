@@ -16,7 +16,7 @@ async function invoke(date, upstream, method='GET'){
   status(n){this.statusCode=n;return this;},
   json(value){this.body=value;return this;}
  };
- try{await handler({method,query:{date}},res);}finally{global.fetch=oldFetch;}
+ try{await handler({method,query:typeof date==='object'?date:{date}},res);}finally{global.fetch=oldFetch;}
  return res;
 }
 
@@ -61,4 +61,29 @@ test('rechaza fechas inválidas o futuras',async()=>{
 test('rechaza métodos distintos de GET',async()=>{
  const res=await invoke('2026-11-04',async()=>null,'POST');
  assert.equal(res.statusCode,405);
+});
+
+test('lote de fechas convierte varios días mediante una consulta histórica',async()=>{
+ let calls=0;
+ const res=await invoke({dates:'2026-11-04,2026-11-05,2026-11-06'},async url=>{
+  calls+=1;
+  assert.match(url,/api.hacienda.go.cr/);
+  return [
+   {fecha:'2026-11-04',compra:443,venta:451},
+   {fecha:'2026-11-06',compra:445,venta:453}
+  ];
+ });
+ assert.equal(res.statusCode,200);
+ assert.equal(calls,1);
+ assert.equal(res.body.rates['2026-11-04'].sell,451);
+ assert.equal(res.body.rates['2026-11-05'].sourceDate,'2026-11-04');
+ assert.equal(res.body.rates['2026-11-06'].sell,453);
+ assert.deepEqual(res.body.missing,[]);
+});
+test('lote no inventa cotización faltante y rechaza fechas futuras',async()=>{
+ const historical=await invoke({dates:'2026-11-01,2026-11-02'},async()=>[]);
+ assert.equal(historical.statusCode,200);
+ assert.deepEqual(historical.body.missing,['2026-11-01','2026-11-02']);
+ const invalid=await invoke({dates:'2099-01-01'},async()=>{throw Error('No debe consultar upstream');});
+ assert.equal(invalid.statusCode,400);
 });
