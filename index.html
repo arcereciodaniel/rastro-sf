@@ -1750,7 +1750,9 @@ function renderHome(){
  const overdue=overdueReceivablesReal();
  const nearBudget=nearBudgetEventsReal();
  const unassigned=unassignedExpenseUsd();
+ const missingFxDates=fxHistoryIncomplete();
  const attention=[];
+ if(missingFxDates)attention.push({tone:'warn',view:'movements',title:missingFxDates+' fechas con tipo de cambio sin verificar',sub:'Los importes en CRC permanecen intactos. Algunos equivalentes USD utilizan temporalmente ₡520 hasta recuperar la referencia histórica.'});
  if(unassigned>.01)attention.push({tone:'warn',view:'movements',title:`${money(unassigned)} de gastos sin asignar`,sub:'Todavía no están atribuidos a eventos u operación.'});
  if(overdue.length)attention.push({tone:'danger',view:'receivables',title:`${overdue.length} cobro${overdue.length===1?' vencido':'s vencidos'}`,sub:'Revisar cuotas con fecha esperada ya pasada.'});
  if(upcomingCobros.length)attention.push({tone:'warn',view:'receivables',title:`${upcomingCobros.length} cobro${upcomingCobros.length===1?' próximo':'s próximos'}`,sub:`${money(upcomingCobros.reduce((s,r)=>s+receivableRemainingUsd(r),0))} esperados en los próximos 30 días.`});
@@ -2073,7 +2075,7 @@ function renderMovements(){
           <td>${escapeHtml(movementEventLabel(m))}</td>
           <td>${escapeHtml(m.method||'—')}</td>
           <td><span class="status good complete-dot">Completo</span></td>
-          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='USD'&&Number(m.fxRate)>0?`<div class="kpi-sub">TC ₡${Number(m.fxRate).toLocaleString('es-CR')}/USD</div>`:''}</td>
+          <td class="num"><strong>${fmtOriginal(m.amount,m.currency)}</strong>${m.currency==='CRC'?`<div class="kpi-sub">≈ ${moneyUSD(valueToUsd(m.amount,m.currency,m.date))} · USD base</div><div class="kpi-sub">Referencia ₡${(Number(fxReference(m.date)?.sell)||FX).toFixed(2)}/USD${fxReference(m.date)?'':' (provisional)'}</div>`:''}</td>
           <td>${m.kind==='expense'&&dbContext.role==='owner'?`<button class="btn secondary small movement-edit" data-edit-global-expense="${m.id}">${uiIcon('pencil')} Editar</button>`:'<span class="kpi-sub">—</span>'}</td>
         </tr>`).join(''):'<tr><td colspan="9" class="kpi-sub">Todavía no hay movimientos reales.</td></tr>'}</tbody>
       </table>
@@ -2491,7 +2493,7 @@ function dbEventToUi(row){
   id:row.id,name:row.name,date:row.event_date,place:row.venue||row.location||'Lugar por definir',
   planner:'—',client:row.name,sale,collected:0,costEst:0,costReal:0,
   commercial:state[0],operational:state[1],financial:'Sin cobros',quality:'Inicial',
-  source:'db',dbStatus:row.status,dbCurrency:row.currency||'USD',dbAmount:raw,notes:row.notes||''
+  source:'db',dbStatus:row.status,dbCurrency:row.currency||'USD',dbAmount:raw,dbContractDate:row.created_at||row.event_date,notes:row.notes||''
  };
 }
 
@@ -2510,6 +2512,11 @@ async function loadGlobalFinancialData(){
  if(paymentRes.error)throw paymentRes.error;
  if(eventBudgetRes.error)throw eventBudgetRes.error;
 
+ await primeFxDates([
+  ...(movementRes.data||[]).map(m=>({currency:m.currency,date:m.movement_date})),
+  ...(eventBudgetRes.data||[]).map(r=>({currency:r.currency,date:r.created_at||realEventById(r.event_id)?.date})),
+  ...(receivableRes.data||[]).map(r=>({currency:r.currency,date:r.due_date}))
+ ]);
  globalDbMovements=movementRes.data||[];
  globalDbAllocations=allocationRes.data||[];
  globalDbReceivables=receivableRes.data||[];
@@ -2652,6 +2659,7 @@ async function loadRealOperations(){
  for(const r of [opsRes,eventsRes,groupsRes,groupEventsRes,budgetRes])if(r.error)throw r.error;
 
  const opEvents=eventsRes.data||[],groups=groupsRes.data||[],groupEvents=groupEventsRes.data||[],lines=budgetRes.data||[];
+ await primeFxDates(lines.map(l=>({currency:l.currency,date:l.created_at||(opsRes.data||[]).find(op=>op.id===l.operation_id)?.start_date})));
  dbOperations=(opsRes.data||[]).map(op=>{
   const opGroups=groups.filter(g=>g.operation_id===op.id).map(g=>({
    id:g.id,name:g.name,location:g.location||'',people:Number(g.people_count||0),notes:g.notes||'',
@@ -2857,6 +2865,11 @@ async function loadRealEventFinancials(eventId){
  if(movementRes.error)throw movementRes.error;if(paymentRes.error)throw paymentRes.error;
  const movementRows=movementRes.data||[],paymentRows=paymentRes.data||[];
 
+ await primeFxDates([
+  ...budgetRows.map(r=>({currency:r.currency,date:r.created_at||e.date})),
+  ...movementRows.map(m=>({currency:m.currency,date:m.movement_date})),
+  ...recRows.map(r=>({currency:r.currency,date:r.due_date}))
+ ]);
  const movementMap=Object.fromEntries(movementRows.map(m=>[m.id,m]));
  const budgetByCategory={};
  const actualByCategory={};
@@ -2926,6 +2939,7 @@ async function loadDatabaseEvents(){
  if(!dbContext.businessId)return;
  const {data,error}=await sb.from('events').select('*').eq('business_id',dbContext.businessId).order('event_date',{ascending:true});
  if(error)throw error;
+ await primeFxDates((data||[]).map(r=>({currency:r.currency,date:r.created_at||r.event_date})));
  databaseEvents=(data||[]).map(dbEventToUi);
  events=[...databaseEvents,...demoEvents];
  if(databaseEvents.length)selectedEvent=databaseEvents[0].id;
@@ -3035,7 +3049,8 @@ async function openExpenseEdit(movementId){
  $('#expenseEditFxRate').value=Number(m.fx_rate_to_crc)>=100&&Number(m.fx_rate_to_crc)<=1500?String(Number(m.fx_rate_to_crc)):'';
  $('#expenseEditFxRate').dataset.fxManual='';
  refreshTransactionFxField('#expenseEditCurrency','#expenseEditFxRateWrap','#expenseEditFxRate');
- setFxStatus('expenseEdit',$('#expenseEditFxRate').value?'TC recuperado de este gasto. Se conservará si no lo cambiás.':'Este gasto no tiene un TC válido registrado. Consultá una referencia o ingresá el TC real.');
+ resetFxForm('expenseEdit');
+ if($('#expenseEditCurrency').value==='CRC')lookupFxRate('expenseEdit');
  $('#expenseEditMethod').value=[...$('#expenseEditMethod').options].some(o=>o.value===(m.payment_method||''))?(m.payment_method||''):'Otro';
  $('#expenseEditCounterparty').value=m.counterparty||'';
  $('#expenseEditDescription').value=m.description||'';
